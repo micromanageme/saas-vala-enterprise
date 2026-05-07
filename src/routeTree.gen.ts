@@ -9,27 +9,76 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrailRouteImport } from './routes/trail'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResellersRouteImport } from './routes/resellers'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PosRouteImport } from './routes/pos'
+import { Route as OfflineRouteImport } from './routes/offline'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MessagingRouteImport } from './routes/messaging'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as ManufacturingRouteImport } from './routes/manufacturing'
 import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as HrmRouteImport } from './routes/hrm'
+import { Route as FranchisesRouteImport } from './routes/franchises'
 import { Route as ErpRouteImport } from './routes/erp'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CrmRouteImport } from './routes/crm'
+import { Route as CompaniesRouteImport } from './routes/companies'
+import { Route as BranchesRouteImport } from './routes/branches'
+import { Route as AuditRouteImport } from './routes/audit'
+import { Route as ApiManagerRouteImport } from './routes/api-manager'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AiStudioRouteImport } from './routes/ai-studio'
 import { Route as AccountingRouteImport } from './routes/accounting'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TrailRoute = TrailRouteImport.update({
+  id: '/trail',
+  path: '/trail',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubscriptionsRoute = SubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResellersRoute = ResellersRouteImport.update({
+  id: '/resellers',
+  path: '/resellers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PosRoute = PosRouteImport.update({
   id: '/pos',
   path: '/pos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfflineRoute = OfflineRouteImport.update({
+  id: '/offline',
+  path: '/offline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagingRoute = MessagingRouteImport.update({
+  id: '/messaging',
+  path: '/messaging',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
@@ -57,6 +106,11 @@ const HrmRoute = HrmRouteImport.update({
   path: '/hrm',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FranchisesRoute = FranchisesRouteImport.update({
+  id: '/franchises',
+  path: '/franchises',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ErpRoute = ErpRouteImport.update({
   id: '/erp',
   path: '/erp',
@@ -70,6 +124,36 @@ const DashboardRoute = DashboardRouteImport.update({
 const CrmRoute = CrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesRoute = CompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchesRoute = BranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiManagerRoute = ApiManagerRouteImport.update({
+  id: '/api-manager',
+  path: '/api-manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiStudioRoute = AiStudioRouteImport.update({
+  id: '/ai-studio',
+  path: '/ai-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountingRoute = AccountingRouteImport.update({
@@ -86,108 +170,213 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accounting': typeof AccountingRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/analytics': typeof AnalyticsRoute
+  '/api-manager': typeof ApiManagerRoute
+  '/audit': typeof AuditRoute
+  '/branches': typeof BranchesRoute
+  '/companies': typeof CompaniesRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
   '/erp': typeof ErpRoute
+  '/franchises': typeof FranchisesRoute
   '/hrm': typeof HrmRoute
   '/inventory': typeof InventoryRoute
   '/licenses': typeof LicensesRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
+  '/messaging': typeof MessagingRoute
+  '/notifications': typeof NotificationsRoute
+  '/offline': typeof OfflineRoute
   '/pos': typeof PosRoute
+  '/reports': typeof ReportsRoute
+  '/resellers': typeof ResellersRoute
+  '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/trail': typeof TrailRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accounting': typeof AccountingRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/analytics': typeof AnalyticsRoute
+  '/api-manager': typeof ApiManagerRoute
+  '/audit': typeof AuditRoute
+  '/branches': typeof BranchesRoute
+  '/companies': typeof CompaniesRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
   '/erp': typeof ErpRoute
+  '/franchises': typeof FranchisesRoute
   '/hrm': typeof HrmRoute
   '/inventory': typeof InventoryRoute
   '/licenses': typeof LicensesRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
+  '/messaging': typeof MessagingRoute
+  '/notifications': typeof NotificationsRoute
+  '/offline': typeof OfflineRoute
   '/pos': typeof PosRoute
+  '/reports': typeof ReportsRoute
+  '/resellers': typeof ResellersRoute
+  '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/trail': typeof TrailRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/accounting': typeof AccountingRoute
+  '/ai-studio': typeof AiStudioRoute
+  '/analytics': typeof AnalyticsRoute
+  '/api-manager': typeof ApiManagerRoute
+  '/audit': typeof AuditRoute
+  '/branches': typeof BranchesRoute
+  '/companies': typeof CompaniesRoute
   '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
   '/erp': typeof ErpRoute
+  '/franchises': typeof FranchisesRoute
   '/hrm': typeof HrmRoute
   '/inventory': typeof InventoryRoute
   '/licenses': typeof LicensesRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
+  '/messaging': typeof MessagingRoute
+  '/notifications': typeof NotificationsRoute
+  '/offline': typeof OfflineRoute
   '/pos': typeof PosRoute
+  '/reports': typeof ReportsRoute
+  '/resellers': typeof ResellersRoute
+  '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/trail': typeof TrailRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/accounting'
+    | '/ai-studio'
+    | '/analytics'
+    | '/api-manager'
+    | '/audit'
+    | '/branches'
+    | '/companies'
     | '/crm'
     | '/dashboard'
     | '/erp'
+    | '/franchises'
     | '/hrm'
     | '/inventory'
     | '/licenses'
     | '/manufacturing'
     | '/marketplace'
+    | '/messaging'
+    | '/notifications'
+    | '/offline'
     | '/pos'
+    | '/reports'
+    | '/resellers'
+    | '/settings'
     | '/subscriptions'
+    | '/trail'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/accounting'
+    | '/ai-studio'
+    | '/analytics'
+    | '/api-manager'
+    | '/audit'
+    | '/branches'
+    | '/companies'
     | '/crm'
     | '/dashboard'
     | '/erp'
+    | '/franchises'
     | '/hrm'
     | '/inventory'
     | '/licenses'
     | '/manufacturing'
     | '/marketplace'
+    | '/messaging'
+    | '/notifications'
+    | '/offline'
     | '/pos'
+    | '/reports'
+    | '/resellers'
+    | '/settings'
     | '/subscriptions'
+    | '/trail'
   id:
     | '__root__'
     | '/'
     | '/accounting'
+    | '/ai-studio'
+    | '/analytics'
+    | '/api-manager'
+    | '/audit'
+    | '/branches'
+    | '/companies'
     | '/crm'
     | '/dashboard'
     | '/erp'
+    | '/franchises'
     | '/hrm'
     | '/inventory'
     | '/licenses'
     | '/manufacturing'
     | '/marketplace'
+    | '/messaging'
+    | '/notifications'
+    | '/offline'
     | '/pos'
+    | '/reports'
+    | '/resellers'
+    | '/settings'
     | '/subscriptions'
+    | '/trail'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountingRoute: typeof AccountingRoute
+  AiStudioRoute: typeof AiStudioRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  ApiManagerRoute: typeof ApiManagerRoute
+  AuditRoute: typeof AuditRoute
+  BranchesRoute: typeof BranchesRoute
+  CompaniesRoute: typeof CompaniesRoute
   CrmRoute: typeof CrmRoute
   DashboardRoute: typeof DashboardRoute
   ErpRoute: typeof ErpRoute
+  FranchisesRoute: typeof FranchisesRoute
   HrmRoute: typeof HrmRoute
   InventoryRoute: typeof InventoryRoute
   LicensesRoute: typeof LicensesRoute
   ManufacturingRoute: typeof ManufacturingRoute
   MarketplaceRoute: typeof MarketplaceRoute
+  MessagingRoute: typeof MessagingRoute
+  NotificationsRoute: typeof NotificationsRoute
+  OfflineRoute: typeof OfflineRoute
   PosRoute: typeof PosRoute
+  ReportsRoute: typeof ReportsRoute
+  ResellersRoute: typeof ResellersRoute
+  SettingsRoute: typeof SettingsRoute
   SubscriptionsRoute: typeof SubscriptionsRoute
+  TrailRoute: typeof TrailRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trail': {
+      id: '/trail'
+      path: '/trail'
+      fullPath: '/trail'
+      preLoaderRoute: typeof TrailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/subscriptions': {
       id: '/subscriptions'
       path: '/subscriptions'
@@ -195,11 +384,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resellers': {
+      id: '/resellers'
+      path: '/resellers'
+      fullPath: '/resellers'
+      preLoaderRoute: typeof ResellersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pos': {
       id: '/pos'
       path: '/pos'
       fullPath: '/pos'
       preLoaderRoute: typeof PosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offline': {
+      id: '/offline'
+      path: '/offline'
+      fullPath: '/offline'
+      preLoaderRoute: typeof OfflineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messaging': {
+      id: '/messaging'
+      path: '/messaging'
+      fullPath: '/messaging'
+      preLoaderRoute: typeof MessagingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketplace': {
@@ -237,6 +468,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HrmRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/franchises': {
+      id: '/franchises'
+      path: '/franchises'
+      fullPath: '/franchises'
+      preLoaderRoute: typeof FranchisesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/erp': {
       id: '/erp'
       path: '/erp'
@@ -256,6 +494,48 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/crm'
       preLoaderRoute: typeof CrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies': {
+      id: '/companies'
+      path: '/companies'
+      fullPath: '/companies'
+      preLoaderRoute: typeof CompaniesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branches': {
+      id: '/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof BranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api-manager': {
+      id: '/api-manager'
+      path: '/api-manager'
+      fullPath: '/api-manager'
+      preLoaderRoute: typeof ApiManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-studio': {
+      id: '/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/ai-studio'
+      preLoaderRoute: typeof AiStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/accounting': {
@@ -278,16 +558,30 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountingRoute: AccountingRoute,
+  AiStudioRoute: AiStudioRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  ApiManagerRoute: ApiManagerRoute,
+  AuditRoute: AuditRoute,
+  BranchesRoute: BranchesRoute,
+  CompaniesRoute: CompaniesRoute,
   CrmRoute: CrmRoute,
   DashboardRoute: DashboardRoute,
   ErpRoute: ErpRoute,
+  FranchisesRoute: FranchisesRoute,
   HrmRoute: HrmRoute,
   InventoryRoute: InventoryRoute,
   LicensesRoute: LicensesRoute,
   ManufacturingRoute: ManufacturingRoute,
   MarketplaceRoute: MarketplaceRoute,
+  MessagingRoute: MessagingRoute,
+  NotificationsRoute: NotificationsRoute,
+  OfflineRoute: OfflineRoute,
   PosRoute: PosRoute,
+  ReportsRoute: ReportsRoute,
+  ResellersRoute: ResellersRoute,
+  SettingsRoute: SettingsRoute,
   SubscriptionsRoute: SubscriptionsRoute,
+  TrailRoute: TrailRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
