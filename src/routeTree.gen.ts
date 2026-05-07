@@ -9,12 +9,72 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as PosRouteImport } from './routes/pos'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as ManufacturingRouteImport } from './routes/manufacturing'
+import { Route as LicensesRouteImport } from './routes/licenses'
+import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as HrmRouteImport } from './routes/hrm'
+import { Route as ErpRouteImport } from './routes/erp'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CrmRouteImport } from './routes/crm'
+import { Route as AccountingRouteImport } from './routes/accounting'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PosRoute = PosRouteImport.update({
+  id: '/pos',
+  path: '/pos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManufacturingRoute = ManufacturingRouteImport.update({
+  id: '/manufacturing',
+  path: '/manufacturing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LicensesRoute = LicensesRouteImport.update({
+  id: '/licenses',
+  path: '/licenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrmRoute = HrmRouteImport.update({
+  id: '/hrm',
+  path: '/hrm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErpRoute = ErpRouteImport.update({
+  id: '/erp',
+  path: '/erp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrmRoute = CrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingRoute = AccountingRouteImport.update({
+  id: '/accounting',
+  path: '/accounting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +85,184 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accounting': typeof AccountingRoute
+  '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/erp': typeof ErpRoute
+  '/hrm': typeof HrmRoute
+  '/inventory': typeof InventoryRoute
+  '/licenses': typeof LicensesRoute
+  '/manufacturing': typeof ManufacturingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/pos': typeof PosRoute
+  '/subscriptions': typeof SubscriptionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accounting': typeof AccountingRoute
+  '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/erp': typeof ErpRoute
+  '/hrm': typeof HrmRoute
+  '/inventory': typeof InventoryRoute
+  '/licenses': typeof LicensesRoute
+  '/manufacturing': typeof ManufacturingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/pos': typeof PosRoute
+  '/subscriptions': typeof SubscriptionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accounting': typeof AccountingRoute
+  '/crm': typeof CrmRoute
   '/dashboard': typeof DashboardRoute
+  '/erp': typeof ErpRoute
+  '/hrm': typeof HrmRoute
+  '/inventory': typeof InventoryRoute
+  '/licenses': typeof LicensesRoute
+  '/manufacturing': typeof ManufacturingRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/pos': typeof PosRoute
+  '/subscriptions': typeof SubscriptionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/accounting'
+    | '/crm'
+    | '/dashboard'
+    | '/erp'
+    | '/hrm'
+    | '/inventory'
+    | '/licenses'
+    | '/manufacturing'
+    | '/marketplace'
+    | '/pos'
+    | '/subscriptions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard'
+  to:
+    | '/'
+    | '/accounting'
+    | '/crm'
+    | '/dashboard'
+    | '/erp'
+    | '/hrm'
+    | '/inventory'
+    | '/licenses'
+    | '/manufacturing'
+    | '/marketplace'
+    | '/pos'
+    | '/subscriptions'
+  id:
+    | '__root__'
+    | '/'
+    | '/accounting'
+    | '/crm'
+    | '/dashboard'
+    | '/erp'
+    | '/hrm'
+    | '/inventory'
+    | '/licenses'
+    | '/manufacturing'
+    | '/marketplace'
+    | '/pos'
+    | '/subscriptions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountingRoute: typeof AccountingRoute
+  CrmRoute: typeof CrmRoute
   DashboardRoute: typeof DashboardRoute
+  ErpRoute: typeof ErpRoute
+  HrmRoute: typeof HrmRoute
+  InventoryRoute: typeof InventoryRoute
+  LicensesRoute: typeof LicensesRoute
+  ManufacturingRoute: typeof ManufacturingRoute
+  MarketplaceRoute: typeof MarketplaceRoute
+  PosRoute: typeof PosRoute
+  SubscriptionsRoute: typeof SubscriptionsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pos': {
+      id: '/pos'
+      path: '/pos'
+      fullPath: '/pos'
+      preLoaderRoute: typeof PosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manufacturing': {
+      id: '/manufacturing'
+      path: '/manufacturing'
+      fullPath: '/manufacturing'
+      preLoaderRoute: typeof ManufacturingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/licenses': {
+      id: '/licenses'
+      path: '/licenses'
+      fullPath: '/licenses'
+      preLoaderRoute: typeof LicensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hrm': {
+      id: '/hrm'
+      path: '/hrm'
+      fullPath: '/hrm'
+      preLoaderRoute: typeof HrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/erp': {
+      id: '/erp'
+      path: '/erp'
+      fullPath: '/erp'
+      preLoaderRoute: typeof ErpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crm': {
+      id: '/crm'
+      path: '/crm'
+      fullPath: '/crm'
+      preLoaderRoute: typeof CrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting': {
+      id: '/accounting'
+      path: '/accounting'
+      fullPath: '/accounting'
+      preLoaderRoute: typeof AccountingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +277,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountingRoute: AccountingRoute,
+  CrmRoute: CrmRoute,
   DashboardRoute: DashboardRoute,
+  ErpRoute: ErpRoute,
+  HrmRoute: HrmRoute,
+  InventoryRoute: InventoryRoute,
+  LicensesRoute: LicensesRoute,
+  ManufacturingRoute: ManufacturingRoute,
+  MarketplaceRoute: MarketplaceRoute,
+  PosRoute: PosRoute,
+  SubscriptionsRoute: SubscriptionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
