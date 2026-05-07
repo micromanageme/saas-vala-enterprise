@@ -1,11 +1,13 @@
 import { ReactNode } from "react";
-import { Bell, Search, Building, ChevronDown } from "lucide-react";
+import { Bell, Search, Building, ChevronDown, Command, Plus } from "lucide-react";
+import { useRouterState, Link } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { modules } from "@/lib/modules";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
