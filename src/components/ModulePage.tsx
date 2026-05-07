@@ -10,6 +10,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Counter } from "./Counter";
 import { Chatter } from "./Chatter";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
+import { ui } from "@/lib/ui-bus";
+import { ACTION_EVENTS } from "./ActionWizards";
+import { Upload, Copy, Archive, Settings2, Printer } from "lucide-react";
 
 export type Kpi = { label: string; value: string; delta?: string; up?: boolean };
 export type Column = { key: string; label: string };
@@ -78,7 +81,18 @@ export function ModulePage({
               </button>
             ))}
           </div>
-          <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-1" />Export</Button>
+          <Button variant="outline" size="sm" onClick={() => ui.emit(ACTION_EVENTS.importWizard)}><Upload className="h-4 w-4 mr-1" />Import</Button>
+          <Button variant="outline" size="sm" onClick={() => ui.emit(ACTION_EVENTS.exportWizard)}><Download className="h-4 w-4 mr-1" />Export</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild><Button variant="outline" size="sm"><Settings2 className="h-4 w-4 mr-1" />Action</Button></DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="glass">
+              <DropdownMenuItem onClick={() => ui.emit(ACTION_EVENTS.duplicate)}><Copy className="h-3.5 w-3.5 mr-2" />Duplicate</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => ui.emit(ACTION_EVENTS.archive)}><Archive className="h-3.5 w-3.5 mr-2" />Archive</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)}><Plus className="h-3.5 w-3.5 mr-2" />Schedule activity</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => window.print()}><Printer className="h-3.5 w-3.5 mr-2" />Print / PDF</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button size="sm" className="gradient-primary text-primary-foreground border-0 shadow-glow">
             <Plus className="h-4 w-4 mr-1" />New
           </Button>

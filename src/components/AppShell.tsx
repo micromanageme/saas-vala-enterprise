@@ -15,6 +15,9 @@ import { ShortcutsDialog } from "./ShortcutsDialog";
 import { GlobalHotkeys } from "./GlobalHotkeys";
 import { PreferencesMenu } from "./PreferencesMenu";
 import { ui, UI_EVENTS } from "@/lib/ui-bus";
+import { Systray } from "./Systray";
+import { Banners } from "./Banners";
+import { ActionWizards } from "./ActionWizards";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -55,6 +58,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <Command className="h-3 w-3" />K
               </kbd>
             </button>
+            <Systray />
             <NotificationDrawer />
             <PreferencesMenu />
             <Link to="/profile" className="relative">
@@ -64,7 +68,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-background" />
             </Link>
           </header>
-          <main className="flex-1 p-4 md:p-6 animate-fade-in pb-24">{children}</main>
+          <main className="flex-1 p-4 md:p-6 animate-fade-in pb-24 space-y-4">
+            <Banners />
+            {children}
+          </main>
+          <ActionWizards />
 
           <button
             onClick={() => ui.emit(UI_EVENTS.openQuickCreate)}
