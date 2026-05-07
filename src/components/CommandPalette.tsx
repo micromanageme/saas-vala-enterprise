@@ -4,6 +4,7 @@ import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from "@/components/ui/command";
 import { modules, groups } from "@/lib/modules";
+import { ui, UI_EVENTS } from "@/lib/ui-bus";
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -17,7 +18,8 @@ export function CommandPalette() {
       }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const off = ui.on(UI_EVENTS.openCommand, () => setOpen(true));
+    return () => { window.removeEventListener("keydown", onKey); off(); };
   }, []);
 
   return (
