@@ -10,6 +10,11 @@ import { AuroraBackground } from "./AuroraBackground";
 import { AIAssistant } from "./AIAssistant";
 import { NotificationDrawer } from "./NotificationDrawer";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
+import { QuickCreate } from "./QuickCreate";
+import { ShortcutsDialog } from "./ShortcutsDialog";
+import { GlobalHotkeys } from "./GlobalHotkeys";
+import { PreferencesMenu } from "./PreferencesMenu";
+import { ui, UI_EVENTS } from "@/lib/ui-bus";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -18,6 +23,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <AuroraBackground />
+      <GlobalHotkeys />
+      <QuickCreate />
+      <ShortcutsDialog />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
@@ -32,14 +40,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="text-foreground font-medium">{current.title}</span>
               </nav>
             )}
-            <div className="relative ml-auto hidden md:block w-72">
+            <button
+              type="button"
+              onClick={() => ui.emit(UI_EVENTS.openCommand)}
+              className="relative ml-auto hidden md:block w-72 text-left"
+              aria-label="Open spotlight search"
+            >
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Spotlight search…" className="pl-9 pr-12 h-9 bg-input/50" />
+              <Input readOnly placeholder="Spotlight search…" className="pl-9 pr-12 h-9 bg-input/50 cursor-pointer" />
               <kbd className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
                 <Command className="h-3 w-3" />K
               </kbd>
-            </div>
+            </button>
             <NotificationDrawer />
+            <PreferencesMenu />
             <Link to="/profile" className="relative">
               <Avatar className="h-8 w-8 ring-2 ring-primary/40 hover:ring-primary transition">
                 <AvatarFallback className="gradient-primary text-primary-foreground text-xs font-bold">SV</AvatarFallback>
@@ -50,6 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <main className="flex-1 p-4 md:p-6 animate-fade-in pb-24">{children}</main>
 
           <button
+            onClick={() => ui.emit(UI_EVENTS.openQuickCreate)}
             className="fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center rounded-full gradient-primary text-primary-foreground shadow-glow hover:scale-110 transition-transform"
             aria-label="Quick action"
           >

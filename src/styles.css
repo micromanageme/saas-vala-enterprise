@@ -115,3 +115,47 @@
   backdrop-filter: blur(12px);
   border: 1px solid oklch(1 0 0 / 0.06);
 }
+
+/* Light mode override */
+html.light {
+  --background: oklch(0.99 0.005 270);
+  --foreground: oklch(0.18 0.02 270);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 270);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 270);
+  --secondary: oklch(0.94 0.01 270);
+  --secondary-foreground: oklch(0.18 0.02 270);
+  --muted: oklch(0.95 0.01 270);
+  --muted-foreground: oklch(0.45 0.02 270);
+  --border: oklch(0.88 0.01 270);
+  --input: oklch(0.93 0.01 270);
+  --sidebar: oklch(0.97 0.005 270);
+  --sidebar-foreground: oklch(0.2 0.02 270);
+  --sidebar-accent: oklch(0.93 0.01 270);
+  --sidebar-accent-foreground: oklch(0.18 0.02 270);
+  --sidebar-border: oklch(0.88 0.01 270);
+}
+
+/* Compact density */
+html.density-compact .gradient-card,
+html.density-compact [class*="p-6"] { padding: 0.75rem !important; }
+html.density-compact h1 { font-size: 1.5rem; }
+html.density-compact .text-2xl { font-size: 1.25rem; }
+
+/* Accessibility focus ring */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* High-contrast respect for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* RTL flips for icon spacing */
+html[dir="rtl"] .mr-1, html[dir="rtl"] .mr-2 { margin-right: 0; }
+html[dir="rtl"] .mr-1 { margin-left: 0.25rem; }
+html[dir="rtl"] .mr-2 { margin-left: 0.5rem; }
