@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { Toaster } from "sonner";
+import { CommandPalette } from "@/components/CommandPalette";
 
 function NotFoundComponent() {
   return (
