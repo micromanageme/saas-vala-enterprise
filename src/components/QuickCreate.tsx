@@ -18,7 +18,7 @@ const actions = [
 export function QuickCreate() {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
-  useEffect(() => ui.on(UI_EVENTS.openQuickCreate, () => setOpen(true)), []);
+  useEffect(() => { return ui.on(UI_EVENTS.openQuickCreate, () => setOpen(true)); }, []);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="glass max-w-lg">

@@ -19,7 +19,7 @@ const shortcuts: { keys: string[]; label: string }[] = [
 
 export function ShortcutsDialog() {
   const [open, setOpen] = useState(false);
-  useEffect(() => ui.on(UI_EVENTS.openShortcuts, () => setOpen((o) => !o)), []);
+  useEffect(() => { return ui.on(UI_EVENTS.openShortcuts, () => setOpen((o) => !o)); }, []);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="glass max-w-lg">
