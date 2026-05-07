@@ -57,6 +57,7 @@ import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as AutomationRouteImport } from './routes/automation'
 import { Route as AuditRouteImport } from './routes/audit'
+import { Route as AppsRouteImport } from './routes/apps'
 import { Route as ApprovalsRouteImport } from './routes/approvals'
 import { Route as ApiManagerRouteImport } from './routes/api-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
@@ -305,6 +306,11 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppsRoute = AppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApprovalsRoute = ApprovalsRouteImport.update({
   id: '/approvals',
   path: '/approvals',
@@ -349,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/api-manager': typeof ApiManagerRoute
   '/approvals': typeof ApprovalsRoute
+  '/apps': typeof AppsRoute
   '/audit': typeof AuditRoute
   '/automation': typeof AutomationRoute
   '/bookmarks': typeof BookmarksRoute
@@ -406,6 +413,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/api-manager': typeof ApiManagerRoute
   '/approvals': typeof ApprovalsRoute
+  '/apps': typeof AppsRoute
   '/audit': typeof AuditRoute
   '/automation': typeof AutomationRoute
   '/bookmarks': typeof BookmarksRoute
@@ -464,6 +472,7 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/api-manager': typeof ApiManagerRoute
   '/approvals': typeof ApprovalsRoute
+  '/apps': typeof AppsRoute
   '/audit': typeof AuditRoute
   '/automation': typeof AutomationRoute
   '/bookmarks': typeof BookmarksRoute
@@ -523,6 +532,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/api-manager'
     | '/approvals'
+    | '/apps'
     | '/audit'
     | '/automation'
     | '/bookmarks'
@@ -580,6 +590,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/api-manager'
     | '/approvals'
+    | '/apps'
     | '/audit'
     | '/automation'
     | '/bookmarks'
@@ -637,6 +648,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/api-manager'
     | '/approvals'
+    | '/apps'
     | '/audit'
     | '/automation'
     | '/bookmarks'
@@ -695,6 +707,7 @@ export interface RootRouteChildren {
   AnalyticsRoute: typeof AnalyticsRoute
   ApiManagerRoute: typeof ApiManagerRoute
   ApprovalsRoute: typeof ApprovalsRoute
+  AppsRoute: typeof AppsRoute
   AuditRoute: typeof AuditRoute
   AutomationRoute: typeof AutomationRoute
   BookmarksRoute: typeof BookmarksRoute
@@ -1083,6 +1096,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/apps': {
+      id: '/apps'
+      path: '/apps'
+      fullPath: '/apps'
+      preLoaderRoute: typeof AppsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/approvals': {
       id: '/approvals'
       path: '/approvals'
@@ -1143,6 +1163,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsRoute: AnalyticsRoute,
   ApiManagerRoute: ApiManagerRoute,
   ApprovalsRoute: ApprovalsRoute,
+  AppsRoute: AppsRoute,
   AuditRoute: AuditRoute,
   AutomationRoute: AutomationRoute,
   BookmarksRoute: BookmarksRoute,
