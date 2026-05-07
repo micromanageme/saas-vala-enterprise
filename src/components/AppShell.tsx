@@ -63,7 +63,10 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <Command className="h-3 w-3" />K
               </kbd>
             </button>
+            <PresenceAvatars />
+            <SaveIndicator />
             <Systray />
+            <FocusMode />
             <NotificationDrawer />
             <PreferencesMenu />
             <Link to="/profile" className="relative">
