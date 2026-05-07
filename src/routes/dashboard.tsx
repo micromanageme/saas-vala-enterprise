@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
+import { QuickAccess } from "@/components/Workspace";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { modules } from "@/lib/modules";
 import { Counter } from "@/components/Counter";
@@ -63,6 +64,8 @@ function Dashboard() {
             </Card>
           ))}
         </div>
+
+        <QuickAccess />
 
         <div className="grid gap-4 lg:grid-cols-3">
           <Card className="gradient-card border-border/60 shadow-elegant lg:col-span-2">
