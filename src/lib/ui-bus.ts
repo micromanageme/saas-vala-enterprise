@@ -3,10 +3,10 @@ type Handler = () => void;
 const map = new Map<string, Set<Handler>>();
 
 export const ui = {
-  on(event: string, h: Handler) {
+  on(event: string, h: Handler): () => void {
     if (!map.has(event)) map.set(event, new Set());
     map.get(event)!.add(h);
-    return () => map.get(event)?.delete(h);
+    return () => { map.get(event)?.delete(h); };
   },
   emit(event: string) {
     map.get(event)?.forEach((h) => h());
