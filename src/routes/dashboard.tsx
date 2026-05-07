@@ -65,6 +65,8 @@ function Dashboard() {
           ))}
         </div>
 
+        <QuickAccess />
+
         <div className="grid gap-4 lg:grid-cols-3">
           <Card className="gradient-card border-border/60 shadow-elegant lg:col-span-2">
             <CardHeader><CardTitle className="text-base">Revenue · last 7 days</CardTitle></CardHeader>
