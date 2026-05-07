@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Search, Command, Plus } from "lucide-react";
+import { Search, Command, Plus, Grid3x3 } from "lucide-react";
 import { useRouterState, Link } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
@@ -31,6 +31,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/60 glass px-4">
             <SidebarTrigger />
+            <Link to="/apps" className="grid h-8 w-8 place-items-center rounded-md hover:bg-primary/10 transition" title="Apps">
+              <Grid3x3 className="h-4 w-4 text-primary" />
+            </Link>
             <WorkspaceSwitcher />
             {current && (
               <nav className="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground">
