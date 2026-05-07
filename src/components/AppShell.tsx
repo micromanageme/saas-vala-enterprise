@@ -19,6 +19,7 @@ import { Systray } from "./Systray";
 import { Banners } from "./Banners";
 import { ActionWizards } from "./ActionWizards";
 import { RippleProvider, SaveIndicator, FocusMode, DragUploadOverlay, BackgroundTasks, PresenceAvatars, Walkthrough } from "./Polish";
+import { Splash, RouteTracker, CollabCursors } from "./Workspace";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -26,6 +27,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
+      <Splash />
+      <RouteTracker />
+      <CollabCursors />
       <AuroraBackground />
       <GlobalHotkeys />
       <QuickCreate />

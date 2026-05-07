@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
+import { QuickAccess } from "@/components/Workspace";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { modules } from "@/lib/modules";
 import { Counter } from "@/components/Counter";
