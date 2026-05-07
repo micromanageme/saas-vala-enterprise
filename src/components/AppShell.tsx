@@ -18,6 +18,7 @@ import { ui, UI_EVENTS } from "@/lib/ui-bus";
 import { Systray } from "./Systray";
 import { Banners } from "./Banners";
 import { ActionWizards } from "./ActionWizards";
+import { RippleProvider, SaveIndicator, FocusMode, DragUploadOverlay, BackgroundTasks, PresenceAvatars, Walkthrough } from "./Polish";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -29,6 +30,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       <GlobalHotkeys />
       <QuickCreate />
       <ShortcutsDialog />
+      <RippleProvider />
+      <DragUploadOverlay />
+      <Walkthrough />
+      <BackgroundTasks />
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-1 flex-col">

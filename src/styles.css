@@ -159,3 +159,27 @@ html.density-compact .text-2xl { font-size: 1.25rem; }
 html[dir="rtl"] .mr-1, html[dir="rtl"] .mr-2 { margin-right: 0; }
 html[dir="rtl"] .mr-1 { margin-left: 0.25rem; }
 html[dir="rtl"] .mr-2 { margin-left: 0.5rem; }
+
+/* Ripple click feedback */
+@keyframes sv-ripple { to { transform: scale(2.4); opacity: 0; } }
+
+/* Focus / Zen mode hides chrome */
+html.focus-mode aside[data-sidebar="sidebar"],
+html.focus-mode header.sticky { opacity: 0.15; transition: opacity .3s; }
+html.focus-mode aside[data-sidebar="sidebar"]:hover,
+html.focus-mode header.sticky:hover { opacity: 1; }
+
+/* Form micro states */
+.field-required > label::after { content: " *"; color: oklch(0.65 0.24 25); }
+.field-error input, .field-error textarea { border-color: oklch(0.65 0.24 25); animation: sv-shake .35s; }
+@keyframes sv-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+
+/* Smart breadcrumb fade */
+nav.breadcrumb > * { animation: fade-in .25s ease-out; }
+
+/* Card hover elevation */
+.gradient-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.gradient-card:hover { transform: translateY(-1px); }
+
+/* Theme transition */
+html, html * { transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
