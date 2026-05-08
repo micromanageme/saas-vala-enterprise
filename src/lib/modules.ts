@@ -6,7 +6,7 @@ import {
   Clock, Bookmark, Zap, Target, Activity, TrendingUp, Search, Workflow,
   User, Folder, FileCheck, Globe, Palette, Lock, KanbanSquare, Bug,
   Headphones, BookOpen, FileSignature, Brush, FileBarChart, Map,
-  Smartphone, MonitorSmartphone, Wallet, Trophy, Network, Bot,
+  Smartphone, MonitorSmartphone, Wallet, Trophy, Network, Bot, Crown,
 } from "lucide-react";
 
 export type ModuleItem = {
@@ -18,6 +18,8 @@ export type ModuleItem = {
 };
 
 export const modules: ModuleItem[] = [
+  // Master
+  { title: "Super Admin", url: "/super-admin", icon: Crown, group: "Master", desc: "Master operating control" },
   // Overview
   { title: "Welcome", url: "/welcome", icon: Sparkles, group: "Overview", desc: "Onboarding & quick start" },
   { title: "AI Dashboard", url: "/dashboard", icon: LayoutDashboard, group: "Overview", desc: "Live KPIs & insights" },
