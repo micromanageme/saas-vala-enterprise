@@ -11,6 +11,7 @@ import {
 import appCss from "../styles.css?url";
 import { Toaster } from "sonner";
 import { CommandPalette } from "@/components/CommandPalette";
+import { AuthGuard } from "@/components/AuthGuard";
 
 function NotFoundComponent() {
   return (
@@ -115,7 +116,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthGuard>
+        <Outlet />
+      </AuthGuard>
       <Toaster richColors theme="dark" position="top-right" />
       <CommandPalette />
     </QueryClientProvider>

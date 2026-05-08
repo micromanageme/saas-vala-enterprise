@@ -16,6 +16,7 @@ import { Route as TrailRouteImport } from './routes/trail'
 import { Route as ThreatsRouteImport } from './routes/threats'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SuperAdminRouteImport } from './routes/super-admin'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SessionsRouteImport } from './routes/sessions'
@@ -33,6 +34,7 @@ import { Route as MlmRouteImport } from './routes/mlm'
 import { Route as MessagingRouteImport } from './routes/messaging'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as ManufacturingRouteImport } from './routes/manufacturing'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
@@ -99,6 +101,11 @@ const ThemeRoute = ThemeRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuperAdminRoute = SuperAdminRouteImport.update({
+  id: '/super-admin',
+  path: '/super-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubscriptionsRoute = SubscriptionsRouteImport.update({
@@ -184,6 +191,11 @@ const MarketplaceRoute = MarketplaceRouteImport.update({
 const ManufacturingRoute = ManufacturingRouteImport.update({
   id: '/manufacturing',
   path: '/manufacturing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LiveRoute = LiveRouteImport.update({
@@ -380,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/licenses': typeof LicensesRoute
   '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
@@ -397,6 +410,7 @@ export interface FileRoutesByFullPath {
   '/sessions': typeof SessionsRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/super-admin': typeof SuperAdminRoute
   '/support': typeof SupportRoute
   '/theme': typeof ThemeRoute
   '/threats': typeof ThreatsRoute
@@ -438,6 +452,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/licenses': typeof LicensesRoute
   '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
@@ -455,6 +470,7 @@ export interface FileRoutesByTo {
   '/sessions': typeof SessionsRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/super-admin': typeof SuperAdminRoute
   '/support': typeof SupportRoute
   '/theme': typeof ThemeRoute
   '/threats': typeof ThreatsRoute
@@ -497,6 +513,7 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/licenses': typeof LicensesRoute
   '/live': typeof LiveRoute
+  '/login': typeof LoginRoute
   '/manufacturing': typeof ManufacturingRoute
   '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
@@ -514,6 +531,7 @@ export interface FileRoutesById {
   '/sessions': typeof SessionsRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
+  '/super-admin': typeof SuperAdminRoute
   '/support': typeof SupportRoute
   '/theme': typeof ThemeRoute
   '/threats': typeof ThreatsRoute
@@ -557,6 +575,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/licenses'
     | '/live'
+    | '/login'
     | '/manufacturing'
     | '/marketplace'
     | '/messaging'
@@ -574,6 +593,7 @@ export interface FileRouteTypes {
     | '/sessions'
     | '/settings'
     | '/subscriptions'
+    | '/super-admin'
     | '/support'
     | '/theme'
     | '/threats'
@@ -615,6 +635,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/licenses'
     | '/live'
+    | '/login'
     | '/manufacturing'
     | '/marketplace'
     | '/messaging'
@@ -632,6 +653,7 @@ export interface FileRouteTypes {
     | '/sessions'
     | '/settings'
     | '/subscriptions'
+    | '/super-admin'
     | '/support'
     | '/theme'
     | '/threats'
@@ -673,6 +695,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/licenses'
     | '/live'
+    | '/login'
     | '/manufacturing'
     | '/marketplace'
     | '/messaging'
@@ -690,6 +713,7 @@ export interface FileRouteTypes {
     | '/sessions'
     | '/settings'
     | '/subscriptions'
+    | '/super-admin'
     | '/support'
     | '/theme'
     | '/threats'
@@ -732,6 +756,7 @@ export interface RootRouteChildren {
   LeaderboardRoute: typeof LeaderboardRoute
   LicensesRoute: typeof LicensesRoute
   LiveRoute: typeof LiveRoute
+  LoginRoute: typeof LoginRoute
   ManufacturingRoute: typeof ManufacturingRoute
   MarketplaceRoute: typeof MarketplaceRoute
   MessagingRoute: typeof MessagingRoute
@@ -749,6 +774,7 @@ export interface RootRouteChildren {
   SessionsRoute: typeof SessionsRoute
   SettingsRoute: typeof SettingsRoute
   SubscriptionsRoute: typeof SubscriptionsRoute
+  SuperAdminRoute: typeof SuperAdminRoute
   SupportRoute: typeof SupportRoute
   ThemeRoute: typeof ThemeRoute
   ThreatsRoute: typeof ThreatsRoute
@@ -807,6 +833,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/super-admin': {
+      id: '/super-admin'
+      path: '/super-admin'
+      fullPath: '/super-admin'
+      preLoaderRoute: typeof SuperAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subscriptions': {
@@ -926,6 +959,13 @@ declare module '@tanstack/react-router' {
       path: '/manufacturing'
       fullPath: '/manufacturing'
       preLoaderRoute: typeof ManufacturingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/live': {
@@ -1188,6 +1228,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeaderboardRoute: LeaderboardRoute,
   LicensesRoute: LicensesRoute,
   LiveRoute: LiveRoute,
+  LoginRoute: LoginRoute,
   ManufacturingRoute: ManufacturingRoute,
   MarketplaceRoute: MarketplaceRoute,
   MessagingRoute: MessagingRoute,
@@ -1205,6 +1246,7 @@ const rootRouteChildren: RootRouteChildren = {
   SessionsRoute: SessionsRoute,
   SettingsRoute: SettingsRoute,
   SubscriptionsRoute: SubscriptionsRoute,
+  SuperAdminRoute: SuperAdminRoute,
   SupportRoute: SupportRoute,
   ThemeRoute: ThemeRoute,
   ThreatsRoute: ThreatsRoute,
