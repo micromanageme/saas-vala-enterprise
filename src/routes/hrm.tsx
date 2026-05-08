@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
 
@@ -7,29 +8,48 @@ export const Route = createFileRoute("/hrm")({
   component: Page,
 });
 
-const kpis = [
-  { label: "Headcount", value: "842", delta: "+12", up: true },
-  { label: "Open Roles", value: "24", delta: "+3", up: true },
-  { label: "Payroll", value: "$1.84M", delta: "+2%", up: true },
-  { label: "Attrition", value: "3.2%", delta: "-0.4%", up: true }
-];
-const columns = [{ key: "emp", label: "Employee" }, { key: "role", label: "Role" }, { key: "dept", label: "Department" }, { key: "status", label: "Status" }];
-const rows = [
-  {
-    "emp": "A. Khan",
-    "role": "Sales Lead",
-    "dept": "Sales",
-    "status": "Active"
-  },
-  {
-    "emp": "M. Patel",
-    "role": "Engineer",
-    "dept": "R&D",
-    "status": "Active"
-  }
-];
-
 function Page() {
+  const { data: hrmData, isLoading, error } = useQuery({
+    queryKey: ["hrm"],
+    queryFn: async () => {
+      const response = await fetch("/api/hrm?type=all");
+      if (!response.ok) throw new Error("Failed to fetch HRM data");
+      return response.json();
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <AppShell>
+        <ModulePage title="HRM" subtitle="Employees, payroll & leave" kpis={[]} columns={[]} rows={[]} />
+      </AppShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <AppShell>
+        <div className="p-4 text-destructive">Failed to load HRM data</div>
+      </AppShell>
+    );
+  }
+
+  const data = hrmData?.data;
+  const kpis = data?.kpis ? [
+    { label: "Total Employees", value: data.kpis.totalEmployees.toString(), delta: `+${data.kpis.totalEmployeesDelta}%`, up: data.kpis.totalEmployeesDelta > 0 },
+    { label: "Active", value: data.kpis.active.toString(), delta: `+${data.kpis.activeDelta}%`, up: data.kpis.activeDelta > 0 },
+    { label: "On Leave", value: data.kpis.onLeave.toString(), delta: `+${data.kpis.onLeaveDelta}`, up: data.kpis.onLeaveDelta < 0 },
+    { label: "New Hires", value: data.kpis.newHires.toString(), delta: `+${data.kpis.newHiresDelta}%`, up: data.kpis.newHiresDelta > 0 }
+  ] : [];
+
+  const columns = [{ key: "name", label: "Employee" }, { key: "department", label: "Department" }, { key: "position", label: "Position" }, { key: "status", label: "Status" }];
+  const rows = data?.employees?.map((employee: any) => ({
+    name: employee.name,
+    department: employee.department,
+    position: employee.position,
+    status: employee.status
+  })) || [];
+
   return (
     <AppShell>
       <ModulePage title="HRM" subtitle="Employees, payroll & leave" kpis={kpis} columns={columns} rows={rows} />

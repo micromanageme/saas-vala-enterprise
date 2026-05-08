@@ -11,6 +11,7 @@ import {
 import appCss from "../styles.css?url";
 import { Toaster } from "sonner";
 import { CommandPalette } from "@/components/CommandPalette";
+import { ViewModeProvider } from "@/lib/view-mode";
 
 function NotFoundComponent() {
   return (
@@ -115,9 +116,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster richColors theme="dark" position="top-right" />
-      <CommandPalette />
+      <ViewModeProvider>
+        <Outlet />
+        <Toaster richColors theme="dark" position="top-right" />
+        <CommandPalette />
+      </ViewModeProvider>
     </QueryClientProvider>
   );
 }

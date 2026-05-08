@@ -1,30 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { modules, groups } from "@/lib/modules";
+import { getAccessibleApps } from "@/lib/navigation";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Grid3x3 } from "lucide-react";
+import { Search, Grid3x3, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 export const Route = createFileRoute("/apps")({ component: AppsPage });
 
 function AppsPage() {
   const [q, setQ] = useState("");
-  const [g, setG] = useState<string | null>(null);
-  const filtered = modules.filter(
-    (m) => (!g || m.group === g) && (!q || m.title.toLowerCase().includes(q.toLowerCase()) || m.desc.toLowerCase().includes(q.toLowerCase()))
+  const { roles } = useAuth();
+  const accessibleApps = getAccessibleApps(roles);
+  const filtered = accessibleApps.filter(
+    (app) => !q || app.name.toLowerCase().includes(q.toLowerCase()) || app.description.toLowerCase().includes(q.toLowerCase())
   );
+
   return (
     <AppShell>
-      <div className="space-y-6">
-        <div className="flex items-end justify-between gap-3 flex-wrap">
+      <div className="max-w-6xl mx-auto space-y-8 py-8">
+        <div className="flex items-end justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
               <Grid3x3 className="h-6 w-6 text-primary" />
-              <h1 className="text-2xl font-bold tracking-tight">Apps</h1>
-              <Badge variant="outline" className="border-primary/40 text-primary">{modules.length} modules</Badge>
+              <h1 className="text-3xl font-bold tracking-tight">Apps</h1>
+              <Badge variant="outline" className="border-primary/40 text-primary">{accessibleApps.length} apps</Badge>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">Open any enterprise module — Odoo-style App Drawer.</p>
+            <p className="text-sm text-muted-foreground mt-1">Choose an application to work with</p>
           </div>
           <div className="relative w-72">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -32,22 +35,27 @@ function AppsPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <button onClick={() => setG(null)} className={`text-xs rounded-full px-3 py-1 border ${!g ? "gradient-primary text-primary-foreground border-transparent" : "border-border hover:border-primary/50"}`}>All</button>
-          {groups.map((x) => (
-            <button key={x} onClick={() => setG(x)} className={`text-xs rounded-full px-3 py-1 border ${g === x ? "gradient-primary text-primary-foreground border-transparent" : "border-border hover:border-primary/50"}`}>{x}</button>
-          ))}
-        </div>
-
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {filtered.map((m) => (
-            <Link key={m.url} to={m.url} className="group rounded-xl gradient-card border border-border/60 p-4 hover:border-primary/60 hover:shadow-glow transition-all hover:-translate-y-0.5">
-              <div className="grid h-12 w-12 place-items-center rounded-lg gradient-primary shadow-glow mb-3 group-hover:scale-110 transition-transform">
-                <m.icon className="h-6 w-6 text-primary-foreground" />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((app) => (
+            <Link key={app.id} to={`/apps/${app.id}`} className="group">
+              <div className="p-6 border rounded-lg hover:border-primary/50 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div
+                    className="p-3 rounded-lg shrink-0"
+                    style={{ backgroundColor: `${app.color}20` }}
+                  >
+                    <app.icon className="h-6 w-6" style={{ color: app.color }} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{app.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{app.description}</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span>Open app</span>
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </div>
               </div>
-              <div className="text-sm font-semibold">{m.title}</div>
-              <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{m.desc}</div>
-              <div className="text-[10px] uppercase tracking-wider text-primary mt-2">{m.group}</div>
             </Link>
           ))}
         </div>

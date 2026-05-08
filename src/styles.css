@@ -143,6 +143,52 @@ html.density-compact [class*="p-6"] { padding: 0.75rem !important; }
 html.density-compact h1 { font-size: 1.5rem; }
 html.density-compact .text-2xl { font-size: 1.25rem; }
 
+/* High-contrast accessibility theme */
+html.contrast-high {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.05 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.05 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.6 0.25 295);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.15 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.1 0 0);
+  --muted-foreground: oklch(0.9 0 0);
+  --accent: oklch(0.3 0.2 200);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.5 0.3 25);
+  -Dyslexia-friendly font option */
+html.font-dyslexia {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+/* -destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.5 0.25 155);
+  --warning: oklch(0.6 0.25 75);
+  --info: oklch(0.5 0.25 230);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.2 0 0);
+  --ring: oklch(0.6 0.25 295);
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.6 0.25 295);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.15 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.3 0 0);
+  --sidebar-ring: oklch(0.6 0.25 295);
+}
+
+html.contrast-high body {
+  background-image: none;
+  background-color: var(--background);
+}
+
 /* Accessibility focus ring */
 :focus-visible {
   outline: 2px solid var(--ring);

@@ -1,0 +1,816 @@
+// SaaS Vala Enterprise - Prisma Schema
+// Multi-tenant PostgreSQL + SQLite hybrid architecture
+// Enterprise-grade RBAC, Audit, Security, and Observability
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// CORE IDENTITY & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  emailVerified     Boolean   @default(false)
+  passwordHash      String?
+  firstName         String?
+  lastName          String?
+  displayName       String?
+  avatar            String?
+  phone             String?
+  status            UserStatus @default(ACTIVE)
+  isSuperAdmin      Boolean   @default(false)
+  lastLoginAt       DateTime?
+  lastLoginIp       String?
+  failedLoginAttempts Int     @default(0)
+  lockedUntil       DateTime?
+  passwordChangedAt DateTime?
+  twoFactorEnabled  Boolean   @default(false)
+  twoFactorSecret   String?
+  backupCodes       Json?
+  preferences       Json?
+  metadata          Json?
+  
+  // Multi-tenancy
+  companyId         String?
+  company           Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  defaultWorkspaceId String?
+  defaultWorkspace  Workspace? @relation(fields: [defaultWorkspaceId], references: [id], onDelete: SetNull)
+  
+  // Relations
+  roles             UserRole[]
+  sessions          Session[]
+  devices           Device[]
+  auditLogs         AuditLog[] @relation("UserAuditLogs")
+  activities        Activity[]
+  notifications     Notification[]
+  apiKeys           ApiKey[]
+  subscriptions     Subscription[]
+  wallets           Wallet[]
+  transactions      Transaction[]
+  supportTickets    SupportTicket[]
+  licenses          License[]
+  downloads         Download[]
+  resellerProfile   Reseller?
+  affiliateProfile  Affiliate?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+  
+  @@index([email])
+  @@index([companyId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  DELETED
+  PENDING_VERIFICATION
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  level       Int      @default(0) // Higher level = more permissions
+  isSystem    Boolean  @default(false) // System roles cannot be deleted
+  permissions Json?    // Cached permissions matrix
+  metadata    Json?
+  
+  // Relations
+  users       UserRole[]
+  rolePermissions RolePermission[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  @@index([slug])
+  @@index([level])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  resource    String   // e.g., "dashboard", "crm", "users"
+  action      String   // e.g., "read", "write", "delete", "admin"
+  description String?
+  category    String?  // e.g., "sales", "finance", "system"
+  metadata    Json?
+  
+  // Relations
+  roles       RolePermission[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([resource, action])
+  @@index([resource])
+  @@index([category])
+  @@map("permissions")
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  assignedBy String?
+  assignedAt DateTime @default(now())
+  expiresAt DateTime?
+  isActive  Boolean  @default(true)
+  metadata  Json?
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String
+  permissionId String
+  grantedBy    String?
+  grantedAt    DateTime @default(now())
+  conditions   Json?    // Conditional permissions
+  metadata     Json?
+  
+  // Relations
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model Session {
+  id              String        @id @default(uuid())
+  userId          String
+  token           String        @unique
+  refreshToken    String?       @unique
+  deviceFingerprint String?
+  deviceType      DeviceType?
+  deviceName      String?
+  browser         String?
+  os              String?
+  ipAddress       String?
+  location        Json?         // { country, city, timezone }
+  userAgent       String?
+  isActive        Boolean       @default(true)
+  lastActivityAt  DateTime      @default(now())
+  expiresAt       DateTime
+  impersonatedBy  String?       // User ID of super admin impersonating
+  originalSession String?       // Original session ID for impersonation
+  metadata        Json?
+  
+  // Relations
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([userId])
+  @@index([token])
+  @@index([refreshToken])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+enum DeviceType {
+  DESKTOP
+  LAPTOP
+  TABLET
+  MOBILE
+  UNKNOWN
+}
+
+model Device {
+  id              String   @id @default(uuid())
+  userId          String
+  deviceFingerprint String @unique
+  deviceName      String?
+  deviceType      DeviceType?
+  browser         String?
+  os              String?
+  isTrusted       Boolean  @default(false)
+  lastSeenAt      DateTime @default(now())
+  ipAddress       String?
+  location        Json?
+  metadata        Json?
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([deviceFingerprint])
+  @@map("devices")
+}
+
+// ============================================================================
+// MULTI-TENANCY & ORGANIZATION
+// ============================================================================
+
+model Company {
+  id                String     @id @default(uuid())
+  name              String
+  slug              String     @unique
+  domain            String?    @unique
+  logo              String?
+  status            CompanyStatus @default(ACTIVE)
+  planId            String?
+  plan              Plan?      @relation(fields: [planId], references: [id])
+  settings          Json?
+  metadata          Json?
+  
+  // Relations
+  subscriptions     Subscription[]
+  branches          Branch[]
+  workspaces        Workspace[]
+  users             User[]
+  auditLogs         AuditLog[] @relation("CompanyAuditLogs")
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  deletedAt         DateTime?
+  
+  @@index([slug])
+  @@index([domain])
+  @@index([status])
+  @@map("companies")
+}
+
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  TRIAL
+  DELETED
+}
+
+model Branch {
+  id          String   @id @default(uuid())
+  companyId   String
+  name        String
+  code        String
+  address     Json?
+  phone       String?
+  email       String?
+  isHeadquarters Boolean @default(false)
+  status      BranchStatus @default(ACTIVE)
+  settings    Json?
+  metadata    Json?
+  
+  // Relations
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("branches")
+}
+
+enum BranchStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model Workspace {
+  id          String   @id @default(uuid())
+  companyId   String?
+  name        String
+  slug        String
+  description String?
+  isDefault   Boolean  @default(false)
+  settings    Json?
+  metadata    Json?
+  
+  // Relations
+  company     Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  users       User[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  @@unique([companyId, slug])
+  @@index([companyId])
+  @@map("workspaces")
+}
+
+// ============================================================================
+// BILLING & SUBSCRIPTIONS
+// ============================================================================
+
+model Plan {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Decimal
+  currency    String   @default("USD")
+  interval    PlanInterval
+  features    Json?
+  limits      Json?    // { users: 100, storage: 10GB }
+  isPopular   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  metadata    Json?
+  
+  // Relations
+  companies   Company[]
+  subscriptions Subscription[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([isActive])
+  @@map("plans")
+}
+
+enum PlanInterval {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  LIFETIME
+}
+
+model Subscription {
+  id              String           @id @default(uuid())
+  companyId       String?
+  userId          String
+  planId          String
+  status          SubscriptionStatus @default(ACTIVE)
+  startDate       DateTime         @default(now())
+  endDate         DateTime?
+  trialEndsAt     DateTime?
+  cancelAt        DateTime?
+  canceledAt      DateTime?
+  billingCycle    PlanInterval
+  amount          Decimal
+  currency        String           @default("USD")
+  paymentMethod   Json?
+  metadata        Json?
+  
+  // Relations
+  company         Company?         @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  plan            Plan             @relation(fields: [planId], references: [id])
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@index([companyId])
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  UNPAID
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+}
+
+model Wallet {
+  id          String   @id @default(uuid())
+  userId      String
+  balance     Decimal  @default(0)
+  currency    String   @default("USD")
+  isFrozen    Boolean  @default(false)
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId])
+  @@map("wallets")
+}
+
+model Transaction {
+  id          String           @id @default(uuid())
+  walletId    String
+  userId      String
+  type        TransactionType
+  amount      Decimal
+  currency    String           @default("USD")
+  balance     Decimal
+  description String?
+  reference   String?          @unique
+  status      TransactionStatus @default(PENDING)
+  metadata    Json?
+  
+  // Relations
+  wallet      Wallet           @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  
+  @@index([walletId])
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  REFUND
+  BONUS
+  PENALTY
+  WITHDRAWAL
+  DEPOSIT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+// ============================================================================
+// PRODUCTS & LICENSING
+// ============================================================================
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Decimal
+  currency    String   @default("USD")
+  category    String?
+  isActive    Boolean  @default(true)
+  metadata    Json?
+  
+  // Relations
+  licenses    License[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  @@index([slug])
+  @@index([isActive])
+  @@map("products")
+}
+
+model License {
+  id          String       @id @default(uuid())
+  userId      String
+  productId   String
+  key         String       @unique
+  status      LicenseStatus @default(ACTIVE)
+  expiresAt   DateTime?
+  maxSeats    Int?
+  currentSeats Int         @default(0)
+  metadata    Json?
+  
+  // Relations
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  downloads   Download[]
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  @@index([userId])
+  @@index([productId])
+  @@index([key])
+  @@map("licenses")
+}
+
+enum LicenseStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+}
+
+model Download {
+  id          String   @id @default(uuid())
+  userId      String
+  licenseId   String
+  version     String
+  fileName    String
+  fileSize    Int?
+  downloadIp  String?
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  license     License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([licenseId])
+  @@map("downloads")
+}
+
+// ============================================================================
+// PARTNERS & AFFILIATES
+// ============================================================================
+
+model Reseller {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  code        String   @unique
+  tier        String   @default("BRONZE")
+  commission  Decimal  @default(0)
+  balance     Decimal  @default(0)
+  status      ResellerStatus @default(PENDING)
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  franchise   Franchise? @relation("FranchiseUser")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([code])
+  @@index([status])
+  @@map("resellers")
+}
+
+enum ResellerStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model Franchise {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  code          String   @unique
+  name          String
+  region        String
+  locations     Int      @default(0)
+  status        FranchiseStatus @default(PENDING)
+  joinedDate    DateTime @default(now())
+  royaltyRate   Decimal  @default(0)
+  metadata      Json?
+  
+  // Relations
+  user          User     @relation("FranchiseUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([code])
+  @@index([status])
+  @@index([region])
+  @@map("franchises")
+}
+
+enum FranchiseStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+}
+
+model Affiliate {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  code        String   @unique
+  commission  Decimal  @default(0)
+  balance     Decimal  @default(0)
+  clicks      Int      @default(0)
+  conversions Int      @default(0)
+  status      AffiliateStatus @default(PENDING)
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([code])
+  @@index([status])
+  @@map("affiliates")
+}
+
+enum AffiliateStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+// ============================================================================
+// SUPPORT
+// ============================================================================
+
+model SupportTicket {
+  id          String          @id @default(uuid())
+  userId      String
+  subject     String
+  description String
+  status      TicketStatus    @default(OPEN)
+  priority    TicketPriority  @default(MEDIUM)
+  category    String?
+  assignedTo  String?
+  resolvedAt  DateTime?
+  metadata    Json?
+  
+  // Relations
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@map("support_tickets")
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// ============================================================================
+// AUDIT & OBSERVABILITY
+// ============================================================================
+
+model AuditLog {
+  id          String       @id @default(uuid())
+  userId      String?
+  companyId   String?
+  action      String       // e.g., "user.login", "role.create", "data.delete"
+  resource    String       // e.g., "users", "roles", "settings"
+  resourceId  String?
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?
+  severity    AuditSeverity @default(INFO)
+  
+  // Relations
+  user        User?        @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: SetNull)
+  company     Company?     @relation("CompanyAuditLogs", fields: [companyId], references: [id], onDelete: SetNull)
+  
+  createdAt   DateTime     @default(now())
+  
+  @@index([userId])
+  @@index([companyId])
+  @@index([action])
+  @@index([resource])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+model Activity {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String   // e.g., "login", "update", "delete", "create"
+  title       String
+  description String?
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("activities")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String
+  type        String           // e.g., "info", "warning", "success", "error"
+  title       String
+  message     String
+  data        Json?
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  actionUrl   String?
+  metadata    Json?
+  
+  // Relations
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime         @default(now())
+  
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// ============================================================================
+// API & SECURITY
+// ============================================================================
+
+model ApiKey {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  key         String   @unique
+  keyHash     String   @unique
+  scopes      Json?
+  isActive    Boolean  @default(true)
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  rateLimit   Int?     @default(1000)
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([keyHash])
+  @@index([isActive])
+  @@map("api_keys")
+}
+
+model Settings {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  category    String?
+  description String?
+  isPublic    Boolean  @default(false)
+  metadata    Json?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([key])
+  @@index([category])
+  @@map("settings")
+}

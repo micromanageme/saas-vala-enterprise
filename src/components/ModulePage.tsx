@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Download, Filter, Search, TrendingUp, TrendingDown, Columns3, Rows3, RefreshCw, Trash2, Star, ListFilter, Group, ChevronLeft, ChevronRight, BarChart3, PieChart as PieIcon, Grid2x2, Table as TableIcon, KanbanSquare, CalendarDays, Activity as ActivityIcon } from "lucide-react";
+import { Plus, Download, Filter, Search, TrendingUp, TrendingDown, Columns3, Rows3, RefreshCw, Trash2, Star, ListFilter, Group, ChevronLeft, ChevronRight, BarChart3, PieChart as PieIcon, Grid2x2, Table as TableIcon, KanbanSquare, CalendarDays, Activity as ActivityIcon, Bell, Zap, FileText, Settings, Shield, Workflow, Clock, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,6 +17,11 @@ import { Upload, Copy, Archive, Settings2, Printer } from "lucide-react";
 export type Kpi = { label: string; value: string; delta?: string; up?: boolean };
 export type Column = { key: string; label: string };
 export type Row = Record<string, string | number>;
+export type QuickAction = { label: string; icon: ReactNode; onClick: () => void };
+export type ModuleShortcut = { label: string; path: string; icon: ReactNode };
+export type Notification = { id: string; title: string; message: string; timestamp: string; type: 'info' | 'warning' | 'error' | 'success' };
+export type WorkflowStep = { id: string; label: string; status: 'pending' | 'in_progress' | 'completed' | 'blocked' };
+export type AuditLog = { id: string; action: string; user: string; timestamp: string; details: string };
 
 function parseKpiNumber(v: string): { n: number; prefix: string; suffix: string } {
   const m = v.match(/^([^\d-]*)([\d,.\-]+)(.*)$/);
@@ -28,9 +33,23 @@ const STAGES = ["New", "Qualified", "Proposal", "Won"];
 
 export function ModulePage({
   title, subtitle, kpis = [], columns = [], rows = [], extra,
+  quickActions = [],
+  moduleShortcuts = [],
+  notifications = [],
+  workflowPipeline = [],
+  auditLogs = [],
+  showSettings = false,
+  showAudit = false,
 }: {
   title: string; subtitle: string;
   kpis?: Kpi[]; columns?: Column[]; rows?: Row[]; extra?: ReactNode;
+  quickActions?: QuickAction[];
+  moduleShortcuts?: ModuleShortcut[];
+  notifications?: Notification[];
+  workflowPipeline?: WorkflowStep[];
+  auditLogs?: AuditLog[];
+  showSettings?: boolean;
+  showAudit?: boolean;
 }) {
   const [selected, setSelected] = useState<number[]>([]);
   const [density, setDensity] = useState<"compact" | "normal">("normal");
@@ -91,6 +110,12 @@ export function ModulePage({
               <DropdownMenuItem onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)}><Plus className="h-3.5 w-3.5 mr-2" />Schedule activity</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => window.print()}><Printer className="h-3.5 w-3.5 mr-2" />Print / PDF</DropdownMenuItem>
+              {showSettings && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem><Settings className="h-3.5 w-3.5 mr-2" />Settings</DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button size="sm" className="gradient-primary text-primary-foreground border-0 shadow-glow">
@@ -134,6 +159,175 @@ export function ModulePage({
           })}
         </div>
       )}
+
+      {/* Quick Actions */}
+      {quickActions.length > 0 && (
+        <Card className="gradient-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Zap className="h-4 w-4 text-primary" />
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {quickActions.map((action, i) => (
+                <Button key={i} variant="outline" size="sm" onClick={action.onClick} className="flex items-center gap-2">
+                  {action.icon}
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Module Shortcuts */}
+      {moduleShortcuts.length > 0 && (
+        <Card className="gradient-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" />
+              Module Shortcuts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+              {moduleShortcuts.map((shortcut, i) => (
+                <Button key={i} variant="ghost" className="h-auto flex-col gap-2 p-4 hover:bg-primary/10">
+                  {shortcut.icon}
+                  <span className="text-xs">{shortcut.label}</span>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Notifications */}
+      {notifications.length > 0 && (
+        <Card className="gradient-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Bell className="h-4 w-4 text-primary" />
+              Notifications
+              <Badge variant="outline" className="ml-2">{notifications.length}</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {notifications.slice(0, 5).map((notif) => (
+                <div key={notif.id} className="flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-card/40">
+                  <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                    notif.type === 'error' ? 'bg-destructive/10 text-destructive' :
+                    notif.type === 'warning' ? 'bg-warning/10 text-warning' :
+                    notif.type === 'success' ? 'bg-success/10 text-success' :
+                    'bg-primary/10 text-primary'
+                  }`}>
+                    {notif.type === 'error' && <AlertCircle className="h-4 w-4" />}
+                    {notif.type === 'warning' && <AlertCircle className="h-4 w-4" />}
+                    {notif.type === 'success' && <ActivityIcon className="h-4 w-4" />}
+                    {notif.type === 'info' && <Bell className="h-4 w-4" />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">{notif.title}</div>
+                    <div className="text-xs text-muted-foreground">{notif.message}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground">{notif.timestamp}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Workflow Pipeline */}
+      {workflowPipeline.length > 0 && (
+        <Card className="gradient-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Workflow className="h-4 w-4 text-primary" />
+              Workflow Pipeline
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
+              {workflowPipeline.map((step, i) => (
+                <div key={step.id} className="flex items-center gap-2">
+                  <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+                    step.status === 'completed' ? 'bg-success/10 border-success/30 text-success' :
+                    step.status === 'in_progress' ? 'bg-primary/10 border-primary/30 text-primary' :
+                    step.status === 'blocked' ? 'bg-destructive/10 border-destructive/30 text-destructive' :
+                    'bg-card/40 border-border/40 text-muted-foreground'
+                  }`}>
+                    <div className={`h-2 w-2 rounded-full ${
+                      step.status === 'completed' ? 'bg-success' :
+                      step.status === 'in_progress' ? 'bg-primary animate-pulse' :
+                      step.status === 'blocked' ? 'bg-destructive' :
+                      'bg-muted-foreground'
+                    }`} />
+                    <span className="text-sm font-medium">{step.label}</span>
+                  </div>
+                  {i < workflowPipeline.length - 1 && (
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Audit Visibility */}
+      {showAudit && auditLogs.length > 0 && (
+        <Card className="gradient-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Shield className="h-4 w-4 text-primary" />
+              Audit Trail
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {auditLogs.slice(0, 10).map((log) => (
+                <div key={log.id} className="flex items-start gap-3 p-2 rounded-lg border border-border/40 bg-card/40 text-xs">
+                  <Clock className="h-3 w-3 text-muted-foreground mt-0.5" />
+                  <div className="flex-1">
+                    <div className="font-medium">{log.action}</div>
+                    <div className="text-muted-foreground">{log.user} • {log.details}</div>
+                  </div>
+                  <div className="text-muted-foreground">{log.timestamp}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Reports */}
+      <Card className="gradient-card border-border/60">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <FileText className="h-4 w-4 text-primary" />
+            Reports
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+            {[
+              { label: "Daily Summary", icon: <ActivityIcon className="h-4 w-4" /> },
+              { label: "Weekly Report", icon: <BarChart3 className="h-4 w-4" /> },
+              { label: "Monthly Analysis", icon: <TrendingUp className="h-4 w-4" /> },
+              { label: "Custom Report", icon: <Settings2 className="h-4 w-4" /> },
+            ].map((report, i) => (
+              <Button key={i} variant="outline" className="h-auto flex-col gap-2 p-4 hover:bg-primary/10">
+                {report.icon}
+                <span className="text-xs">{report.label}</span>
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="list">
         <div className="flex flex-wrap items-center justify-between gap-2">
