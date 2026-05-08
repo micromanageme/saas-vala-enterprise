@@ -5,9 +5,12 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter,
 } from "@/components/ui/sidebar";
 import { modules, groups } from "@/lib/modules";
+import { useSession, canSeeGroup } from "@/lib/auth";
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const session = useSession();
+  const visibleGroups = groups.filter((g) => canSeeGroup(session?.role, g));
 
   return (
     <Sidebar collapsible="icon">
@@ -24,7 +27,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {groups.map((g) => (
+        {visibleGroups.map((g) => (
           <SidebarGroup key={g}>
             <SidebarGroupLabel>{g}</SidebarGroupLabel>
             <SidebarGroupContent>
