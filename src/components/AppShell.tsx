@@ -20,6 +20,7 @@ import { Banners } from "./Banners";
 import { ActionWizards } from "./ActionWizards";
 import { RippleProvider, SaveIndicator, FocusMode, DragUploadOverlay, BackgroundTasks, PresenceAvatars, Walkthrough } from "./Polish";
 import { Splash, RouteTracker, CollabCursors } from "./Workspace";
+import { RoleSwitcher } from "./RoleSwitcher";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -47,6 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Grid3x3 className="h-4 w-4 text-primary" />
             </Link>
             <WorkspaceSwitcher />
+            <RoleSwitcher />
             {current && (
               <nav className="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="opacity-50">/</span>
