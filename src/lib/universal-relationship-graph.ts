@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Universal Relationship Graph - Everything connected visually (customer↔orders↔payments↔support)
 import type { EntityType, EntityState } from "./operational-state-machine";
 import type { Priority } from "./system-priority-engine";

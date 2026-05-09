@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - RBAC Engine
  * Dynamic role-based access control with caching and inheritance

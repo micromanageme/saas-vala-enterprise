@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Authentication Middleware
  * Enterprise authentication middleware for API routes

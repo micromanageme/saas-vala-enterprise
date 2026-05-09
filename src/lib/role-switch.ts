@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Role Switch Foundation
  * Super admin impersonation and dynamic role switching

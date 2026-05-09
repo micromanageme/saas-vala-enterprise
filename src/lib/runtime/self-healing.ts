@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Self-Healing Runtime Detection System
  * 

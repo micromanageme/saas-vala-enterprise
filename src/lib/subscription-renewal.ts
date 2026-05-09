@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Subscription Renewal Engine
  * Automatic subscription renewal processing

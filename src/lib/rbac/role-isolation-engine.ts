@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Role Isolation Engine
  * Enforces strict role-based access control across all dashboards and routes

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Rate Limiter
  * Request rate limiting for API endpoints

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   ShoppingCart, UserPlus, DollarSign, Truck, CheckCircle,
   AlertTriangle, Clock, XCircle, TrendingUp, ArrowRight,

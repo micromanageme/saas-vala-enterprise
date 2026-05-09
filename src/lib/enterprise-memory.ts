@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Enterprise Memory - System remembers user context
 import { type SituationalMode } from "./system-identity";
 

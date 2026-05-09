@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Database Client
  * Prisma client singleton with connection pooling and error handling

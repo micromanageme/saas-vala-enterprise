@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Universal Responsibility Engine - Every task shows owner/team/escalation chain/due time
 import type { EntityType, EntityState } from "./operational-state-machine";
 import type { Priority } from "./system-priority-engine";

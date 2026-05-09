@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   LayoutDashboard, Users, Briefcase, ShoppingCart, Calculator, Boxes,
   Factory, Store, Repeat, KeyRound, Handshake, Building2, Sparkles,

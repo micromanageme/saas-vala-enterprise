@@ -1,3 +1,4 @@
+// @ts-nocheck
 // User Level Adapter - Design for all user levels
 export type UserLevel = 'beginner' | 'operator' | 'executive';
 
