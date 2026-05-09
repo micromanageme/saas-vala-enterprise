@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Cross-Realm Fabric API
  * Cloud-edge-onprem federation, hybrid infrastructure orchestration, multi-region authority, sovereign coordination

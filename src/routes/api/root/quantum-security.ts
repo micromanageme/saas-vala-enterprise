@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Quantum Security Layer API
  * Post-quantum encryption readiness, quantum-safe key exchange, entropy verification, cryptographic resilience

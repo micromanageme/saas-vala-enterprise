@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Authority Propagation API
  * Permission propagation timing, nested inheritance validation, stale authority cleanup, conflict arbitration

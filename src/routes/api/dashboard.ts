@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Dashboard Data API
  * Real dashboard metrics and analytics

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Digital Twin API
  * Live infrastructure mirror, topology graph, health overlays

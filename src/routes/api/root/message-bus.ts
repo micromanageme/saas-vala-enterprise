@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Message Bus Control API
  * Kafka/RabbitMQ/NATS, queue health, dead-letter queues

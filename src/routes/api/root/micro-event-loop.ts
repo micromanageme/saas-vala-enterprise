@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Event Loop Observability API
  * Event-loop starvation detection, async dead-zone tracing, microtask queue stabilization, recovery

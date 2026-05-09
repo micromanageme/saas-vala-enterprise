@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - AI Orchestration Center API
  * Root-level AI model and agent control

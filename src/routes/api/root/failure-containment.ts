@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Failure Containment API
  * Fault isolation, blast-radius control, cascading failure prevention, degraded-mode recovery

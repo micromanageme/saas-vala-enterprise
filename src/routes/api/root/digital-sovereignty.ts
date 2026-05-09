@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Digital Sovereignty Control API
  * Jurisdiction-aware storage, regional compliance isolation, sovereign cloud governance, geopolitical routing

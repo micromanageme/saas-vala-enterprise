@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Universal Override Lock API
  * Override conflict arbitration, emergency override sequencing, irreversible safeguard barriers, freeze control

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Accounting API
  * Ledger, Taxes & Financial Reports

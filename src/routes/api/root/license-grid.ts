@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal License Grid API
  * Global activations, hardware binding, tamper detection

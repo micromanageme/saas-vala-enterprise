@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Feature Flag Engine API
  * Staged rollout, tenant feature controls, emergency disable

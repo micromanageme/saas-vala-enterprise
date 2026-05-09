@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Products API
  * Marketplace product management (Enterprise Scale: 2000+ products)

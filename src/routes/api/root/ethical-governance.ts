@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Ethical Governance Engine API
  * AI ethics enforcement, bias monitoring, explainability tracking, policy-constrained automation

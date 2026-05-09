@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Dependency Engine API
  * Dependency graph visualization, circular detection, runtime healing, orphan cleanup

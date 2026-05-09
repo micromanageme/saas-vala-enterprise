@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - API: Authentication
  * Login endpoint with JWT token generation

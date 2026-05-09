@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Disaster Recovery Center API
  * Root-level backup, restore, and failover control

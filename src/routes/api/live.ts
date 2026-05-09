@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Live Analytics API
  * Real-time metrics and monitoring

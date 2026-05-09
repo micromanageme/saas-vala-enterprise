@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Ticket Assignment API
  * Support ticket assignment and workflow

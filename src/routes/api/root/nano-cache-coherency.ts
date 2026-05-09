@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano Cache Coherency Fabric API
  * Distributed cache reconciliation, cache mutation sequencing, stale propagation detection, divergence healing

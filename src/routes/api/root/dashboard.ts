@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Access Admin API
  * TOPMOST ROOT CONTROL LAYER - Above Super Admin

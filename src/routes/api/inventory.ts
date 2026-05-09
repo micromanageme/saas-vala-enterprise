@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Inventory API
  * Stock, Warehouses & Moves

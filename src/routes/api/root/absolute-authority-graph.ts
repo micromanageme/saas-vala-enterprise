@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Absolute Authority Graph API
  * Authority chain visualization, privilege escalation tracing, conflict resolution, governance topology

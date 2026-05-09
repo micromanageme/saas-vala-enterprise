@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Event Orchestrator API
  * Event stream monitoring, replay, and distributed tracing

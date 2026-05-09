@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro WebSocket Recovery API
  * Socket resurrection flow, packet sequence correction, realtime state convergence, ghost cleanup

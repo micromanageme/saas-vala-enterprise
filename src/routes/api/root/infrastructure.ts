@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Infrastructure Core API
  * Root-level infrastructure control

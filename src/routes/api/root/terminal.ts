@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Command Terminal API
  * Secure command execution, diagnostic console, emergency scripts

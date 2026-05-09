@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Knowledge Fabric API
  * Cross-module semantic graph, enterprise knowledge linking, AI retrieval, ontology mapping

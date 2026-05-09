@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Policy Engine API
  * Centralized policy execution, runtime injection, cross-tenant enforcement

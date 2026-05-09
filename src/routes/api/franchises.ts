@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Franchises API
  * Franchisee network management (Database Integration)

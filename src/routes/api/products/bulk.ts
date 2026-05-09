@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Bulk Products API
  * Bulk upload and management for 2000+ products

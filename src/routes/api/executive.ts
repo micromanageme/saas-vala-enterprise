@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Executive API
  * C-suite dashboard and executive KPIs

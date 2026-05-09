@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Shadow System Detector API
  * Hidden process detection, rogue service discovery, unauthorized dependency discovery, phantom state

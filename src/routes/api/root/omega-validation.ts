@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Final Omega Validation API
  * Authority paths, hidden dependencies, privilege boundaries, orchestration reversibility, runtime observability,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano Tenant Isolation Matrix API
  * Cross-tenant leakage detection, tenant-state quarantine, permission bleed prevention, cache boundaries

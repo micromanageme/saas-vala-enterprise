@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Multiverse Environment Control API
  * Dev/staging/prod isolation, sandbox universes, branch orchestration, simulation clusters

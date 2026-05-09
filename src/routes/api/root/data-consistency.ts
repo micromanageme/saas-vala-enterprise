@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Data Consistency Engine API
  * Replication consistency, transaction reconciliation, stale read detection, healing

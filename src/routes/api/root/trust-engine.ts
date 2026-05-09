@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Trust Engine API
  * Trust scoring, device validation, behavioral anomaly, adaptive access

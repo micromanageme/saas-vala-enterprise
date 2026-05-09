@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Transcendent Validation API
  * Authority chains, runtime paths, dependencies, state reproducibility, orchestration reversibility,

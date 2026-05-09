@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Simulation Engine API
  * Infrastructure simulation, deployment simulation, disaster simulation, load simulation

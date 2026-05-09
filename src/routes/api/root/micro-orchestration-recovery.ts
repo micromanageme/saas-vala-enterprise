@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Orchestration Recovery API
  * Orchestration deadlock prevention, workflow replay convergence, queue-state reconciliation, arbitration

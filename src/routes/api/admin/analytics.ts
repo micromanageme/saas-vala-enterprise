@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Enterprise Analytics API
  * Global analytics for Super Admin

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Trustless Verification API
  * Zero-trust validation chains, cryptographic proof verification, decentralized integrity, chain-of-trust

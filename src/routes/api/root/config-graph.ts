@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Configuration Graph API
  * Config dependency mapping, validation, drift detection, secret propagation

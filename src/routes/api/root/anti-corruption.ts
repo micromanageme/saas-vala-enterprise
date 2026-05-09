@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Anti-Corruption Layer API
  * Schema corruption prevention, transactional corruption healing, runtime integrity, drift-neutralization

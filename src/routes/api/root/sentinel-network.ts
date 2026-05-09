@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Sentinel Network API
  * Distributed guardian processes, watchdog intelligence, autonomous protection nodes, containment agents

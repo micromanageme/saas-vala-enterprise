@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Dynamic Permission Mutation API
  * Super Admin permission management

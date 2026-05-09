@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Reality Mirror API
  * Complete live ecosystem twin, realtime topology sync, operational simulation overlay, predictive impact

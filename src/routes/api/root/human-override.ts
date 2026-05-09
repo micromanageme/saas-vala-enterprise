@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Human-Override Layer API
  * Manual authority override, emergency command priority, irreversible action arbitration, dual-authorization

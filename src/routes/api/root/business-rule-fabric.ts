@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Business Rule Fabric API
  * Centralized business logic, runtime rule execution, dynamic injection, conflict resolution

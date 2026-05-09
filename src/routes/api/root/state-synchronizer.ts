@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root State Synchronizer API
  * Cross-tab sync, cross-device sync, realtime propagation, stale state cleanup

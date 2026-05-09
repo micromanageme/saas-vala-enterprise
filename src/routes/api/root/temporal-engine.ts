@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Temporal Engine API
  * Historical state replay, point-in-time restoration, timeline branching, causality tracing

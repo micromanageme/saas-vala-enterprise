@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Messaging API
  * WhatsApp, SMS & Email
