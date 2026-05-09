@@ -8,7 +8,7 @@ import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 
-export const Route = createFileRoute('/api/users')({
+export const Route = createFileRoute('/api/users/')({
   GET: async ({ request }) => {
     const logger = Logger.createRequestLogger('users-api');
 

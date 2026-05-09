@@ -13,7 +13,7 @@ const resetLicenseSchema = z.object({
   reason: z.string(),
 });
 
-export const Route = createFileRoute('/api/licenses/$licenseId/reset')({
+export const Route = createFileRoute('/api/licenses/reset')({
   POST: async ({ request, params }) => {
     const logger = Logger.createRequestLogger('license-reset-api');
 

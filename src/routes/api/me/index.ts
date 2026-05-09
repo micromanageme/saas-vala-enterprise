@@ -9,7 +9,7 @@ import { AuthMiddleware } from '@/lib/middleware';
 import { RBACService } from '@/lib/rbac';
 import { Logger } from '@/lib/logger';
 
-export const Route = createFileRoute('/api/me')({
+export const Route = createFileRoute('/api/me/')({
   GET: async ({ request }) => {
     const logger = Logger.createRequestLogger('me-api');
 
