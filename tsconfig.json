@@ -1,46 +1,15 @@
 {
   "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "eslint.config.js"],
-  "exclude": [
-    "src/lib/api-monitor.ts",
-    "src/lib/audit.ts",
-    "src/lib/auth/jwt.ts",
-    "src/lib/auth/session.ts",
-    "src/lib/auth/password.ts",
-    "src/lib/auth/index.ts",
-    "src/lib/business-operating-logic.ts",
-    "src/lib/cache.ts",
-    "src/lib/db.ts",
-    "src/lib/db-optimization.ts",
-    "src/lib/entity-centric.ts",
-    "src/lib/middleware/auth.ts",
-    "src/lib/middleware/security.ts",
-    "src/lib/middleware/index.ts",
-    "src/lib/operational-journey.ts",
-    "src/lib/operational-state-machine.ts",
-    "src/lib/rbac/**",
-    "src/lib/runtime/**",
-    "src/lib/self-healing.ts",
-    "src/lib/self-healing-factory.ts",
-    "src/lib/api-cache-middleware.ts",
-    "src/lib/rate-limiter.ts",
-    "src/lib/subscription-renewal.ts",
-    "src/lib/commission-engine.ts",
-    "src/lib/route-protection.ts"
-  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
-
-    /* Bundler mode */
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
-
-    /* Linting */
     "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": false,
