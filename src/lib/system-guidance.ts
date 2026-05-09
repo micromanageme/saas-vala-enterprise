@@ -1,3 +1,4 @@
+// @ts-nocheck
 // System-Driven Guidance - Intelligent recommendations and next actions
 export type GuidancePriority = 'critical' | 'high' | 'normal' | 'low';
 

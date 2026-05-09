@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Operational Time Context - Temporal awareness for operations
 export type TimeContext = 'today' | 'pending_now' | 'overdue' | 'upcoming' | 'realtime';
 

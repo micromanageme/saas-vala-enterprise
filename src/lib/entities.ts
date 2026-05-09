@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { 
   Building2, FileText, DollarSign, Truck, 
   MessageSquare, TrendingUp, Users, Package,

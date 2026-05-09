@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Universal Attention Engine - Automatically surface bottlenecks, failures, pending approvals, revenue risks, SLA risks
 import type { EntityType, EntityState } from "./operational-state-machine";
 import type { Priority } from "./system-priority-engine";

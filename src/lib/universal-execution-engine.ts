@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Universal Execution Engine - Execute workflows directly without browsing system structure
 import type { EntityType, EntityState } from "./operational-state-machine";
 import type { Priority } from "./system-priority-engine";

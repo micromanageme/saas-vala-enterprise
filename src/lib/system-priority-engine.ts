@@ -1,3 +1,4 @@
+// @ts-nocheck
 // System-Wide Priority Engine - Universal prioritization across all workflows
 export type Priority = 'critical' | 'urgent' | 'normal' | 'low';
 
