@@ -41,7 +41,7 @@ function Page() {
     { label: "Conversion Rate", value: "4.5%", delta: "+0.8%", up: true },
     { label: "Active Deals", value: "156", delta: "+23", up: true },
     { label: "Customer Satisfaction", value: "4.3/5", delta: "+0.2", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "lead", label: "Lead" },

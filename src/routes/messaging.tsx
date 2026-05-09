@@ -40,7 +40,7 @@ function Page() {
     { label: "Delivered", value: `${data.kpis.delivered}%`, delta: `+${data.kpis.deliveredDelta}%`, up: data.kpis.deliveredDelta > 0 },
     { label: "Open Rate", value: `${data.kpis.openRate}%`, delta: `+${data.kpis.openRateDelta}%`, up: data.kpis.openRateDelta > 0 },
     { label: "Templates", value: data.kpis.templates.toString(), delta: `+${data.kpis.templatesDelta}`, up: data.kpis.templatesDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "channel", label: "Channel" }, { key: "template", label: "Template" }, { key: "sent", label: "Sent" }, { key: "deliveryRate", label: "Delivery" }];
   const rows = data?.campaigns?.map((c: any) => ({

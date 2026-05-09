@@ -40,7 +40,7 @@ function Page() {
     { label: "Active", value: data.kpis.active.toString(), delta: `+${data.kpis.activeDelta}`, up: data.kpis.activeDelta > 0 },
     { label: "Sales", value: `$${(data.kpis.sales / 1000).toFixed(0)}K`, delta: `+${data.kpis.salesDelta}%`, up: data.kpis.salesDelta > 0 },
     { label: "Commission", value: `$${(data.kpis.commission / 1000).toFixed(0)}K`, delta: `+${data.kpis.commissionDelta}%`, up: data.kpis.commissionDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Reseller" }, { key: "tier", label: "Tier" }, { key: "sales", label: "Sales" }, { key: "commission", label: "Commission" }];
   const rows = data?.resellers?.map((r: any) => ({

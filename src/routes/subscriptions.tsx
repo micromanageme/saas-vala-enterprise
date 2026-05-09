@@ -40,7 +40,7 @@ function Page() {
     { label: "Active", value: data.kpis.active.toString(), delta: `+${data.kpis.activeDelta}%`, up: data.kpis.activeDelta > 0 },
     { label: "Churn", value: `${data.kpis.churn}%`, delta: `${data.kpis.churnDelta}%`, up: data.kpis.churnDelta < 0 },
     { label: "LTV", value: `$${data.kpis.ltv.toLocaleString()}`, delta: `+${data.kpis.ltvDelta}%`, up: data.kpis.ltvDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "customer", label: "Customer" }, { key: "plan", label: "Plan" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }];
   const rows = data?.subscriptions?.map((sub: any) => ({

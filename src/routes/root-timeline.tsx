@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Events", value: replay.totalEvents.toLocaleString(), delta: "—", up: true },
     { label: "Replayable", value: replay.replayableEvents.toLocaleString(), delta: "—", up: true },
     { label: "Unreplayable", value: replay.unreplayableEvents.toString(), delta: "—", up: replay.unreplayableEvents === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "action", label: "Action" },

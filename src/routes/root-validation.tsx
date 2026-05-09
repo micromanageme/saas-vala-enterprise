@@ -53,7 +53,7 @@ function Page() {
     { label: "Hidden Failures", value: health.hiddenFailures.toString(), delta: "—", up: health.hiddenFailures === 0 },
     { label: "Orphan Services", value: health.orphanServices.toString(), delta: "—", up: health.orphanServices === 0 },
     { label: "Uncontrolled Access", value: health.uncontrolledAccess.toString(), delta: "—", up: health.uncontrolledAccess === 0 },
-  ];
+  ] : [];
 
   const rows = [
     { metric: "Dependencies Mapped", value: `${dependency?.mappedDependencies}/${dependency?.totalDependencies}`, status: dependency?.unmappedDependencies === 0 ? 'OK' : 'WARNING' },

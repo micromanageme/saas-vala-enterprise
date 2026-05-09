@@ -40,7 +40,7 @@ function Page() {
     { label: "Won Deals", value: `$${(data.kpis.wonDeals / 1000).toFixed(0)}K`, delta: `+${data.kpis.wonDealsDelta}%`, up: data.kpis.wonDealsDelta > 0 },
     { label: "Win Rate", value: `${data.kpis.winRate}%`, delta: `+${data.kpis.winRateDelta}%`, up: data.kpis.winRateDelta > 0 },
     { label: "Avg Cycle", value: `${data.kpis.avgCycle}d`, delta: `${data.kpis.avgCycleDelta}d`, up: data.kpis.avgCycleDelta < 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Customer" }, { key: "stage", label: "Stage" }, { key: "value", label: "Value" }, { key: "owner", label: "Owner" }];
   const rows = data?.leads?.map((lead: any) => ({

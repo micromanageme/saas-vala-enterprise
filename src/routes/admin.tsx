@@ -49,7 +49,7 @@ function Page() {
     { label: "Pending Approvals", value: data.kpis.pendingApprovals.toString(), delta: "—", up: true },
     { label: "Active Sessions", value: data.kpis.activeSessions.toLocaleString(), delta: "—", up: true },
     { label: "Total Transactions", value: data.kpis.totalTransactions.toLocaleString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "displayName", label: "User" },

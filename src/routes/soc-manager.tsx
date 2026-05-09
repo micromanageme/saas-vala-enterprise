@@ -47,7 +47,7 @@ function Page() {
     { label: "Alerts Today", value: "45", delta: "+5", up: false },
     { label: "MTTR", value: "2.5h", delta: "-0.5h", up: true },
     { label: "SOC Coverage", value: "24/7", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "incident", label: "Incident" },

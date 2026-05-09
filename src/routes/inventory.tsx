@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Stock", value: data.kpis.totalStock.toLocaleString(), delta: `+${data.kpis.totalStockDelta}%`, up: data.kpis.totalStockDelta > 0 },
     { label: "Low Stock", value: data.kpis.lowStock.toString(), delta: `${data.kpis.lowStockDelta}`, up: data.kpis.lowStockDelta < 0 },
     { label: "Value", value: `$${(data.kpis.value / 1000000).toFixed(2)}M`, delta: `+${data.kpis.valueDelta}%`, up: data.kpis.valueDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Product" }, { key: "sku", label: "SKU" }, { key: "stock", label: "Stock" }, { key: "status", label: "Status" }];
   const rows = data?.products?.map((product: any) => ({

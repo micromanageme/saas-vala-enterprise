@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Sessions", value: data.kpis?.activeSessions?.toLocaleString() || "0", delta: "—", up: true },
     { label: "IT Tickets", value: "23", delta: "-5", up: true },
     { label: "SLA Compliance", value: "98.5%", delta: "+0.5%", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "system", label: "System" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "CDN Status", value: cdn.status, delta: "—", up: cdn.status === 'SYNCED' },
     { label: "Pending Files", value: cdn.pendingFiles.toString(), delta: "—", up: cdn.pendingFiles === 0 },
     { label: "Distribution Points", value: cdn.distributionPoints.toString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Storage" },

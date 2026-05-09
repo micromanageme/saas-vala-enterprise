@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Modules", value: ancestry.totalModules.toString(), delta: "—", up: true },
     { label: "Mapped Ancestries", value: ancestry.mappedAncestries.toString(), delta: "—", up: true },
     { label: "Total Generations", value: data?.versionLineage?.totalGenerations.toString() || "0", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "module", label: "Module" },

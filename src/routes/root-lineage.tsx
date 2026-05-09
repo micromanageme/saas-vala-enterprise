@@ -46,7 +46,7 @@ function Page() {
     { label: "Mapped", value: ownership.mappedEntities.toString(), delta: "—", up: true },
     { label: "Unmapped", value: ownership.unmappedEntities.toString(), delta: "—", up: ownership.unmappedEntities === 0 },
     { label: "Data Sources", value: sources.length.toString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Source" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Total", value: data.kpis.total.toString(), delta: `+${data.kpis.totalDelta}`, up: data.kpis.totalDelta > 0 },
     { label: "Revoked", value: data.kpis.revoked.toString(), delta: `${data.kpis.revokedDelta}`, up: data.kpis.revokedDelta < 0 },
     { label: "Expiring", value: data.kpis.expiring.toString(), delta: `${data.kpis.expiringDelta}`, up: data.kpis.expiringDelta < 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "key", label: "License Key" }, { key: "product", label: "Product" }, { key: "status", label: "Status" }, { key: "expires", label: "Expires" }];
   const rows = data?.licenses?.slice(0, 10).map((l: any) => ({

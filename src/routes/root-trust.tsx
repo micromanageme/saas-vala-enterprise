@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Devices", value: deviceTrust.totalDevices.toString(), delta: "—", up: true },
     { label: "Trusted", value: deviceTrust.trustedDevices.toString(), delta: "—", up: true },
     { label: "Untrusted", value: deviceTrust.untrustedDevices.toString(), delta: "—", up: deviceTrust.untrustedDevices === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "userId", label: "User ID" },

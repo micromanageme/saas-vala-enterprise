@@ -41,7 +41,7 @@ function Page() {
     { label: "Expenses", value: `$${(data.kpis.expenses / 1000).toFixed(0)}K`, delta: "-3%", up: true },
     { label: "Invoices Pending", value: "34", delta: "-8", up: true },
     { label: "Budget Variance", value: "-2.3%", delta: "+0.5%", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "invoice", label: "Invoice" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Commands Executed", value: `${emergency.executedCommands}/${emergency.totalCommands}`, delta: "—", up: true },
     { label: "Approved Actions", value: `${data?.irreversibleActionArbitration?.approvedActions}/${data?.irreversibleActionArbitration?.totalActions}`, delta: "—", up: true },
     { label: "Dual Auth Workflows", value: data?.dualAuthorizationWorkflows?.completedWorkflows.toString() || "0", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "type", label: "Type" },

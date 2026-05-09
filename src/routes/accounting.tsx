@@ -40,7 +40,7 @@ function Page() {
     { label: "AR", value: `$${(data.kpis.ar / 1000).toFixed(0)}K`, delta: `${data.kpis.arDelta}%`, up: data.kpis.arDelta > 0 },
     { label: "AP", value: `$${(data.kpis.ap / 1000).toFixed(0)}K`, delta: `+${data.kpis.apDelta}%`, up: data.kpis.apDelta > 0 },
     { label: "Net Income", value: `$${(data.kpis.netIncome / 1000).toFixed(0)}K`, delta: `+${data.kpis.netIncomeDelta}%`, up: data.kpis.netIncomeDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "journal", label: "Journal" }, { key: "ref", label: "Ref" }, { key: "debit", label: "Debit" }, { key: "credit", label: "Credit" }];
   const rows = data?.journalEntries?.map((entry: any) => ({

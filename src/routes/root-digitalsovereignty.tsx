@@ -45,7 +45,7 @@ function Page() {
     { label: "Compliant Regions", value: `${compliance.compliantRegions}/${compliance.totalRegions}`, delta: "—", up: true },
     { label: "Data Leaks", value: compliance.dataLeakageIncidents.toString(), delta: "—", up: compliance.dataLeakageIncidents === 0 },
     { label: "Governance Status", value: data?.sovereignCloudGovernance?.governanceStatus || "—", delta: "—", up: data?.sovereignCloudGovernance?.governanceStatus === 'COMPLIANT' },
-  ];
+  ] : [];
 
   const columns = [
     { key: "jurisdiction", label: "Jurisdiction" },

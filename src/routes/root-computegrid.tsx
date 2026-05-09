@@ -46,7 +46,7 @@ function Page() {
     { label: "Active", value: workload.activeWorkloads.toString(), delta: "—", up: true },
     { label: "Queued", value: workload.queuedWorkloads.toString(), delta: "—", up: workload.queuedWorkloads === 0 },
     { label: "Edge Nodes", value: data?.edgeComputeMesh?.edgeNodes.toString() || "0", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Cluster" },

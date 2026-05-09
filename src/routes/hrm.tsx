@@ -40,7 +40,7 @@ function Page() {
     { label: "Active", value: data.kpis.active.toString(), delta: `+${data.kpis.activeDelta}%`, up: data.kpis.activeDelta > 0 },
     { label: "On Leave", value: data.kpis.onLeave.toString(), delta: `+${data.kpis.onLeaveDelta}`, up: data.kpis.onLeaveDelta < 0 },
     { label: "New Hires", value: data.kpis.newHires.toString(), delta: `+${data.kpis.newHiresDelta}%`, up: data.kpis.newHiresDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Employee" }, { key: "department", label: "Department" }, { key: "position", label: "Position" }, { key: "status", label: "Status" }];
   const rows = data?.employees?.map((employee: any) => ({

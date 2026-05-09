@@ -41,7 +41,7 @@ function Page() {
     { label: "EBITDA", value: `$${(data.kpis.ebitda / 1000000).toFixed(2)}M`, delta: `+${data.kpis.ebitdaDelta}%`, up: data.kpis.ebitdaDelta > 0 },
     { label: "Cash Flow", value: `$${(data.kpis.cash / 1000000).toFixed(2)}M`, delta: `+${data.kpis.cashDelta}%`, up: data.kpis.cashDelta > 0 },
     { label: "Burn Rate", value: `$${(data.kpis.burnRate / 1000).toFixed(0)}K/mo`, delta: "-5%", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "category", label: "Category" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Durability", value: durability.overallDurability, delta: "—", up: true },
     { label: "Data Loss Events", value: durability.dataLossEvents.toString(), delta: "—", up: durability.dataLossEvents === 0 },
     { label: "Total Storage", value: storage.reduce((sum: number, s: any) => sum + parseFloat(s.size), 0).toFixed(1) + "TB", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Storage" },

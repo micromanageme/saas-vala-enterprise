@@ -42,7 +42,7 @@ function Page() {
     { label: "Failed Logins (24h)", value: security.failedLogins.toString(), delta: "-12%", up: security.failedLogins < 10 },
     { label: "Suspicious Activity", value: security.suspiciousActivity.toString(), delta: "-5%", up: security.suspiciousActivity < 5 },
     { label: "Active Threats", value: security.activeThreats.toString(), delta: "—", up: security.activeThreats === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "threat", label: "Threat Type" },

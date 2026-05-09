@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Universes", value: `${sandbox?.activeUniverses}/${sandbox?.totalUniverses}`, delta: "—", up: true },
     { label: "Orchestrated Branches", value: data?.branchEnvironmentOrchestration?.orchestratedBranches.toString() || "0", delta: "—", up: true },
     { label: "Active Clusters", value: data?.isolatedSimulationClusters?.activeClusters.toString() || "0", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Environment" },

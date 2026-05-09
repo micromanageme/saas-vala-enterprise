@@ -46,7 +46,7 @@ function Page() {
     { label: "Healthy", value: discovery.healthyServices.toString(), delta: "—", up: true },
     { label: "Degraded", value: discovery.degradedServices.toString(), delta: "—", up: false },
     { label: "Failed", value: discovery.failedServices.toString(), delta: "—", up: discovery.failedServices === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Service" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Completed", value: data.kpis.completed.toString(), delta: `+${data.kpis.completedDelta}`, up: data.kpis.completedDelta > 0 },
     { label: "Throughput", value: `${data.kpis.throughput}%`, delta: `+${data.kpis.throughputDelta}%`, up: data.kpis.throughputDelta > 0 },
     { label: "Scrap", value: `${data.kpis.scrap}%`, delta: `${data.kpis.scrapDelta}%`, up: data.kpis.scrapDelta < 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "id", label: "MO #" }, { key: "product", label: "Product" }, { key: "qty", label: "Qty" }, { key: "status", label: "Status" }];
   const rows = data?.orders?.map((o: any) => ({

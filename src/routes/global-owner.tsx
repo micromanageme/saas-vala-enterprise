@@ -213,7 +213,7 @@ function Page() {
     { region: "APAC", revenue: 2_910_000, growth: 22.7, status: "Surging" },
     { region: "LATAM", revenue: 980_000, growth: 5.3, status: "Stable" },
     { region: "MEA", revenue: 490_000, growth: 14.9, status: "Growing" },
-  ];
+  ] : [];
 
   const filteredGroups = useMemo(() => {
     if (!search.trim()) return ROLE_DASHBOARDS;

@@ -40,7 +40,7 @@ function Page() {
     { label: "Monthly Revenue", value: `$${(data.kpis.monthlyRevenue / 1000).toFixed(0)}K`, delta: `+${data.kpis.revenueDelta}%`, up: data.kpis.revenueDelta > 0 },
     { label: "Total Invoices", value: data.kpis.totalInvoices.toString(), delta: `+${data.kpis.invoicesDelta}`, up: data.kpis.invoicesDelta > 0 },
     { label: "Active Subscriptions", value: data.kpis.activeSubscriptions.toString(), delta: `+${data.kpis.subscriptionsDelta}`, up: data.kpis.subscriptionsDelta > 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "invoiceNumber", label: "Invoice" },

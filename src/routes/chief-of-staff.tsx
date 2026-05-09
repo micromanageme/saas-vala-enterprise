@@ -41,7 +41,7 @@ function Page() {
     { label: "Action Items", value: "34", delta: "-8", up: true },
     { label: "Initiatives On Track", value: "89%", delta: "+5%", up: true },
     { label: "Board Prep Status", value: "Ready", delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "initiative", label: "Initiative" },

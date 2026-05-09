@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Tenants", value: data.kpis.activeTenants.toLocaleString(), delta: `+${data.kpis.tenantsDelta}%`, up: data.kpis.tenantsDelta > 0 },
     { label: "Open Tickets", value: data.kpis.openTickets.toString(), delta: `${data.kpis.ticketsDelta}`, up: data.kpis.ticketsDelta < 0 },
     { label: "Pending Approvals", value: data.kpis.pendingApprovals.toString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "displayName", label: "User" },

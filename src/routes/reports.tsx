@@ -40,7 +40,7 @@ function Page() {
     { label: "Scheduled", value: data.kpis.scheduled.toString(), delta: `+${data.kpis.scheduledDelta}`, up: data.kpis.scheduledDelta > 0 },
     { label: "Subscribers", value: data.kpis.subscribers.toString(), delta: `+${data.kpis.subscribersDelta}`, up: data.kpis.subscribersDelta > 0 },
     { label: "Exports", value: data.kpis.exports.toString(), delta: `+${data.kpis.exportsDelta}`, up: data.kpis.exportsDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Report" }, { key: "type", label: "Type" }, { key: "lastRun", label: "Last Run" }, { key: "subscribers", label: "Subscribers" }];
   const rows = data?.reports?.map((r: any) => ({

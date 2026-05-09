@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Tokens", value: revocation.totalTokens.toLocaleString(), delta: "—", up: true },
     { label: "Active", value: revocation.activeTokens.toString(), delta: "—", up: true },
     { label: "Revoked", value: revocation.revokedTokens.toLocaleString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "userId", label: "User ID" },

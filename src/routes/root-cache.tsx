@@ -45,7 +45,7 @@ function Page() {
     { label: "Sync Status", value: sync.status, delta: "—", up: sync.status === 'SYNCED' },
     { label: "Pending Syncs", value: sync.pendingSyncs.toString(), delta: "—", up: sync.pendingSyncs === 0 },
     { label: "Failed Syncs", value: sync.failedSyncs.toString(), delta: "—", up: sync.failedSyncs === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Cluster" },

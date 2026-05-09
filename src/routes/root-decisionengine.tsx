@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Decisions", value: risk.totalDecisions.toLocaleString(), delta: "—", up: true },
     { label: "Low Risk", value: risk.lowRiskDecisions.toString(), delta: "—", up: true },
     { label: "Rejected", value: risk.rejectedDecisions.toString(), delta: "—", up: risk.rejectedDecisions === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "type", label: "Type" },

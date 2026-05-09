@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Policies", value: runtime.activePolicies.toString(), delta: "—", up: true },
     { label: "Injected", value: runtime.injectedPolicies.toString(), delta: "—", up: true },
     { label: "Pending", value: runtime.pendingInjection.toString(), delta: "—", up: runtime.pendingInjection === 0 },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Policy" },

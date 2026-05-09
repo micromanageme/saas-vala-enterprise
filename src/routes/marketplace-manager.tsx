@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Products", value: "3,456", delta: "+18%", up: true },
     { label: "GMV", value: `$${(data.totalRevenue / 1000000).toFixed(2)}M`, delta: "+22%", up: true },
     { label: "Vendor Satisfaction", value: "4.4/5", delta: "+0.2", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "vendor", label: "Vendor" },

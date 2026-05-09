@@ -42,7 +42,7 @@ function Page() {
     { label: "Growth", value: financial.growthRate, delta: "+5%", up: true },
     { label: "Margin", value: financial.profitMargin, delta: "+3%", up: true },
     { label: "Market Cap", value: `$${(financial.marketCap / 1000000).toFixed(0)}M`, delta: "+20%", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "goal", label: "Strategic Goal" },

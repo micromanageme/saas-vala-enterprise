@@ -46,7 +46,7 @@ function Page() {
     { label: "Compatible", value: compatibility.compatible.toString(), delta: "—", up: true },
     { label: "Incompatible", value: compatibility.incompatible.toString(), delta: "—", up: compatibility.incompatible === 0 },
     { label: "Active Sandboxes", value: sandboxes.filter((s: any) => s.status === 'ACTIVE').length.toString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Sandbox" },

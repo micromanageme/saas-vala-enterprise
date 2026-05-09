@@ -47,14 +47,14 @@ function Page() {
     { label: "Healthy", value: infra.healthy.toString(), delta: "—", up: true },
     { label: "Degraded", value: infra.degraded.toString(), delta: "—", up: infra.degraded === 0 },
     { label: "Nodes", value: topology?.nodes.toString() || "0", delta: "—", up: true },
-  ];
+  ] : [];
 
   const rows = health ? [
     { metric: "Overall Health", value: health.overallHealth, status: health.overallHealth === 'HEALTHY' ? 'OK' : 'WARNING' },
     { metric: "Critical Nodes", value: health.criticalNodes.toString(), status: health.criticalNodes === 0 ? 'OK' : 'CRITICAL' },
     { metric: "Warning Nodes", value: health.warningNodes.toString(), status: health.warningNodes === 0 ? 'OK' : 'WARNING' },
     { metric: "Healthy Nodes", value: health.healthyNodes.toString(), status: 'OK' },
-  ];
+  ] : [];
 
   const columns = [
     { key: "metric", label: "Metric" },

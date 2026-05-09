@@ -45,7 +45,7 @@ function Page() {
     { label: "Tenants", value: universalControl.totalTenants.toLocaleString(), delta: "—", up: true },
     { label: "Branches", value: universalControl.totalBranches.toLocaleString(), delta: "—", up: true },
     { label: "System Health", value: universalControl.systemHealth, delta: "—", up: universalControl.systemHealth === 'HEALTHY' },
-  ];
+  ] : [];
 
   const columns = [
     { key: "name", label: "Component" },

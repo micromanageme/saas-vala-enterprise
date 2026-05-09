@@ -41,7 +41,7 @@ function Page() {
     { label: "Reports Generated", value: "45", delta: "+8", up: true },
     { label: "Data Sources", value: "8", delta: "+1", up: true },
     { label: "Users Served", value: "156", delta: "+12", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "dashboard", label: "Dashboard" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Upcoming", value: data.kpis.upcoming.toString(), delta: `+${data.kpis.upcomingDelta}`, up: data.kpis.upcomingDelta > 0 },
     { label: "Meetings", value: data.kpis.meetings.toString(), delta: `+${data.kpis.meetingsDelta}`, up: data.kpis.meetingsDelta > 0 },
     { label: "Conflicts", value: data.kpis.conflicts.toString(), delta: `${data.kpis.conflictsDelta}`, up: data.kpis.conflictsDelta < 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "title", label: "Event" }, { key: "type", label: "Type" }, { key: "start", label: "Start" }, { key: "status", label: "Status" }];
   const rows = data?.events?.map((e: any) => ({

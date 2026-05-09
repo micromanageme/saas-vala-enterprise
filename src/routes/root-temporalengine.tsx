@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Snapshots", value: restoration.totalSnapshots.toLocaleString(), delta: "—", up: true },
     { label: "Restorable", value: restoration.restorableSnapshots.toLocaleString(), delta: "—", up: true },
     { label: "Retention Days", value: restoration.retentionDays.toString(), delta: "—", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "type", label: "Type" },

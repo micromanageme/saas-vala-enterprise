@@ -46,7 +46,7 @@ function Page() {
     { label: "Critical", value: siem.criticalEvents.toString(), delta: "—", up: false },
     { label: "High", value: siem.highEvents.toString(), delta: "—", up: false },
     { label: "Medium", value: siem.mediumEvents.toString(), delta: "—", up: false },
-  ];
+  ] : [];
 
   const columns = [
     { key: "type", label: "Type" },

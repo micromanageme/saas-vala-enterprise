@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Projects", value: data.kpis.activeProjects?.toString() || "45", delta: "+3", up: true },
     { label: "Team Productivity", value: data.kpis.productivity || "87%", delta: "+5%", up: true },
     { label: "Process Adherence", value: data.kpis.processAdherence || "95%", delta: "+1%", up: true },
-  ];
+  ] : [];
 
   const columns = [
     { key: "department", label: "Department" },

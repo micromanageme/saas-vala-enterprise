@@ -40,7 +40,7 @@ function Page() {
     { label: "Active", value: data.kpis.active.toString(), delta: `+${data.kpis.activeDelta}`, up: data.kpis.activeDelta > 0 },
     { label: "Locations", value: data.kpis.locations.toString(), delta: `+${data.kpis.locationsDelta}`, up: data.kpis.locationsDelta > 0 },
     { label: "Royalties", value: `$${(data.kpis.royalties / 1000).toFixed(0)}K`, delta: `+${data.kpis.royaltiesDelta}%`, up: data.kpis.royaltiesDelta > 0 }
-  ];
+  ] : [];
 
   const columns = [{ key: "name", label: "Franchisee" }, { key: "region", label: "Region" }, { key: "locations", label: "Locations" }, { key: "status", label: "Status" }];
   const rows = data?.franchises?.map((f: any) => ({
