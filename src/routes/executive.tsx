@@ -40,7 +40,7 @@ function Page() {
     { label: "EBITDA", value: `$${(data.kpis.ebitda / 1000000).toFixed(2)}M`, delta: `+${data.kpis.ebitdaDelta}%`, up: data.kpis.ebitdaDelta > 0 },
     { label: "Cash", value: `$${(data.kpis.cash / 1000000).toFixed(2)}M`, delta: `+${data.kpis.cashDelta}%`, up: data.kpis.cashDelta > 0 },
     { label: "NPS", value: data.kpis.nps.toString(), delta: `+${data.kpis.npsDelta}`, up: data.kpis.npsDelta > 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "kpi", label: "KPI" }, { key: "target", label: "Target" }, { key: "actual", label: "Actual" }, { key: "status", label: "Status" }];
   const rows = data?.targets?.map((t: any) => ({

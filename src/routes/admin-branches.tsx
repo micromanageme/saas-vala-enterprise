@@ -40,7 +40,7 @@ function Page() {
     { label: "Active", value: data.kpis.activeBranches.toString(), delta: `+${data.kpis.branchesDelta}`, up: data.kpis.branchesDelta > 0 },
     { label: "Countries", value: data.kpis.totalCountries.toString(), delta: "+2", up: true },
     { label: "Cities", value: data.kpis.totalCities.toString(), delta: "+5", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Name" },

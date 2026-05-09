@@ -45,7 +45,7 @@ function Page() {
     { label: "Synchronized Nodes", value: `${twin?.synchronizedNodes}/${twin?.totalNodes}`, delta: "—", up: true },
     { label: "Sync Latency", value: twin?.syncLatency || "—", delta: "—", up: true },
     { label: "Prediction Accuracy", value: predictive?.accuracy || "0%", delta: "—", up: parseFloat(predictive?.accuracy || '0') > 90 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Nodes", value: twin?.totalNodes.toString() || "0", status: "OK" },

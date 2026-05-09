@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Roles", value: inheritance.totalRoles.toString(), delta: "—", up: true },
     { label: "Active Hierarchies", value: inheritance.activeHierarchies.toString(), delta: "—", up: true },
     { label: "Active Elevations", value: data?.privilegeElevation?.activeElevations.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Role" },

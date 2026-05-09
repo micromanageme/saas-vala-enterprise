@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Zones", value: zones.totalZones.toString(), delta: "—", up: true },
     { label: "Active Zones", value: zones.activeZones.toString(), delta: "—", up: true },
     { label: "Failover Ready", value: zones.failoverReady ? "Yes" : "No", delta: "—", up: zones.failoverReady },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "System" },

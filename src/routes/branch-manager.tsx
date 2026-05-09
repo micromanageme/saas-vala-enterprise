@@ -40,7 +40,7 @@ function Page() {
     { label: "Branch Revenue", value: "$125K", delta: "+8%", up: true },
     { label: "Active Projects", value: "8", delta: "+1", up: true },
     { label: "Team Satisfaction", value: "4.3/5", delta: "+0.2", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "employee", label: "Employee" },

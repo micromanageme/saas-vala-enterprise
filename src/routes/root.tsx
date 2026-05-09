@@ -51,7 +51,7 @@ function Page() {
     { label: "AI Models", value: universalControl.activeAiModels.toString(), delta: "—", up: true },
     { label: "Workflows", value: universalControl.totalWorkflows.toString(), delta: "—", up: true },
     { label: "System Health", value: universalControl.systemHealth, delta: "—", up: universalControl.systemHealth === 'HEALTHY' },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Component" },

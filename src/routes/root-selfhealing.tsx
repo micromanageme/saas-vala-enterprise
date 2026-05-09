@@ -47,7 +47,7 @@ function Page() {
     { label: "Healthy Services", value: `${service?.healthyServices}/${service?.totalServices}`, delta: "—", up: true },
     { label: "Recovered Services", value: service?.recoveredServices.toString() || "0", delta: "—", up: true },
     { label: "Recovered Connections", value: websocket?.recoveredConnections.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Services", value: service?.totalServices.toString() || "0", status: "OK" },

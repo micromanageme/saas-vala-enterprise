@@ -45,7 +45,7 @@ function Page() {
     { label: "Reconciled Caches", value: `${reconciliation?.reconciledCaches}/${reconciliation?.totalReconciliations}`, delta: "—", up: reconciliation?.unreconciledCaches === 0 },
     { label: "Sequence Accuracy", value: sequencing?.sequenceAccuracy || "0%", delta: "—", up: sequencing?.sequenceAccuracy === '100%' },
     { label: "Healing Rate", value: data?.cacheDivergenceHealing?.healingRate || "0%", delta: "—", up: data?.cacheDivergenceHealing?.healingRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Avg Reconciliation Time", value: reconciliation?.avgReconciliationTime || "—", status: "OK" },

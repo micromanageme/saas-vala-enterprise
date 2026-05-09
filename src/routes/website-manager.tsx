@@ -41,7 +41,7 @@ function Page() {
     { label: "Unique Visitors", value: "45.2K", delta: "+8%", up: true },
     { label: "Bounce Rate", value: "32%", delta: "-3%", up: true },
     { label: "Avg Session", value: "4.5min", delta: "+0.5min", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "page", label: "Page" },

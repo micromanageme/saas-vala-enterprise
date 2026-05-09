@@ -40,7 +40,7 @@ function Page() {
     { label: "Storage Used", value: `${data.kpis.storageUsed} GB`, delta: `+${data.kpis.storageUsedDelta} GB`, up: data.kpis.storageUsedDelta > 0 },
     { label: "Shared", value: data.kpis.shared.toString(), delta: `+${data.kpis.sharedDelta}`, up: data.kpis.sharedDelta > 0 },
     { label: "Folders", value: data.kpis.folders.toString(), delta: `+${data.kpis.foldersDelta}`, up: data.kpis.foldersDelta > 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "name", label: "File" }, { key: "type", label: "Type" }, { key: "size", label: "Size" }, { key: "uploadedBy", label: "Uploaded By" }];
   const rows = data?.documents?.map((d: any) => ({

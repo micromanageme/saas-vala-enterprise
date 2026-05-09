@@ -45,7 +45,7 @@ function Page() {
     { label: "Containment Rate", value: containment.containmentRate, delta: "—", up: containment.containmentRate === '100%' },
     { label: "Total Executions", value: data?.rollbackSafety?.totalExecutions.toString() || "0", delta: "—", up: true },
     { label: "All Safe", value: data?.rollbackSafety?.status || "—", delta: "—", up: data?.rollbackSafety?.status === 'ALL_SAFE' },
-  ] : [];
+  ];
 
   const columns = [
     { key: "taskId", label: "Task ID" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Validation Rate", value: validation?.validationRate || "0%", delta: "—", up: parseFloat(validation?.validationRate || '0') > 99 },
     { label: "Traced Mutations", value: `${mutation?.tracedMutations}/${mutation?.totalPrompts}`, delta: "—", up: mutation?.untracedMutations === 0 },
     { label: "Prevention Rate", value: data?.autonomousDriftPrevention?.preventionRate || "0%", delta: "—", up: data?.autonomousDriftPrevention?.preventionRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Validations", value: validation?.totalValidations.toString() || "0", status: "OK" },

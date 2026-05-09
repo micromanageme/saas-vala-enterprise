@@ -41,7 +41,7 @@ function Page() {
     { label: "Deals Closed", value: "23", delta: "+5", up: true },
     { label: "Pipeline Value", value: `$450K`, delta: "+12%", up: true },
     { label: "Win Rate", value: "34%", delta: "+3%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "salesperson", label: "Salesperson" },

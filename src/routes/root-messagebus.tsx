@@ -46,7 +46,7 @@ function Page() {
     { label: "Successful", value: retry.successfulRetries.toString(), delta: "—", up: true },
     { label: "Failed", value: retry.failedRetries.toString(), delta: "—", up: retry.failedRetries === 0 },
     { label: "Max Retries", value: retry.maxRetries.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Queue" },

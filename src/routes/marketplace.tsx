@@ -48,7 +48,7 @@ function Page() {
     { label: "Active", value: data.kpis.activeProducts.toLocaleString(), delta: `+${data.kpis.activeProductsDelta}`, up: data.kpis.activeProductsDelta > 0 },
     { label: "Revenue", value: `$${(data.kpis.totalRevenue / 1000).toFixed(0)}K`, delta: `+${data.kpis.totalRevenueDelta}%`, up: data.kpis.totalRevenueDelta > 0 },
     { label: "Downloads", value: data.kpis.totalDownloads.toLocaleString(), delta: `+${data.kpis.totalDownloadsDelta}`, up: data.kpis.totalDownloadsDelta > 0 }
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Product" },

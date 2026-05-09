@@ -41,7 +41,7 @@ function Page() {
     { label: "Open Positions", value: "12", delta: "-3", up: true },
     { label: "Retention Rate", value: "94%", delta: "+2%", up: true },
     { label: "Employee Satisfaction", value: "4.2/5", delta: "+0.3", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "department", label: "Department" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Tasks Completed", value: "12", delta: "+3", up: true },
     { label: "Hours This Week", value: "32", delta: "—", up: true },
     { label: "Performance", value: "92%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "task", label: "Task" },

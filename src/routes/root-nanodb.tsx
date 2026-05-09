@@ -45,7 +45,7 @@ function Page() {
     { label: "Phantom Reads", value: phantom?.phantomReads.toString() || "0", delta: "—", up: phantom?.phantomReads === 0 },
     { label: "Enforcement Rate", value: isolation?.enforcementRate || "0%", delta: "—", up: isolation?.enforcementRate === '100%' },
     { label: "Conflict Count", value: data?.distributedWriteArbitration?.conflictCount.toString() || "0", delta: "—", up: data?.distributedWriteArbitration?.conflictCount === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Reads", value: phantom?.totalReads.toLocaleString() || "0", status: "OK" },

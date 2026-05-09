@@ -45,7 +45,7 @@ function Page() {
     { label: "Validation Rate", value: validation?.validationRate || "0%", delta: "—", up: validation?.validationRate === '100%' },
     { label: "Healing Rate", value: healing?.healingRate || "0%", delta: "—", up: healing?.healingRate === '100%' },
     { label: "Entropy Score", value: data?.storageEntropyMonitoring?.entropyScore || "—", delta: "—", up: parseFloat(data?.storageEntropyMonitoring?.entropyScore || '0') > 8 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Writes", value: validation?.totalWrites.toLocaleString() || "0", status: "OK" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Users", value: "456", delta: "+23", up: true },
     { label: "Country Revenue", value: "$1.2M", delta: "+12%", up: true },
     { label: "Compliance Score", value: "98%", delta: "+1%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "branch", label: "Branch" },

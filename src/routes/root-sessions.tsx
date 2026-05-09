@@ -46,7 +46,7 @@ function Page() {
     { label: "Suspicious Logins", value: hijack.suspiciousLogins.toString(), delta: "—", up: hijack.suspiciousLogins === 0 },
     { label: "Concurrent", value: hijack.concurrentSessions.toString(), delta: "—", up: true },
     { label: "Unusual Locations", value: hijack.unusualLocations.toString(), delta: "—", up: hijack.unusualLocations === 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "user", label: "User" },

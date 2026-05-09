@@ -45,7 +45,7 @@ function Page() {
     { label: "Hidden Processes", value: process?.hiddenProcessesFound.toString() || "0", delta: "—", up: process?.hiddenProcessesFound === 0 },
     { label: "Rogue Services", value: service?.rogueServices.toString() || "0", delta: "—", up: service?.rogueServices === 0 },
     { label: "Phantom States", value: data?.phantomStateIsolation?.phantomStates.toString() || "0", delta: "—", up: data?.phantomStateIsolation?.phantomStates === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Scans", value: process?.totalScans.toString() || "0", status: "OK" },

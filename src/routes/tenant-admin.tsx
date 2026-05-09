@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Licenses", value: data.kpis.activeLicenses.toLocaleString(), delta: `+${data.kpis.licensesDelta}%`, up: data.kpis.licensesDelta > 0 },
     { label: "Monthly Revenue", value: `$${(data.kpis.monthlyRevenue / 1000).toFixed(0)}K`, delta: `+${data.kpis.revenueDelta}%`, up: data.kpis.revenueDelta > 0 },
     { label: "Open Tickets", value: data.kpis.openTickets.toString(), delta: `${data.kpis.ticketsDelta}`, up: data.kpis.ticketsDelta < 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "user", label: "User" },

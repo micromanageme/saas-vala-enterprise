@@ -40,7 +40,7 @@ function Page() {
     { label: "On Schedule", value: "83%", delta: "+5%", up: true },
     { label: "Budget Utilized", value: "78%", delta: "-3%", up: true },
     { label: "Team Capacity", value: "85%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "project", label: "Project" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Workflows", value: workflows.length.toString(), delta: "—", up: true },
     { label: "Successful Replays", value: replay.successfulReplays.toString(), delta: "—", up: true },
     { label: "Failed Replays", value: replay.failedReplays.toString(), delta: "—", up: replay.failedReplays === 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Workflow" },

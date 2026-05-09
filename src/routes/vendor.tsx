@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Sales", value: "$12.5K", delta: "+18%", up: true },
     { label: "Pending Orders", value: "8", delta: "-2", up: true },
     { label: "Rating", value: "4.5/5", delta: "+0.2", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "product", label: "Product" },

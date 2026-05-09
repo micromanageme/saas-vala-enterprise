@@ -41,7 +41,7 @@ function Page() {
     { label: "Active", value: data.kpis.activeServers.toString(), delta: `+${data.kpis.serversDelta}`, up: data.kpis.serversDelta > 0 },
     { label: "Containers", value: data.kpis.activeContainers.toString(), delta: `+${data.kpis.containersDelta}`, up: data.kpis.containersDelta > 0 },
     { label: "Deployments", value: data.kpis.totalDeployments.toString(), delta: `+${data.kpis.deploymentsDelta}`, up: data.kpis.deploymentsDelta > 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Server" },

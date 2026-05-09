@@ -46,7 +46,7 @@ function Page() {
     { label: "Tamper Detected", value: forensic.tamperDetected ? "Yes" : "No", delta: "—", up: !forensic.tamperDetected },
     { label: "Chain of Trust", value: forensic.chainOfTrust, delta: "—", up: forensic.chainOfTrust === 'VALID' },
     { label: "Logs Shown", value: logs.length.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "action", label: "Action" },

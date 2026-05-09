@@ -45,7 +45,7 @@ function Page() {
     { label: "Degraded Services", value: degradation?.degradedServices.toString() || "0", delta: "—", up: degradation?.degradedServices === 0 },
     { label: "Isolation Rate", value: isolation?.isolationRate || "0%", delta: "—", up: isolation?.isolationRate === '100%' },
     { label: "Quarantine Rate", value: data?.unstableNodeQuarantine?.quarantineRate || "0%", delta: "—", up: data?.unstableNodeQuarantine?.quarantineRate === '0' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Services", value: degradation?.totalServices.toString() || "0", status: "OK" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Federated Realms", value: `${federation?.federatedRealms}/${federation?.totalRealms}`, delta: "—", up: true },
     { label: "Orchestration Success", value: hybrid?.orchestrationSuccess || "0%", delta: "—", up: hybrid?.orchestrationSuccess === '100%' },
     { label: "Sync Latency", value: data?.multiRegionAuthoritySynchronization?.syncLatency || "—", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Federation Status", value: federation?.federationStatus || "—", status: federation?.federationStatus === 'HEALTHY' ? 'OK' : 'WARNING' },

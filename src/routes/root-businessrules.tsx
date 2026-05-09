@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Rules", value: runtime?.totalRules.toString() || "0", delta: "—", up: true },
     { label: "Active Rules", value: runtime?.activeRules.toString() || "0", delta: "—", up: true },
     { label: "Executions/s", value: runtime?.executionsPerSecond.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Rule" },

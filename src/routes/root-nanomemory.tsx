@@ -45,7 +45,7 @@ function Page() {
     { label: "Isolation Rate", value: isolation?.isolationRate || "0%", delta: "—", up: isolation?.isolationRate === '100%' },
     { label: "Fragmentation Score", value: fragmentation?.fragmentationScore || "0%", delta: "—", up: parseFloat(fragmentation?.fragmentationScore || '0') < 10 },
     { label: "Memory Leak Rate", value: data?.memoryLeakAncestry?.leakRate || "0%", delta: "—", up: data?.memoryLeakAncestry?.leakRate === '0' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total References", value: isolation?.totalReferences.toLocaleString() || "0", status: "OK" },

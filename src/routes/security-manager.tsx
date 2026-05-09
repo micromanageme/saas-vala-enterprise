@@ -42,7 +42,7 @@ function Page() {
     { label: "Vulnerabilities", value: security.activeThreats.toString(), delta: "-5", up: security.activeThreats < 5 },
     { label: "Failed Logins", value: security.failedLogins.toString(), delta: "-12%", up: security.failedLogins < 10 },
     { label: "Compliance", value: "98%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "check", label: "Security Check" },

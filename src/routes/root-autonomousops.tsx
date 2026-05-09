@@ -45,7 +45,7 @@ function Page() {
     { label: "Remediation Rate", value: remediation?.remediationRate || "0%", delta: "—", up: true },
     { label: "Successful Optimizations", value: optimization?.successfulOptimizations.toString() || "0", delta: "—", up: true },
     { label: "Scaling Success", value: `${data?.autonomousScaling?.successfulScaling}/${data?.autonomousScaling?.totalScalingEvents}`, delta: "—", up: data?.autonomousScaling?.failedScaling === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Incidents", value: remediation?.totalIncidents.toString() || "0", status: "OK" },

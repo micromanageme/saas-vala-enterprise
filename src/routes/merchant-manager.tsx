@@ -41,7 +41,7 @@ function Page() {
     { label: "Active Merchants", value: "42", delta: "+4", up: true },
     { label: "Merchant Revenue", value: `$${(data.totalRevenue / 1000).toFixed(0)}K`, delta: "+12%", up: true },
     { label: "Avg Order Value", value: "$125", delta: "+8%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "merchant", label: "Merchant" },

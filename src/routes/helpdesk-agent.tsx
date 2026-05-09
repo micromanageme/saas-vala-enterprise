@@ -41,7 +41,7 @@ function Page() {
     { label: "Resolved", value: "8", delta: "+1", up: true },
     { label: "Avg Response", value: "15min", delta: "-3min", up: true },
     { label: "CSAT Score", value: "4.5/5", delta: "+0.2", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "ticket", label: "Ticket" },

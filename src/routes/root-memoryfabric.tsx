@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Nodes", value: `${persistence?.activeNodes}/${persistence?.totalMemoryNodes}`, delta: "—", up: true },
     { label: "Continuity Rate", value: continuity?.continuityRate || "0%", delta: "—", up: continuity?.continuityRate === '100%' },
     { label: "Total Memory", value: persistence?.totalMemory || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total States", value: continuity?.totalStates.toString() || "0", status: "OK" },

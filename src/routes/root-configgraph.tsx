@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Configs", value: drift.totalConfigs.toString(), delta: "—", up: true },
     { label: "Validated", value: drift.validatedConfigs.toString(), delta: "—", up: true },
     { label: "Drifted", value: drift.driftedConfigs.toString(), delta: "—", up: drift.driftedConfigs === 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Config" },

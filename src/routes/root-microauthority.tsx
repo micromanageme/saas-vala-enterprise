@@ -45,7 +45,7 @@ function Page() {
     { label: "Avg Propagation Time", value: timing?.avgPropagationTime || "0ms", delta: "—", up: true },
     { label: "Valid Inheritances", value: `${inheritance?.validInheritances}/${inheritance?.totalValidations}`, delta: "—", up: inheritance?.invalidInheritances === 0 },
     { label: "Cleanup Rate", value: data?.staleAuthorityCleanup?.cleanupRate || "0%", delta: "—", up: data?.staleAuthorityCleanup?.cleanupRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Propagations", value: timing?.totalPropagations.toString() || "0", status: "OK" },

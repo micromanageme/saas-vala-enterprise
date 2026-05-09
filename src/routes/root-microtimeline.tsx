@@ -45,7 +45,7 @@ function Page() {
     { label: "Reconstruction Rate", value: reconstruction?.reconstructionRate || "0%", delta: "—", up: reconstruction?.reconstructionRate === '100%' },
     { label: "Normalized Timestamps", value: `${normalization?.normalizedTimestamps.toLocaleString()}/${normalization?.totalTimestamps.toLocaleString()}`, delta: "—", up: true },
     { label: "Mapped Causalities", value: `${data?.telemetryCausalityMapping?.mappedCausalities}/${data?.telemetryCausalityMapping?.totalMappings}`, delta: "—", up: data?.telemetryCausalityMapping?.unmappedCausalities === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Traces", value: reconstruction?.totalTraces.toLocaleString() || "0", status: "OK" },

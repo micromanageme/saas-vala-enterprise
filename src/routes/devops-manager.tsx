@@ -41,7 +41,7 @@ function Page() {
     { label: "Build Time", value: "4.2min", delta: "-0.5min", up: true },
     { label: "Incidents (7d)", value: "2", delta: "-3", up: true },
     { label: "Uptime", value: `${data.systemHealth.uptime}%`, delta: "—", up: data.systemHealth.uptime > 99 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "service", label: "Service" },

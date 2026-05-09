@@ -40,7 +40,7 @@ function Page() {
     { label: "Events/s", value: data.kpis.eventsPerSecond.toString(), delta: `+${data.kpis.eventsPerSecondDelta}`, up: data.kpis.eventsPerSecondDelta > 0 },
     { label: "Errors", value: `${data.kpis.errors}%`, delta: `${data.kpis.errorsDelta}%`, up: data.kpis.errorsDelta < 0 },
     { label: "Latency", value: `${data.kpis.latency}ms`, delta: `${data.kpis.latencyDelta}ms`, up: data.kpis.latencyDelta < 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "metric", label: "Metric" }, { key: "value", label: "Value" }, { key: "change", label: "Change" }, { key: "timestamp", label: "Time" }];
   const rows = data?.metrics?.map((m: any) => ({

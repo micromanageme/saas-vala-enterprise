@@ -46,7 +46,7 @@ function Page() {
     { label: "Logs/s", value: telemetry?.logsPerSecond.toLocaleString() || "0", delta: "—", up: true },
     { label: "Traces/s", value: telemetry?.tracesPerSecond.toLocaleString() || "0", delta: "—", up: true },
     { label: "Active Traces", value: tracing?.activeTraces.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Metrics Per Second", value: telemetry?.metricsPerSecond.toLocaleString() || "0", status: "OK" },

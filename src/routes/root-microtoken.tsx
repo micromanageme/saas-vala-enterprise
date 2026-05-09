@@ -45,7 +45,7 @@ function Page() {
     { label: "Mapped Tokens", value: `${ancestry?.mappedTokens}/${ancestry?.totalTokens}`, delta: "—", up: ancestry?.unmappedTokens === 0 },
     { label: "Tracked Refreshes", value: `${lineage?.trackedRefreshes}/${lineage?.totalRefreshes}`, delta: "—", up: lineage?.untrackedRefreshes === 0 },
     { label: "Replay Attempts", value: data?.replayAttackIsolation?.replayAttempts.toString() || "0", delta: "—", up: data?.replayAttackIsolation?.replayAttempts === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Max Ancestry Depth", value: ancestry?.maxAncestryDepth.toString() || "0", status: "OK" },

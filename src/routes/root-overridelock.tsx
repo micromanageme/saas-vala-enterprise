@@ -45,7 +45,7 @@ function Page() {
     { label: "Resolved Conflicts", value: `${arbitration?.resolvedConflicts}/${arbitration?.totalConflicts}`, delta: "—", up: true },
     { label: "Executed Sequences", value: `${sequencing?.executedSequences}/${sequencing?.totalSequences}`, delta: "—", up: true },
     { label: "Active Barriers", value: data?.irreversibleSafeguardBarriers?.activeBarriers.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Avg Arbitration Time", value: arbitration?.avgArbitrationTime || "—", status: "OK" },

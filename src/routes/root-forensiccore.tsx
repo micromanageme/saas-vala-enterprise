@@ -45,7 +45,7 @@ function Page() {
     { label: "Sealed Events", value: `${chain?.sealedEvents.toLocaleString()}/${chain?.totalEvents.toLocaleString()}`, delta: "—", up: chain?.tamperedEvents === 0 },
     { label: "Valid Seals", value: `${sealing?.validSeals.toLocaleString()}/${sealing?.totalSeals.toLocaleString()}`, delta: "—", up: sealing?.brokenSeals === 0 },
     { label: "Retention Years", value: data?.irreversibleEvidencePreservation?.retentionYears.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Chain Length", value: chain?.chainLength.toLocaleString() || "0", status: "OK" },

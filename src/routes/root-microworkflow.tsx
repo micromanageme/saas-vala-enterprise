@@ -45,7 +45,7 @@ function Page() {
     { label: "Tracked Branches", value: `${lineage?.trackedBranches}/${lineage?.totalBranches}`, delta: "—", up: lineage?.untrackedBranches === 0 },
     { label: "Valid Snapshots", value: `${snapshots?.validSnapshots}/${snapshots?.totalSnapshots}`, delta: "—", up: snapshots?.corruptedSnapshots === 0 },
     { label: "Corrected Drifts", value: data?.executionDriftTracing?.correctedDrifts.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Max Branch Depth", value: lineage?.maxBranchDepth.toString() || "0", status: "OK" },

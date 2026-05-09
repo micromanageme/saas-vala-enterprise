@@ -45,7 +45,7 @@ function Page() {
     { label: "Providers", value: sso.totalProviders.toString(), delta: "—", up: true },
     { label: "Active", value: sso.activeProviders.toString(), delta: "—", up: true },
     { label: "Failed", value: sso.failedProviders.toString(), delta: "—", up: sso.failedProviders === 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "provider", label: "Provider" },

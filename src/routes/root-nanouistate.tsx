@@ -45,7 +45,7 @@ function Page() {
     { label: "Convergence Rate", value: convergence?.convergenceRate || "0%", delta: "—", up: convergence?.convergenceRate === '100%' },
     { label: "Invalidated UIs", value: `${invalidation?.invalidatedUIs}/${invalidation?.totalInvalidations}`, delta: "—", up: invalidation?.missedInvalidations === 0 },
     { label: "Resolved Arbitrations", value: data?.componentHydrationArbitration?.resolvedArbitrations.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total States", value: convergence?.totalStates.toString() || "0", status: "OK" },

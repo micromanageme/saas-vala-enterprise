@@ -40,7 +40,7 @@ function Page() {
     { label: "Features Used", value: "8/15", delta: "+3", up: true },
     { label: "Data Processed", value: "5.6K", delta: "+2K", up: true },
     { label: "Conversion Progress", value: "65%", delta: "+15%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "feature", label: "Feature" },

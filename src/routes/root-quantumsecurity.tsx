@@ -45,7 +45,7 @@ function Page() {
     { label: "Quantum Safe", value: readiness?.readinessPercentage || "0%", delta: "—", up: readiness?.readinessPercentage === '100%' },
     { label: "Safe Exchanges", value: data?.quantumSafeKeyExchange?.successfulExchanges.toString() || "0", delta: "—", up: true },
     { label: "Status", value: resilience?.status || "—", delta: "—", up: resilience?.status === 'QUANTUM_SAFE' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Keys", value: readiness?.totalKeys.toLocaleString() || "0", status: "OK" },

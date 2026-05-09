@@ -40,7 +40,7 @@ function Page() {
     { label: "Open Positions", value: "8", delta: "-2", up: true },
     { label: "Time to Hire", value: "18 days", delta: "-3 days", up: true },
     { label: "Retention Rate", value: "94%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "candidate", label: "Candidate" },

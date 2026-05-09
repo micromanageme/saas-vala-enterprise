@@ -40,7 +40,7 @@ function Page() {
     { label: "Leads Generated", value: "1,234", delta: "+18%", up: true },
     { label: "Marketing ROI", value: "320%", delta: "+15%", up: true },
     { label: "Brand Awareness", value: "78%", delta: "+5%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "campaign", label: "Campaign" },

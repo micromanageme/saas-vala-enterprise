@@ -46,7 +46,7 @@ function Page() {
     { label: "Used", value: memory.used, delta: "—", up: true },
     { label: "Free", value: memory.free, delta: "—", up: true },
     { label: "Swap Used", value: memory.swapUsed, delta: "—", up: memory.swapUsed === "0GB" },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Process" },

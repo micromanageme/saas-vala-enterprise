@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Users", value: "234", delta: "+12", up: true },
     { label: "State Revenue", value: "$450K", delta: "+8%", up: true },
     { label: "Active Projects", value: "5", delta: "+1", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "city", label: "City" },

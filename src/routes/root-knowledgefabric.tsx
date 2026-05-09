@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Nodes", value: graph?.totalNodes.toLocaleString() || "0", delta: "—", up: true },
     { label: "Linked Entities", value: knowledge?.linkedEntities.toLocaleString() || "0", delta: "—", up: true },
     { label: "Completeness", value: knowledge?.completeness || "0%", delta: "—", up: knowledge?.completeness === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Nodes", value: graph?.totalNodes.toLocaleString() || "0", status: "OK" },

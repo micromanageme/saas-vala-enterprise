@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Agents", value: agents?.activeAgents.toString() || "0", delta: "—", up: true },
     { label: "Coordinated Agents", value: agents?.coordinatedAgents.toString() || "0", delta: "—", up: true },
     { label: "Completed Workflows", value: workflows?.completedWorkflows.toLocaleString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Agents", value: agents?.totalAgents.toString() || "0", status: "OK" },

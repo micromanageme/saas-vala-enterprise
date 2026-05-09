@@ -45,7 +45,7 @@ function Page() {
     { label: "Verified Modules", value: `${integrity?.verifiedModules}/${integrity?.totalModules}`, delta: "—", up: true },
     { label: "Corrupted Modules", value: integrity?.corruptedModules.toString() || "0", delta: "—", up: integrity?.corruptedModules === 0 },
     { label: "Unstable Modules", value: data?.unstableModuleIsolation?.unstableModules.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Modules", value: integrity?.totalModules.toString() || "0", status: "OK" },

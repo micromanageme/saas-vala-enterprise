@@ -45,7 +45,7 @@ function Page() {
     { label: "Resurrection Rate", value: resurrection?.resurrectionRate || "0%", delta: "—", up: parseFloat(resurrection?.resurrectionRate || '0') > 95 },
     { label: "Correction Rate", value: correction?.correctionRate || "0%", delta: "—", up: parseFloat(correction?.correctionRate || '0') < 1 },
     { label: "Converged States", value: `${data?.realtimeStateConvergence?.convergedStates}/${data?.realtimeStateConvergence?.totalConvergences}`, delta: "—", up: data?.realtimeStateConvergence?.divergentStates === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Resurrections", value: resurrection?.totalResurrections.toString() || "0", status: "OK" },

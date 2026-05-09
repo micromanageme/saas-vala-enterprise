@@ -41,7 +41,7 @@ function Page() {
     { label: "Data Points", value: "45.2M", delta: "+22%", up: true },
     { label: "Dashboards Active", value: "89", delta: "+5", up: true },
     { label: "Data Freshness", value: "Real-time", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "report", label: "Report" },

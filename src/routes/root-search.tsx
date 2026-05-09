@@ -46,7 +46,7 @@ function Page() {
     { label: "Indexed", value: index.indexedDocuments.toLocaleString(), delta: "—", up: true },
     { label: "Pending", value: index.pendingIndex.toString(), delta: "—", up: index.pendingIndex === 0 },
     { label: "Index Size", value: index.indexSize, delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Module" },

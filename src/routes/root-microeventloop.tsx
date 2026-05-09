@@ -45,7 +45,7 @@ function Page() {
     { label: "Starvation Events", value: starvation?.starvationEvents.toString() || "0", delta: "—", up: starvation?.starvationEvents === 0 },
     { label: "Avg Loop Time", value: starvation?.avgLoopTime || "—", delta: "—", up: true },
     { label: "Dead Zones Found", value: deadzone?.deadZonesFound.toString() || "0", delta: "—", up: deadzone?.deadZonesFound === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Checks", value: starvation?.totalChecks.toLocaleString() || "0", status: "OK" },

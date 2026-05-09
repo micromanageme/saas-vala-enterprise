@@ -41,7 +41,7 @@ function Page() {
     { label: "Monthly Calls", value: data.kpis.monthlyAiCalls.toLocaleString(), delta: `+${data.kpis.callsDelta}%`, up: data.kpis.callsDelta > 0 },
     { label: "Active Models", value: data.kpis.activeModels.toString(), delta: "—", up: true },
     { label: "Error Rate", value: `${(data.kpis.errorRate * 100).toFixed(2)}%`, delta: `${data.kpis.errorRateDelta}%`, up: data.kpis.errorRateDelta < 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Model" },

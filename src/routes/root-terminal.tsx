@@ -47,7 +47,7 @@ function Page() {
     { label: "Issues Detected", value: diagnostic.issuesDetected.toString(), delta: "—", up: diagnostic.issuesDetected === 0 },
     { label: "Warnings", value: diagnostic.warnings.toString(), delta: "—", up: diagnostic.warnings === 0 },
     { label: "Scripts Ready", value: scripts?.length.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "command", label: "Command" },

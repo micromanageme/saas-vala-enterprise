@@ -45,7 +45,7 @@ function Page() {
     { label: "Validation Rate", value: validation?.validationRate || "0%", delta: "—", up: parseFloat(validation?.validationRate || '0') > 99 },
     { label: "Executed Chains", value: `${execution?.executedChains}/${execution?.totalChains}`, delta: "—", up: true },
     { label: "Rollback Success", value: `${data?.runtimePolicyRollback?.successfulRollbacks}/${data?.runtimePolicyRollback?.totalRollbacks}`, delta: "—", up: data?.runtimePolicyRollback?.failedRollbacks === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Validations", value: validation?.totalValidations.toString() || "0", status: "OK" },

@@ -46,7 +46,7 @@ function Page() {
     { label: "Throttled", value: throttling.throttledRequests.toString(), delta: "—", up: throttling.throttledRequests === 0 },
     { label: "Rate Limit", value: throttling.rateLimit, delta: "—", up: true },
     { label: "Window", value: throttling.window, delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "API" },

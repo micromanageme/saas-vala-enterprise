@@ -40,7 +40,7 @@ function Page() {
     { label: "Open Tasks", value: data.kpis.openTasks.toString(), delta: `+${data.kpis.openTasksDelta}`, up: data.kpis.openTasksDelta > 0 },
     { label: "Sprints", value: data.kpis.sprints.toString(), delta: `+${data.kpis.sprintsDelta}`, up: data.kpis.sprintsDelta > 0 },
     { label: "Bugs", value: data.kpis.bugs.toString(), delta: `${data.kpis.bugsDelta}`, up: data.kpis.bugsDelta < 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "name", label: "Project" }, { key: "lead", label: "Lead" }, { key: "progress", label: "Progress" }, { key: "status", label: "Status" }];
   const rows = data?.projects?.map((p: any) => ({

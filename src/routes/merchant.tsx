@@ -40,7 +40,7 @@ function Page() {
     { label: "Orders", value: "156", delta: "+18", up: true },
     { label: "Products", value: "23", delta: "+3", up: true },
     { label: "Customers", value: "89", delta: "+5", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "order", label: "Order" },

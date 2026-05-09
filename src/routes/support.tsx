@@ -40,7 +40,7 @@ function Page() {
     { label: "SLA Hit Rate", value: `${data.kpis.slaHitRate}%`, delta: `${data.kpis.slaHitRateDelta}%`, up: data.kpis.slaHitRateDelta > 0 },
     { label: "CSAT", value: data.kpis.csat.toString(), delta: `+${data.kpis.csatDelta}`, up: data.kpis.csatDelta > 0 },
     { label: "Avg Reply", value: `${data.kpis.avgReplyTime}h`, delta: `${data.kpis.avgReplyTimeDelta}h`, up: data.kpis.avgReplyTimeDelta < 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "id", label: "#" }, { key: "subject", label: "Subject" }, { key: "priority", label: "Priority" }, { key: "status", label: "Status" }];
   const rows = data?.tickets?.slice(0, 10).map((t: any) => ({

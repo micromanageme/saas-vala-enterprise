@@ -46,7 +46,7 @@ function Page() {
     { label: "Healthy", value: watchdog.healthyProcesses.toString(), delta: "—", up: true },
     { label: "Stuck", value: watchdog.stuckProcesses.toString(), delta: "—", up: watchdog.stuckProcesses === 0 },
     { label: "Auto Restarted", value: watchdog.autoRestarted.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Process" },

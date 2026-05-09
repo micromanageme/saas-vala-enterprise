@@ -40,7 +40,7 @@ function Page() {
     { label: "Pending", value: `$${data.kpis.pending.toLocaleString()}`, delta: `+${data.kpis.pendingDelta}%`, up: data.kpis.pendingDelta > 0 },
     { label: "Withdrawn", value: `$${data.kpis.withdrawn.toLocaleString()}`, delta: `+${data.kpis.withdrawnDelta}%`, up: data.kpis.withdrawnDelta > 0 },
     { label: "Transactions", value: data.kpis.transactions.toString(), delta: `+${data.kpis.transactionsDelta}%`, up: data.kpis.transactionsDelta > 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "description", label: "Description" }, { key: "type", label: "Type" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }];
   const rows = data?.transactions?.map((txn: any) => ({

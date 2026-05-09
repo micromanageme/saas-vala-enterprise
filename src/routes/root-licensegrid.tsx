@@ -46,7 +46,7 @@ function Page() {
     { label: "Tampered", value: tamper.tamperedLicenses.toString(), delta: "—", up: tamper.tamperedLicenses === 0 },
     { label: "Active", value: activations.filter((a: any) => a.status === 'ACTIVE').length.toString(), delta: "—", up: true },
     { label: "Shown", value: activations.length.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "key", label: "License Key" },

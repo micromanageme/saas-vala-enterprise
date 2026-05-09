@@ -46,7 +46,7 @@ function Page() {
     { label: "Enabled", value: flags.filter((f: any) => f.enabled).length.toString(), delta: "—", up: true },
     { label: "Staged", value: flags.filter((f: any) => f.staged).length.toString(), delta: "—", up: true },
     { label: "Emergency Ready", value: emergency?.ready ? "Yes" : "No", delta: "—", up: emergency?.ready },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Flag" },

@@ -46,7 +46,7 @@ function Page() {
     { label: "Success Rate", value: `${((gateway.successfulRequests / gateway.totalRequests) * 100).toFixed(2)}%`, delta: "—", up: true },
     { label: "Avg Latency", value: gateway.avgLatency, delta: "—", up: true },
     { label: "Throughput", value: gateway.throughput, delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "location", label: "Location" },

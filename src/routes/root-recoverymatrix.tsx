@@ -45,7 +45,7 @@ function Page() {
     { label: "Resurrectable Components", value: `${resurrection?.resurrectableComponents}/${resurrection?.totalComponents}`, delta: "—", up: resurrection?.nonResurrectableComponents === 0 },
     { label: "Restoration Success", value: restoration?.restorationSuccess || "0%", delta: "—", up: restoration?.restorationSuccess === '100%' },
     { label: "Recovery Accuracy", value: data?.timelineConsistentRecovery?.recoveryAccuracy || "0%", delta: "—", up: data?.timelineConsistentRecovery?.recoveryAccuracy === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Resurrection Time", value: resurrection?.resurrectionTime || "—", status: "OK" },

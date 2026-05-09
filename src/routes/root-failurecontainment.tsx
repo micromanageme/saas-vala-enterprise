@@ -46,7 +46,7 @@ function Page() {
     { label: "Healthy Services", value: `${isolation?.healthyServices}/${isolation?.totalServices}`, delta: "—", up: true },
     { label: "Contained Failures", value: `${blast?.containedFailures}/${blast?.totalFailures}`, delta: "—", up: true },
     { label: "Protected Dependencies", value: `${cascading?.protectedDependencies}/${cascading?.totalDependencies}`, delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Services", value: isolation?.totalServices.toString() || "0", status: "OK" },

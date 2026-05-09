@@ -41,7 +41,7 @@ function Page() {
     { label: "Conversion Rate", value: "4.5%", delta: "+0.8%", up: true },
     { label: "Marketing ROI", value: "320%", delta: "+15%", up: true },
     { label: "Brand Awareness", value: "78%", delta: "+5%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "channel", label: "Channel" },

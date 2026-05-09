@@ -43,7 +43,7 @@ function Page() {
     { label: "Active Users", value: monitoring.users.active.toString(), delta: "—", up: true },
     { label: "Active Sessions", value: monitoring.sessions.active.toString(), delta: "—", up: true },
     { label: "Total Transactions", value: monitoring.transactions.total.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "metric", label: "Metric" },
@@ -58,7 +58,7 @@ function Page() {
     { metric: "Active Sessions", value: monitoring.sessions.active.toString(), status: "ACTIVE" },
     { metric: "Active Licenses", value: monitoring.licenses.active.toString(), status: "ACTIVE" },
     { metric: "Total Products", value: monitoring.products.total.toString(), status: "ACTIVE" },
-  ] : [];
+  ];
 
   return (
     <AppShell>

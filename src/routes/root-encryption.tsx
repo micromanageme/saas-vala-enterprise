@@ -45,7 +45,7 @@ function Page() {
     { label: "HSM Status", value: hsm.status, delta: "—", up: hsm.status === 'CONNECTED' },
     { label: "Keys in HSM", value: hsm.keysInHSM.toString(), delta: "—", up: true },
     { label: "Total Secrets", value: data?.vaultOrchestration?.totalSecrets.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Key" },

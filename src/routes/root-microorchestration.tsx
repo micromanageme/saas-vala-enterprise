@@ -45,7 +45,7 @@ function Page() {
     { label: "Deadlock Rate", value: deadlock?.deadlockRate || "0%", delta: "—", up: deadlock?.deadlockRate === '0' },
     { label: "Convergence Rate", value: convergence?.convergenceRate || "0%", delta: "—", up: convergence?.convergenceRate === '100%' },
     { label: "Reconciliation Rate", value: data?.queueStateReconciliation?.reconciliationRate || "0%", delta: "—", up: data?.queueStateReconciliation?.reconciliationRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Orchestrations", value: deadlock?.totalOrchestrations.toString() || "0", status: "OK" },

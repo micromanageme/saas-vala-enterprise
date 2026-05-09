@@ -46,7 +46,7 @@ function Page() {
     { label: "RAM Utilization", value: ram?.utilization || "0%", delta: "—", up: true },
     { label: "Allocated Cores", value: `${cpu?.allocatedCores}/${cpu?.totalCores}`, delta: "—", up: true },
     { label: "Allocated RAM", value: `${ram?.allocatedRAM}/${ram?.totalRAM}`, delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total CPU Cores", value: cpu?.totalCores.toString() || "0", status: "OK" },

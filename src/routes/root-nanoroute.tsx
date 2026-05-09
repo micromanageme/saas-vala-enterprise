@@ -45,7 +45,7 @@ function Page() {
     { label: "Reconciliation Rate", value: `${reconciliation?.reconciledRoutes}/${reconciliation?.totalReconciliations}`, delta: "—", up: reconciliation?.unreconciledRoutes === 0 },
     { label: "Hydration Rate", value: hydration?.hydrationRate || "0%", delta: "—", up: hydration?.hydrationRate === '100%' },
     { label: "Invalidation Time", value: data?.staleRouteInvalidation?.invalidationTime || "—", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Avg Reconciliation Time", value: reconciliation?.avgReconciliationTime || "—", status: "OK" },

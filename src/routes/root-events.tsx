@@ -46,7 +46,7 @@ function Page() {
     { label: "Completed", value: tracing.completedTraces.toLocaleString(), delta: "—", up: true },
     { label: "Failed", value: tracing.failedTraces.toString(), delta: "—", up: tracing.failedTraces === 0 },
     { label: "Avg Duration", value: tracing.avgTraceDuration, delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Stream" },

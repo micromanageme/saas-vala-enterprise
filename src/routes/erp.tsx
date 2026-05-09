@@ -40,7 +40,7 @@ function Page() {
     { label: "Sales Orders", value: data.kpis.salesOrders.toString(), delta: `+${data.kpis.salesOrdersDelta}%`, up: data.kpis.salesOrdersDelta > 0 },
     { label: "Invoiced", value: `$${(data.kpis.invoiced / 1000).toFixed(0)}K`, delta: `+${data.kpis.invoicedDelta}%`, up: data.kpis.invoicedDelta > 0 },
     { label: "Backorders", value: data.kpis.backorders.toString(), delta: data.kpis.backordersDelta.toString(), up: data.kpis.backordersDelta < 0 }
-  ] : [];
+  ];
 
   const columns = [{ key: "so", label: "SO #" }, { key: "customer", label: "Customer" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }];
   const rows = data?.orders?.map((order: any) => ({

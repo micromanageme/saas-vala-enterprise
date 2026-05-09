@@ -45,7 +45,7 @@ function Page() {
     { label: "Passed Checks", value: `${validation?.passedChecks}/${validation?.totalChecks}`, delta: "—", up: validation?.failedChecks === 0 },
     { label: "Integrity Score", value: boot?.integrityScore || "0%", delta: "—", up: boot?.integrityScore === '100%' },
     { label: "Chain Status", value: data?.trustedStartupChain?.chainStatus || "—", delta: "—", up: data?.trustedStartupChain?.chainStatus === 'TRUSTED' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Checks", value: validation?.totalChecks.toString() || "0", status: "OK" },

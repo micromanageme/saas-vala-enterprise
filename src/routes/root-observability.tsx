@@ -46,7 +46,7 @@ function Page() {
     { label: "DB Latency (p95)", value: `${metrics.dbLatency.p95}ms`, delta: "—", up: true },
     { label: "Cache Hit Rate", value: `${metrics.cacheHitRate}%`, delta: "—", up: true },
     { label: "Error Rate", value: `${(metrics.errorRate * 100).toFixed(2)}%`, delta: "—", up: metrics.errorRate < 0.05 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "level", label: "Level" },

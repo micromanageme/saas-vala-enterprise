@@ -46,7 +46,7 @@ function Page() {
     { label: "Processed", value: eventBus.processedEvents.toLocaleString(), delta: "—", up: true },
     { label: "Failed", value: eventBus.failedEvents.toString(), delta: "—", up: false },
     { label: "Throughput", value: eventBus.throughput.toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Workflow" },

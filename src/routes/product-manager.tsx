@@ -40,7 +40,7 @@ function Page() {
     { label: "Feature Requests", value: "234", delta: "+18", up: true },
     { label: "NPS Score", value: "72", delta: "+5", up: true },
     { label: "Roadmap Progress", value: "68%", delta: "+8%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "feature", label: "Feature" },

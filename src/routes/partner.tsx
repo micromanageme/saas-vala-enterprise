@@ -40,7 +40,7 @@ function Page() {
     { label: "Commission", value: "$2.5K", delta: "+18%", up: true },
     { label: "Active Deals", value: "8", delta: "+2", up: true },
     { label: "Conversion Rate", value: "34%", delta: "+3%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "referral", label: "Referral" },

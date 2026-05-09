@@ -45,7 +45,7 @@ function Page() {
     { label: "Prediction Accuracy", value: detection?.accuracy || "0%", delta: "—", up: parseFloat(detection?.accuracy || '0') > 90 },
     { label: "Forecasted Anomalies", value: `${forecasting?.forecastedAnomalies}/${forecasting?.totalAnomalies}`, delta: "—", up: true },
     { label: "Defense Rate", value: data?.selfDefenseOrchestration?.defenseRate || "0%", delta: "—", up: parseFloat(data?.selfDefenseOrchestration?.defenseRate || '0') > 95 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Predictions", value: detection?.totalPredictions.toString() || "0", status: "OK" },

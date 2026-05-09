@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Simulations", value: infra.totalSimulations.toString(), delta: "—", up: true },
     { label: "Successful", value: infra.successfulSimulations.toString(), delta: "—", up: true },
     { label: "Failed", value: infra.failedSimulations.toString(), delta: "—", up: infra.failedSimulations === 0 },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Simulation" },
