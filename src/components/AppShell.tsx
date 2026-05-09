@@ -104,6 +104,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </kbd>
             </button>
             {showAdvancedFeatures && (
+              <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-2">
@@ -139,6 +140,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {viewMode === 'executive' ? <BarChart3 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
                 <span className="hidden sm:inline">{viewMode === 'executive' ? 'Executive' : 'Operator'}</span>
               </Button>
+              </>
             )}
             <PresenceAvatars />
             {showAdvancedFeatures && <SaveIndicator />}
