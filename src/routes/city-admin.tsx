@@ -40,7 +40,7 @@ function Page() {
     { label: "City Revenue", value: "$180K", delta: "+6%", up: true },
     { label: "Active Customers", value: "45", delta: "+3", up: true },
     { label: "Local Events", value: "3", delta: "+1", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "customer", label: "Customer" },

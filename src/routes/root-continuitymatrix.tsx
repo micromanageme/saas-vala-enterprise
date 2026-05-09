@@ -45,7 +45,7 @@ function Page() {
     { label: "Resilience Score", value: resilience?.resilienceScore?.toString() || "0/10", delta: "—", up: (resilience?.resilienceScore || 0) > 9 },
     { label: "Archives Verified", value: `${archival?.integrityVerified.toLocaleString()}/${archival?.totalArchives.toLocaleString()}`, delta: "—", up: archival?.corruptedArchives === 0 },
     { label: "Active Regions", value: `${data?.multiRegionContinuity?.activeRegions}/${data?.multiRegionContinuity?.totalRegions}`, delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Threat Mitigation", value: resilience?.threatMitigation || "0%", status: "OK" },

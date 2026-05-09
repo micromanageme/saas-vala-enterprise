@@ -45,7 +45,7 @@ function Page() {
     { label: "Checksum Accuracy", value: checksum?.checksumAccuracy || "0%", delta: "—", up: checksum?.checksumAccuracy === '100%' },
     { label: "Parity Rate", value: parity?.parityRate || "0%", delta: "—", up: parity?.parityRate === '100%' },
     { label: "Rollback Rate", value: data?.rollbackDeterminismVerification?.rollbackRate || "0%", delta: "—", up: data?.rollbackDeterminismVerification?.rollbackRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Artifacts", value: checksum?.totalArtifacts.toString() || "0", status: "OK" },

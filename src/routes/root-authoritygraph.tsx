@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Chains", value: chain?.totalChains.toString() || "0", delta: "—", up: true },
     { label: "Traced Escalations", value: `${escalation?.tracedEscalations}/${escalation?.totalEscalations}`, delta: "—", up: true },
     { label: "Resolution Rate", value: data?.inheritanceConflictResolution?.resolutionRate || "0%", delta: "—", up: data?.inheritanceConflictResolution?.resolutionRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Chain Depth", value: chain?.chainDepth.toString() || "0", status: "OK" },

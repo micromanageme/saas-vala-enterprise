@@ -45,7 +45,7 @@ function Page() {
     { label: "Validated Chains", value: `${chains?.validatedChains}/${chains?.totalChains}`, delta: "—", up: chains?.invalidChains === 0 },
     { label: "Verified Proofs", value: `${proof?.verifiedProofs}/${proof?.totalProofs}`, delta: "—", up: proof?.invalidProofs === 0 },
     { label: "Trust Score", value: data?.chainOfTrustOrchestration?.trustScore || "0%", delta: "—", up: data?.chainOfTrustOrchestration?.trustScore === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Chain Depth", value: chains?.chainDepth.toString() || "0", status: "OK" },

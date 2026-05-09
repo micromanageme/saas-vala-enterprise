@@ -40,7 +40,7 @@ function Page() {
     { label: "Stock Value", value: "$1.2M", delta: "+8%", up: true },
     { label: "Low Stock Items", value: "23", delta: "-5", up: true },
     { label: "Turnover Rate", value: "4.2x", delta: "+0.3", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "product", label: "Product" },

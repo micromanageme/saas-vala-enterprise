@@ -45,7 +45,7 @@ function Page() {
     { label: "Fingerprint Accuracy", value: fingerprint?.fingerprintAccuracy || "0%", delta: "—", up: parseFloat(fingerprint?.fingerprintAccuracy || '0') > 99 },
     { label: "Valid Entropy", value: `${entropy?.validEntropy}/${entropy?.totalValidations}`, delta: "—", up: entropy?.invalidEntropy === 0 },
     { label: "Cloned Sessions", value: data?.clonedSessionDetection?.clonedSessionsFound.toString() || "0", delta: "—", up: data?.clonedSessionDetection?.clonedSessionsFound === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Fingerprints", value: fingerprint?.totalFingerprints.toString() || "0", status: "OK" },

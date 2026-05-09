@@ -45,7 +45,7 @@ function Page() {
     { label: "Compliant Actions", value: `${ethics?.compliantActions}/${ethics?.totalAIActions}`, delta: "—", up: ethics?.nonCompliantActions === 0 },
     { label: "Biased Models", value: bias?.biasedModels.toString() || "0", delta: "—", up: bias?.biasedModels === 0 },
     { label: "Avg Bias Score", value: bias?.avgBiasScore?.toString() || "0", delta: "—", up: bias?.avgBiasScore < 0.1 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total AI Actions", value: ethics?.totalAIActions.toLocaleString() || "0", status: "OK" },

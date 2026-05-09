@@ -40,7 +40,7 @@ function Page() {
     { label: "Features Used", value: "5/10", delta: "+2", up: true },
     { label: "Data Processed", value: "1.2K", delta: "+500", up: true },
     { label: "Upgrade Eligible", value: "Yes", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "feature", label: "Feature" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Alerts Active", value: "3", delta: "-2", up: true },
     { label: "Dashboard Health", value: "100%", delta: "—", up: true },
     { label: "Data Retention", value: "30 days", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "service", label: "Service" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Revenue", value: "$45K", delta: "+12%", up: true },
     { label: "Team Size", value: "18", delta: "+3", up: true },
     { label: "Performance", value: "92%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "location", label: "Location" },

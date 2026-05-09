@@ -45,7 +45,7 @@ function Page() {
     { label: "Profiled Users", value: `${learning?.profiledUsers}/${learning?.totalUsers}`, delta: "—", up: true },
     { label: "Prediction Accuracy", value: prediction?.accuracy || "0%", delta: "—", up: parseFloat(prediction?.accuracy || '0') > 90 },
     { label: "Pattern Confidence", value: data?.threatPatternIntelligence?.patternConfidence || "0%", delta: "—", up: parseFloat(data?.threatPatternIntelligence?.patternConfidence || '0') > 90 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Behaviors Learned", value: learning?.totalBehaviorsLearned.toString() || "0", status: "OK" },

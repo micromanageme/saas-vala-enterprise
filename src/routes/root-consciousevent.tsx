@@ -45,7 +45,7 @@ function Page() {
     { label: "Awareness Coverage", value: awareness?.awarenessCoverage || "0%", delta: "—", up: awareness?.awarenessCoverage === '100%' },
     { label: "Active Links", value: data?.crossServiceCognition?.activeLinks.toString() || "0", delta: "—", up: true },
     { label: "Containment Rate", value: data?.chainReactionContainment?.containmentRate || "0%", delta: "—", up: data?.chainReactionContainment?.containmentRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Services", value: awareness?.totalServices.toString() || "0", status: "OK" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "API Calls/Day", value: "1.2M", delta: "+15%", up: true },
     { label: "Avg Response", value: "120ms", delta: "-20ms", up: true },
     { label: "Accuracy", value: "94.5%", delta: "+1.2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "model", label: "Model" },

@@ -72,7 +72,7 @@ export const entityTypeColors: Record<EntityType, string> = {
   quote: 'oklch(0.6 0.18 145)',
   lead: 'oklch(0.55 0.2 50)',
   contract: 'oklch(0.6 0.15 270)',
-  shipment: 'oklch(0.65 0.18 145),
+  shipment: 'oklch(0.65 0.18 145)',
 };
 
 // Create relationship graph from entities
@@ -430,7 +430,7 @@ export function getNodeNeighbors(
   const visited = new Set<string>();
   const resultNodes: RelationshipNode[] = [];
   const resultEdges: RelationshipEdge[] = [];
-  const queue = Array<{ nodeId: string; currentDepth: number }>([{ nodeId, 0 }]);
+  const queue: Array<{ nodeId: string; currentDepth: number }> = [{ nodeId, currentDepth: 0 }];
   
   while (queue.length > 0) {
     const { nodeId: currentId, currentDepth } = queue.shift()!;

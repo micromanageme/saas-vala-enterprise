@@ -40,7 +40,7 @@ function Page() {
     { label: "Open Tickets", value: "1", delta: "—", up: true },
     { label: "Monthly Spend", value: "$450", delta: "—", up: true },
     { label: "Usage", value: "78%", delta: "+5%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "subscription", label: "Subscription" },

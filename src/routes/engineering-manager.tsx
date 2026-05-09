@@ -40,7 +40,7 @@ function Page() {
     { label: "Active Sprints", value: "4", delta: "—", up: true },
     { label: "Velocity", value: "42 pts/sprint", delta: "+5", up: true },
     { label: "Open PRs", value: "23", delta: "-8", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "developer", label: "Developer" },

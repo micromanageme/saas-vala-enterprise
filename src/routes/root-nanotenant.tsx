@@ -45,7 +45,7 @@ function Page() {
     { label: "Leakage Rate", value: leakage?.detectionRate || "0%", delta: "—", up: leakage?.detectionRate === '0' },
     { label: "Quarantine Rate", value: quarantine?.quarantineRate || "0%", delta: "—", up: quarantine?.quarantineRate === '0' },
     { label: "Isolation Accuracy", value: data?.isolatedCacheBoundaries?.isolationAccuracy || "0%", delta: "—", up: data?.isolatedCacheBoundaries?.isolationAccuracy === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Checks", value: leakage?.totalChecks.toLocaleString() || "0", status: "OK" },

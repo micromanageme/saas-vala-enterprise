@@ -55,7 +55,7 @@ function Page() {
   const kpis = [
     { label: "Overall Status", value: "ALL_VALIDATED", delta: "—", up: true },
     { label: "Authority Conflicts", value: conflicts?.invisibleConflicts.toString() || "0", delta: "—", up: conflicts?.invisibleConflicts === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Authority Chains", value: `${authority?.verifiedChains}/${authority?.totalChains}`, status: authority?.status },

@@ -52,7 +52,7 @@ function Page() {
   const rows = [
     { network: "Core Backbone", allocated: "200 Gbps", used: "150 Gbps", status: "Normal" },
     { network: "Metro Access", allocated: "150 Gbps", used: "120 Gbps", status: "Normal" },
-    { network: "Edge Network", allocated: "100 Gbps", used: "95 Gbps, status: "High Usage" },
+    { network: "Edge Network", allocated: "100 Gbps", used: "95 Gbps", status: "High Usage" },
     { network: "Data Center", allocated: "50 Gbps", used: "40 Gbps", status: "Normal" },
     { network: "Backup Link", allocated: "20 Gbps", used: "5 Gbps", status: "Standby" },
   ];

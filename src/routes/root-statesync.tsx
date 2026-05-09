@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Channels", value: `${sync?.activeChannels}/${sync?.totalSyncChannels}`, delta: "—", up: true },
     { label: "Messages/s", value: sync?.messagesPerSecond.toString() || "0", delta: "—", up: true },
     { label: "Synced Users", value: `${device?.syncedUsers}/${device?.totalUsers}`, delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Sync Channels", value: sync?.totalSyncChannels.toString() || "0", status: "OK" },

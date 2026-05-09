@@ -40,7 +40,7 @@ function Page() {
     { label: "Bandwidth Usage", value: "45%", delta: "+2%", up: true },
     { label: "Active Connections", value: "12.5K", delta: "+1.2K", up: true },
     { label: "Security Events", value: "2", delta: "-3", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "network", label: "Network" },

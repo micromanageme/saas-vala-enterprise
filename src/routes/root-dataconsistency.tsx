@@ -45,7 +45,7 @@ function Page() {
     { label: "Consistent Replicas", value: `${replication?.consistentReplicas}/${replication?.totalReplicas}`, delta: "—", up: true },
     { label: "Reconciled Transactions", value: `${transactions?.reconciledTransactions.toLocaleString()}/${transactions?.totalTransactions.toLocaleString()}`, delta: "—", up: true },
     { label: "Stale Read Rate", value: data?.staleReadDetection?.staleReadRate || "0%", delta: "—", up: data?.staleReadDetection?.staleReadRate === '0%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Replicas", value: replication?.totalReplicas.toString() || "0", status: "OK" },

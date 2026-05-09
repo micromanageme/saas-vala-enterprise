@@ -45,7 +45,7 @@ function Page() {
     { label: "Consensus Rate", value: governance?.consensusRate || "0%", delta: "—", up: parseFloat(governance?.consensusRate || '0') > 90 },
     { label: "Achieved Consensus", value: `${consensus?.achievedConsensus}/${consensus?.totalConsensusVotes}`, delta: "—", up: true },
     { label: "Resolved Conflicts", value: data?.conflictArbitration?.resolvedConflicts.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Approvals", value: governance?.totalApprovals.toString() || "0", status: "OK" },

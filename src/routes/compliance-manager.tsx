@@ -40,7 +40,7 @@ function Page() {
     { label: "Open Audits", value: "2", delta: "-1", up: true },
     { label: "Policies Active", value: "45", delta: "+3", up: true },
     { label: "Training Complete", value: "94%", delta: "+5%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "framework", label: "Framework" },

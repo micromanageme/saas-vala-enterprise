@@ -45,7 +45,7 @@ function Page() {
     { label: "Prevention Rate", value: schema?.preventionRate || "0%", delta: "—", up: schema?.preventionRate === '100%' },
     { label: "Healed Transactions", value: `${transactional?.healedTransactions.toLocaleString()}/${transactional?.totalTransactions.toLocaleString()}`, delta: "—", up: transactional?.corruptedTransactions === 0 },
     { label: "Enforcement Rate", value: data?.runtimeIntegrityEnforcement?.enforcementRate || "0%", delta: "—", up: data?.runtimeIntegrityEnforcement?.enforcementRate === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Schemas", value: schema?.totalSchemas.toString() || "0", status: "OK" },

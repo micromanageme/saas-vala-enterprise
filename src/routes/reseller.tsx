@@ -40,7 +40,7 @@ function Page() {
     { label: "Commission", value: "$12.5K", delta: "+15%", up: true },
     { label: "Clients", value: "45", delta: "+8", up: true },
     { label: "Tier Status", value: "Gold", delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "client", label: "Client" },

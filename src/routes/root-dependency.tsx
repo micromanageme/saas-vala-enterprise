@@ -45,7 +45,7 @@ function Page() {
     { label: "Total Nodes", value: graph?.totalNodes.toString() || "0", delta: "—", up: true },
     { label: "Total Edges", value: graph?.totalEdges.toString() || "0", delta: "—", up: true },
     { label: "Circular Dependencies", value: graph?.circularDependencies.toString() || "0", delta: "—", up: graph?.circularDependencies === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Dependencies", value: healing?.totalDependencies.toString() || "0", status: "OK" },

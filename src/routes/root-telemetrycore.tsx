@@ -45,7 +45,7 @@ function Page() {
     { label: "Federated Sources", value: `${federation?.federatedSources}/${federation?.totalSources}`, delta: "—", up: true },
     { label: "Telemetry Rate", value: federation?.telemetryRate || "0", delta: "—", up: true },
     { label: "Coverage", value: data?.ultraHighFrequencyMonitoring?.coverage || "0%", delta: "—", up: data?.ultraHighFrequencyMonitoring?.coverage === '100%' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Metrics", value: observability?.totalMetrics.toLocaleString() || "0", status: "OK" },

@@ -45,7 +45,7 @@ function Page() {
     { label: "Integrated Platforms", value: `${orchestration?.integratedPlatforms}/${orchestration?.totalPlatforms}`, delta: "—", up: true },
     { label: "Success Rate", value: orchestration?.orchestrationSuccessRate || "0%", delta: "—", up: parseFloat(orchestration?.orchestrationSuccessRate || '0') > 99 },
     { label: "Supported Translations", value: translation?.supportedTranslations.toString() || "0", delta: "—", up: true },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Platforms", value: orchestration?.totalPlatforms.toString() || "0", status: "OK" },

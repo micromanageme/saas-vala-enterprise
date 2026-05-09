@@ -45,7 +45,7 @@ function Page() {
     { label: "Synthesized Permissions", value: `${permission?.synthesizedPermissions}/${permission?.totalContexts}`, delta: "—", up: true },
     { label: "Adaptation Rate", value: workflow?.adaptationRate || "0%", delta: "—", up: workflow?.adaptationRate === '100%' },
     { label: "Cognition Accuracy", value: data?.realtimeEnvironmentCognition?.cognitionAccuracy || "0%", delta: "—", up: parseFloat(data?.realtimeEnvironmentCognition?.cognitionAccuracy || '0') > 95 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Synthesis Time", value: permission?.synthesisTime || "—", status: "OK" },

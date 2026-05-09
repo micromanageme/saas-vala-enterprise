@@ -46,7 +46,7 @@ function Page() {
     { label: "Compliant", value: frameworks.filter((f: any) => f.status === 'COMPLIANT').length.toString(), delta: "—", up: true },
     { label: "Automated Audits", value: automation?.automatedAudits.toString() || "0", delta: "—", up: true },
     { label: "Total Audits", value: ((automation?.automatedAudits || 0) + (automation?.manualAudits || 0)).toString(), delta: "—", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "name", label: "Framework" },

@@ -40,7 +40,7 @@ function Page() {
     { label: "Production Rate", value: "92%", delta: "+3%", up: true },
     { label: "Quality Score", value: "98.5%", delta: "+0.5%", up: true },
     { label: "On-Time Delivery", value: "94%", delta: "+2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "order", label: "Order" },

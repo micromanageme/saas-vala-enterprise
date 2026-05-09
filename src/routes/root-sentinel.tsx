@@ -45,7 +45,7 @@ function Page() {
     { label: "Active Guardians", value: `${guardian?.activeGuardians}/${guardian?.totalGuardians}`, delta: "—", up: true },
     { label: "Guardian Coverage", value: guardian?.guardianCoverage || "0%", delta: "—", up: guardian?.guardianCoverage === '100%' },
     { label: "Protection Level", value: data?.autonomousProtectionNodes?.protectionLevel || "—", delta: "—", up: data?.autonomousProtectionNodes?.protectionLevel === 'CRITICAL' },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Total Watchdogs", value: watchdog?.totalWatchdogs.toString() || "0", status: "OK" },

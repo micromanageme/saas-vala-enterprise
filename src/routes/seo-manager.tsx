@@ -40,7 +40,7 @@ function Page() {
     { label: "Keywords Ranked", value: "1,234", delta: "+18%", up: true },
     { label: "Avg Position", value: "12.5", delta: "-2.3", up: true },
     { label: "Backlinks", value: "2,456", delta: "+15%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "keyword", label: "Keyword" },

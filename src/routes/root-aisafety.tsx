@@ -47,7 +47,7 @@ function Page() {
     { label: "Hallucinations", value: hallucination?.detectedHallucinations.toString() || "0", delta: "—", up: hallucination?.detectedHallucinations === 0 },
     { label: "Abuse Flagged", value: abuse?.flaggedQueries.toString() || "0", delta: "—", up: abuse?.flaggedQueries === 0 },
     { label: "Violations", value: policy?.policyViolations.toString() || "0", delta: "—", up: policy?.policyViolations === 0 },
-  ] : [];
+  ];
 
   const rows = [
     { metric: "Hallucination Rate", value: `${((hallucination?.detectedHallucinations || 0) / (hallucination?.totalQueries || 1) * 100).toFixed(4)}%`, status: 'OK' },

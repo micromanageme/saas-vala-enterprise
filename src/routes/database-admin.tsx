@@ -40,7 +40,7 @@ function Page() {
     { label: "Total Size", value: "2.5TB", delta: "+0.5TB", up: true },
     { label: "Backup Status", value: "Current", delta: "—", up: true },
     { label: "Query Performance", value: "Excellent", delta: "+5%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "database", label: "Database" },
