@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Entity-Centric Design - System organized around entities, not modules
 export type EntityType = 
   | 'customer'

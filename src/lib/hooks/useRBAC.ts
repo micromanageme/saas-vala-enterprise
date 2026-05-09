@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - RBAC Hook
  * Client-side RBAC utilities

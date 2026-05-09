@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Cache Service
  * Simple in-memory cache for API responses

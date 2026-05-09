@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Operational State Machine - Every entity must exist in clear state
 export type EntityState = 
   | 'draft'

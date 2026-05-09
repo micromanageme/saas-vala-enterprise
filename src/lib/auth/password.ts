@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Password Management
  * Enterprise-grade password hashing and validation

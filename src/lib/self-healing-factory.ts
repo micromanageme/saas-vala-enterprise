@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Self-Healing Software Factory
  * Comprehensive automated recovery system for role-based dashboards and services

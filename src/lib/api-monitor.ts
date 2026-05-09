@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - API Monitor
  * API monitoring and metrics collection

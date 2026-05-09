@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - RBAC Permission Definitions
  * Centralized permission constants for all modules

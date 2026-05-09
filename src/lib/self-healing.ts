@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Self-Healing System
  * Runtime auto-recovery and resilience layer

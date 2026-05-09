@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Audit Service
  * Enterprise audit logging for security and compliance

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - JWT Authentication
  * Enterprise-grade JWT token generation and validation

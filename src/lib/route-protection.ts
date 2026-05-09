@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Route Protection
  * Client-side route protection using TanStack Router

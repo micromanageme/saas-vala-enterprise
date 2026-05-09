@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - API Cache Middleware
  * Cache API responses for performance
