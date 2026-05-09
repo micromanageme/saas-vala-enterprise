@@ -37,7 +37,7 @@ function Page() {
 
   const kpis = [
     { label: "Systems Monitored", value: "125", delta: "+10", up: true },
-    { label: "Alerts Handled", value="45", delta: "+5", up: true },
+    { label: "Alerts Handled", value: "45", delta: "+5", up: true },
     { label: "System Uptime", value: "99.8%", delta: "+0.1%", up: true },
     { label: "Response Time", value: "15s", delta: "-2s", up: true },
   ];
