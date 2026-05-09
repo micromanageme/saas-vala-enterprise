@@ -430,7 +430,7 @@ export function getNodeNeighbors(
   const visited = new Set<string>();
   const resultNodes: RelationshipNode[] = [];
   const resultEdges: RelationshipEdge[] = [];
-  const queue = Array<{ nodeId: string; currentDepth: number }>([{ nodeId, 0 }]);
+  const queue: Array<{ nodeId: string; currentDepth: number }> = [{ nodeId, currentDepth: 0 }];
   
   while (queue.length > 0) {
     const { nodeId: currentId, currentDepth } = queue.shift()!;
