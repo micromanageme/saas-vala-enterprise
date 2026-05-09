@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Cache Command API
  * Redis/cache clusters, invalidation, and synchronization

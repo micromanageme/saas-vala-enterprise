@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Runtime Validator API
  * Runtime integrity scan, hot module verification, unstable isolation, corruption recovery

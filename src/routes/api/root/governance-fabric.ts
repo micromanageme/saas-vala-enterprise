@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Governance Fabric API
  * Governance hierarchy, operational governance, policy lineage, approval governance

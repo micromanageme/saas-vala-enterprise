@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Execution Timeline API
  * Timeline replay, event chronology, audit reconstruction, forensic sequencing

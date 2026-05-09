@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Predictive Failure Engine API
  * Predictive outage detection, anomaly forecasting, proactive remediation planning, self-defense

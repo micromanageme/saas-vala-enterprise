@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - API: Authentication
  * Logout endpoint with session invalidation

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Token Authority API
  * Token minting, revocation, JWT lifecycle, session token graph

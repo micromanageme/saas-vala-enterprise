@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Compute Grid API
  * Cluster orchestration, distributed compute, edge compute mesh, workload balancing

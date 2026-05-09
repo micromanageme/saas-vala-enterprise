@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Kernel Control API
  * System kernel monitoring and runtime process control

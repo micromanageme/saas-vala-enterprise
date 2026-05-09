@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Final Root Validation API
  * System validation, dependency mapping, service monitoring

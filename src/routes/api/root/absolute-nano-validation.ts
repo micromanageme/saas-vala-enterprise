@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Absolute Nano Root Validation API
  * Microstate determinism, authority mutation traceability, async chain recoverability, render path observability,

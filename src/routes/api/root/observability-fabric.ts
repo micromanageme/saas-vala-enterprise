@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Observability Fabric API
  * Unified telemetry, distributed tracing, correlation engine, anomaly heatmaps

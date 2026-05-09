@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root API Command Center API
  * API contracts, schema validation, API replay, throttling

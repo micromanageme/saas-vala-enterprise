@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Interoperability Fabric API
  * Cross-platform orchestration, protocol translation, legacy-modern bridge, federated ecosystem

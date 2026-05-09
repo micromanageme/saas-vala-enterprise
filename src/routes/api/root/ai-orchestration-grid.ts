@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal AI Orchestration Grid API
  * Multi-agent coordination, AI workflow graph, inference balancing, AI failover

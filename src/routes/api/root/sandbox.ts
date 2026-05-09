@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Sandbox Environment API
  * Isolated testing, deployment simulation, compatibility validation

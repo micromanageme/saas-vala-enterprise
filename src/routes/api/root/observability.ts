@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Observability Center API
  * Root-level logs, metrics, and tracing

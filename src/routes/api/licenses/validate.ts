@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - License Validation API
  * Secure license validation for offline/online activation

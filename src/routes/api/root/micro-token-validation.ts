@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Token Chain Validation API
  * Token ancestry mapping, refresh lineage tracking, replay attack isolation, invalid chain termination

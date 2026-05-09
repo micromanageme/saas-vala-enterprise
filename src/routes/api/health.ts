@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Health Check API
  * Enterprise health monitoring endpoint

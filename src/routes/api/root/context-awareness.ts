@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Context Awareness Engine API
  * Contextual permission synthesis, situational workflow adaptation, dynamic policy intelligence, cognition

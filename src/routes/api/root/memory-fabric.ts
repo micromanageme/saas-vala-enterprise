@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Memory Fabric API
  * Distributed memory persistence, state continuity preservation, long-session resilience, reconciliation

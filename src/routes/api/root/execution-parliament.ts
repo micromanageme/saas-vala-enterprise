@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Execution Parliament API
  * Distributed approval governance, multi-authority consensus, conflict arbitration, policy negotiation

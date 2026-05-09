@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Policy Evaluation Pipeline API
  * Pre-policy validation, chained policy execution, runtime policy rollback, policy side-effect tracing

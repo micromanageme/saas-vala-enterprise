@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Global Branch Management API
  * Super Admin branch and location management

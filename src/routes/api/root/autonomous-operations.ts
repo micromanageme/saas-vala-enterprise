@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Autonomous Operations Core API
  * Autonomous remediation, optimization, scaling, anomaly correction

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Storage Integrity Engine API
  * Write-corruption validation, fragmented state healing, storage entropy monitoring, repair

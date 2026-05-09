@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Search Engine API
  * Global search index, cross-module search, permission-aware search

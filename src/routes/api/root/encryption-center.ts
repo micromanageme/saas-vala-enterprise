@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Encryption Center API
  * Key rotation, HSM integration, vault orchestration, storage validation

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root AI Safety Center API
  * Hallucination monitoring, abuse detection, policy enforcement

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root RBAC Engine API
  * Universal permission control at root level

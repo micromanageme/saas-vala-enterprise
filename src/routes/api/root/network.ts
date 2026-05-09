@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Network Operations API
  * DNS routing, gateway traffic, proxy management

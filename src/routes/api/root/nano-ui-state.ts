@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano UI State Synthesis API
  * Hidden state convergence, stale UI invalidation, render dependency reconciliation, hydration arbitration

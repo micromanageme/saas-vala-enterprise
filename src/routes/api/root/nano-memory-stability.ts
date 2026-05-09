@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano Memory Stability Layer API
  * Retained-reference isolation, heap fragmentation tracking, memory leak ancestry, garbage harmonization

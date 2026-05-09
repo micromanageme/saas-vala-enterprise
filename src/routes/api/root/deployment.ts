@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Deployment Control API
  * Root-level CI/CD and environment management

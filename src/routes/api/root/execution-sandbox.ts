@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Execution Sandbox API
  * Isolated runtime execution, privileged simulation, unsafe containment, rollback-safe

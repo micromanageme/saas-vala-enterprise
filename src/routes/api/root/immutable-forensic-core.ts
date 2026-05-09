@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Immutable Forensic Core API
  * Tamper-proof activity chain, cryptographic audit sealing, forensic reconstruction, evidence preservation

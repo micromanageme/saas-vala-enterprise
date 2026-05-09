@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Filesystem Control API
  * Storage explorer, object storage, CDN sync

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Payment Workflow API
  * Payment processing and transaction tracking

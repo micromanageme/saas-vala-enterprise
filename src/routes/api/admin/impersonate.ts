@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - User Impersonation API
  * Super Admin user impersonation

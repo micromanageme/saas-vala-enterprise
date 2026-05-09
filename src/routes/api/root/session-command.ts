@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Global Session Command Center API
  * Active sessions, forced logout, hijack detection

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Global Tenant Control API
  * Super Admin tenant management

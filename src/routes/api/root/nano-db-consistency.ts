@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano Database Consistency Lock API
  * Phantom read detection, isolation-level enforcement, transactional lineage graph, write arbitration

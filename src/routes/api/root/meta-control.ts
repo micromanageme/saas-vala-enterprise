@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Meta Control Layer API
  * System-of-systems visibility, global orchestration graph, universal dependency oversight

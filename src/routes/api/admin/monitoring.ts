@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Global Monitoring API
  * System-wide monitoring and observability

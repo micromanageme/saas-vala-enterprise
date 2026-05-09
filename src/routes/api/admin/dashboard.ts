@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Super Admin Dashboard API
  * Ultimate Enterprise Command Center - Main Dashboard

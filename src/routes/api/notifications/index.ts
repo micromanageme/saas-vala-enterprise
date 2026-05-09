@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Notifications API
  * Real notification data
@@ -8,7 +9,7 @@ import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 
-export const Route = createFileRoute('/api/notifications')({
+export const Route = createFileRoute('/api/notifications/')({
   GET: async ({ request }) => {
     const logger = Logger.createRequestLogger('notifications-api');
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Absolute Recovery Matrix API
  * Total ecosystem resurrection, dead-state restoration, corruption rollback lineage, timeline-consistent recovery

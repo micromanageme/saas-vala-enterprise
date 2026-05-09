@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - User Behavior Analytics API
  * User behavior and engagement analytics

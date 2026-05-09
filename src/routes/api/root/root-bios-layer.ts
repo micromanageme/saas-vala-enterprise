@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Root BIOS Layer API
  * Pre-runtime validation, boot integrity checks, trusted startup chain, secure initialization

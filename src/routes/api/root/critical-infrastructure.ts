@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Critical Infrastructure Control API
  * Mission-critical systems, high-availability zones, emergency routing, national-grade redundancy

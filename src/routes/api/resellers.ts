@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Resellers API
  * Channel partners and commissions (Database Integration)

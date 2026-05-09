@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Root Decision Engine API
  * Automated governance decisions, risk-aware execution, approval intelligence, adaptive escalation

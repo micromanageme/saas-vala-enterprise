@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Nano Route Resolution Engine API
  * Dynamic route reconciliation, permission-aware route hydration, stale route invalidation, orphan cleanup

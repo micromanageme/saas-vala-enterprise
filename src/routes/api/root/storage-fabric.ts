@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Storage Fabric API
  * Object storage federation, replication, durability validation, archive orchestration

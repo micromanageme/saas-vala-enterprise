@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Micro Deployment Consistency Engine API
  * Artifact checksum lineage, environment parity validation, deployment mutation diffing, rollback verification

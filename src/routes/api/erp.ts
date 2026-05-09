@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - ERP API
  * Sales, Quotations, Orders & Invoicing

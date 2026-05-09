@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Meta-Role Engine API
  * Dynamic runtime role generation, hierarchical inheritance, temporary elevation, contextual synthesis

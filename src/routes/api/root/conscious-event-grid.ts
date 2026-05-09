@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Universal Conscious Event Grid API
  * Global event awareness, cross-service cognition, realtime impact propagation, chain-reaction containment

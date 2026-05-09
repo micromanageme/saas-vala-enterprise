@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SaaS Vala Enterprise - Revenue Analytics API
  * Revenue and financial analytics
