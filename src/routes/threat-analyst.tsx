@@ -47,7 +47,7 @@ function Page() {
     { label: "Blocked Attacks", value: "234", delta: "+12", up: true },
     { label: "Analysis Time", value: "15min", delta: "-5min", up: true },
     { label: "False Positives", value: "5%", delta: "-2%", up: true },
-  ] : [];
+  ];
 
   const columns = [
     { key: "threat", label: "Threat Type" },
