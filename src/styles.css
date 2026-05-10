@@ -160,14 +160,7 @@ html.contrast-high {
   --accent: oklch(0.3 0.2 200);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.5 0.3 25);
-  -Dyslexia-friendly font option */
-html.font-dyslexia {
-  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
-  letter-spacing: 0.05em;
-  line-height: 1.6;
-}
-
-/* -destructive-foreground: oklch(1 0 0);
+  --destructive-foreground: oklch(1 0 0);
   --success: oklch(0.5 0.25 155);
   --warning: oklch(0.6 0.25 75);
   --info: oklch(0.5 0.25 230);
@@ -182,6 +175,13 @@ html.font-dyslexia {
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(0.3 0 0);
   --sidebar-ring: oklch(0.6 0.25 295);
+}
+
+/* Dyslexia-friendly font option */
+html.font-dyslexia {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
 }
 
 html.contrast-high body {
