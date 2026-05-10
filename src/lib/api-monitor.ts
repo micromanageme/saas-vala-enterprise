@@ -127,4 +127,4 @@ class ApiMonitor {
   }
 }
 
-export const ApiMonitor = new ApiMonitor();
+export const apiMonitor = new ApiMonitor();
