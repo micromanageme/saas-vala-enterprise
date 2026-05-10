@@ -4,7 +4,7 @@
  * Enterprise authentication middleware for API routes
  */
 
-import { JWTService } from '../auth';
+import { JWTService } from '../auth/jwt';
 import { SessionService } from '../auth/session';
 import { RBACService } from '../rbac';
 import { AuditService } from '../audit';
