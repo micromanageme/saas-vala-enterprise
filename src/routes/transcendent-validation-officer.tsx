@@ -39,7 +39,7 @@ function Page() {
   const kpis = [
     { label: "Validations", value: "250", delta: "+25", up: true },
     { label: "Pass Rate", value: "97%", delta: "+1%", up: true },
-    { label: "Depth", label: "8 levels", delta: "+1 level", up: true },
+    { label: "Depth", value: "8 levels", delta: "+1 level", up: true },
     { label: "Coverage", value: "95%", delta: "+2%", up: true },
   ];
 

@@ -40,7 +40,7 @@ function Page() {
     { label: "Annotations Today", value: "500", delta: "+50", up: true },
     { label: "Accuracy", value: "98%", delta: "+1%", up: true },
     { label: "Review Rate", value: "95%", delta: "+2%", up: true },
-    { label: "Quality Score", label: "4.8/5", delta: "+0.1", up: true },
+    { label: "Quality Score", value: "4.8/5", delta: "+0.1", up: true },
   ];
 
   const columns = [
