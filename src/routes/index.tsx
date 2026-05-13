@@ -1,233 +1,235 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  getJourneysRequiringAttention,
-  getActiveJourneys,
-  type OperationalJourney
-} from "@/lib/operational-journey";
-import { 
-  SYSTEM_IDENTITY,
-  SYSTEM_TAGLINE
-} from "@/lib/system-identity";
-import { 
-  Activity, 
-  AlertTriangle, 
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useSession, canSeeGroup } from "@/lib/auth";
+import { modules, groups, type ModuleItem } from "@/lib/modules";
+import { ui, UI_EVENTS } from "@/lib/ui-bus";
+import { SYSTEM_IDENTITY } from "@/lib/system-identity";
+import {
+  Search,
+  Command,
   ArrowRight,
-  CheckCircle,
-  Play,
-  DollarSign,
-  TrendingDown,
-  TrendingUp
+  Sparkles,
+  Pin,
+  LayoutGrid,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Command Center — SaaS Vala" }] }),
-  component: OneScreenControl,
+  head: () => ({ meta: [{ title: "Home — SaaS Vala" }] }),
+  component: Home,
 });
 
-function OneScreenControl() {
-  const { critical, high } = getJourneysRequiringAttention();
-  const allJourneys = getActiveJourneys();
-  
-  // Calculate revenue impact
-  const totalRevenueImpact = allJourneys.reduce((sum, j) => 
-    sum + (j.revenueImpact?.amount || 0), 0
+const PRIORITY_TITLES = [
+  "AI Dashboard",
+  "Executive",
+  "CRM",
+  "Sales / ERP",
+  "Accounting",
+  "Inventory",
+  "HRM",
+  "Analytics",
+  "Notifications",
+  "Settings",
+];
+
+function Home() {
+  const session = useSession();
+  const role = session?.role;
+  const name = session?.name || "there";
+  const [q, setQ] = useState("");
+
+  // Filter modules by what this role can access
+  const allowed = useMemo<ModuleItem[]>(() => {
+    if (!role) return modules;
+    return modules.filter((m) => canSeeGroup(role, m.group));
+  }, [role]);
+
+  // Pinned shortcuts — top relevant modules for this role
+  const pinned = useMemo<ModuleItem[]>(() => {
+    const byTitle = new Map(allowed.map((m) => [m.title, m]));
+    const picks: ModuleItem[] = [];
+    for (const t of PRIORITY_TITLES) {
+      const m = byTitle.get(t);
+      if (m) picks.push(m);
+      if (picks.length >= 8) break;
+    }
+    if (picks.length < 8) {
+      for (const m of allowed) {
+        if (picks.length >= 8) break;
+        if (!picks.includes(m)) picks.push(m);
+      }
+    }
+    return picks;
+  }, [allowed]);
+
+  // Search filter for the browse-by-category section
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (!needle) return allowed;
+    return allowed.filter(
+      (m) =>
+        m.title.toLowerCase().includes(needle) ||
+        m.group.toLowerCase().includes(needle) ||
+        m.desc.toLowerCase().includes(needle),
+    );
+  }, [q, allowed]);
+
+  const grouped = useMemo(
+    () =>
+      groups
+        .map((g) => ({ group: g, items: filtered.filter((m) => m.group === g) }))
+        .filter((g) => g.items.length > 0),
+    [filtered],
   );
-  
-  // Get most critical journey
-  const mostCritical = critical.length > 0 ? critical[0] : high.length > 0 ? high[0] : null;
 
   return (
     <AppShell>
-      <div className="max-w-5xl mx-auto py-8 space-y-6">
-        {/* System Identity - Calm, Professional */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">{SYSTEM_IDENTITY}</h1>
-          <p className="text-lg text-muted-foreground">{SYSTEM_TAGLINE}</p>
-        </div>
+      <div className="mx-auto max-w-6xl space-y-8 px-4 py-8">
+        {/* Greeting */}
+        <header className="space-y-2">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>{SYSTEM_IDENTITY}</span>
+            {role && (
+              <Badge variant="secondary" className="ml-1 text-[10px]">
+                {role.replace(/_/g, " ")}
+              </Badge>
+            )}
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Welcome back, {name.split(" ")[0]}
+          </h1>
+          <p className="text-muted-foreground">
+            Yahan se aap apne saare modules access kar sakte hain. Search karein ya niche category browse karein.
+          </p>
+        </header>
 
-        {/* Business Health Overview */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="border-border/60">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Revenue Impact</span>
-                <DollarSign className="h-4 w-4 text-primary" />
-              </div>
-              <div className={`text-2xl font-bold ${totalRevenueImpact >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {totalRevenueImpact >= 0 ? '+' : ''}{totalRevenueImpact.toLocaleString()}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">This cycle</p>
-            </CardContent>
-          </Card>
+        {/* Big search → opens command palette */}
+        <button
+          onClick={() => ui.emit(UI_EVENTS.openCommand)}
+          className="group relative block w-full text-left"
+          aria-label="Open command palette"
+        >
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <div className="flex h-14 w-full cursor-pointer items-center rounded-xl border border-border bg-card pl-12 pr-4 text-base text-muted-foreground shadow-sm transition group-hover:border-primary/40 group-hover:shadow-md">
+            <span className="flex-1">Search any module, page or action…</span>
+            <kbd className="ml-2 inline-flex items-center gap-1 rounded border border-border bg-muted px-2 py-0.5 text-xs">
+              <Command className="h-3 w-3" />K
+            </kbd>
+          </div>
+        </button>
 
-          <Card className="border-border/60">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Critical</span>
-                <AlertTriangle className="h-4 w-4 text-red-500" />
-              </div>
-              <div className="text-2xl font-bold text-red-600">{critical.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">Immediate action</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/60">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Health</span>
-                <CheckCircle className="h-4 w-4 text-green-500" />
-              </div>
-              <div className="text-2xl font-bold text-green-600">87%</div>
-              <p className="text-xs text-muted-foreground mt-1">Operations normal</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Single Priority Action - What to do NOW */}
-        {mostCritical && (
-          <section>
-            <div className="flex items-center gap-2 mb-3">
-              <Play className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">Requires Your Attention</h2>
-            </div>
-            <Card className="border-l-4 border-l-primary bg-primary/5">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-xl font-semibold">{mostCritical.entity.name}</h3>
-                      {mostCritical.revenueImpact && (
-                        <div className={`flex items-center gap-1 text-sm ${
-                          mostCritical.revenueImpact.type === 'positive' ? 'text-green-600' : 
-                          mostCritical.revenueImpact.type === 'negative' ? 'text-red-600' : 
-                          'text-muted-foreground'
-                        }`}>
-                          {mostCritical.revenueImpact.type === 'negative' && <TrendingDown className="h-4 w-4" />}
-                          {mostCritical.revenueImpact.type === 'positive' && <TrendingUp className="h-4 w-4" />}
-                          {mostCritical.revenueImpact.amount > 0 ? '+' : ''}{mostCritical.revenueImpact.amount}
+        {/* Pinned shortcuts for this role */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Pin className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-semibold uppercase tracking-wider">
+              Pinned for you
+            </h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+            {pinned.map((m) => {
+              const Icon = m.icon;
+              return (
+                <Link key={m.url} to={m.url as any}>
+                  <Card className="group h-full border-border/60 transition hover:border-primary/50 hover:shadow-md">
+                    <CardContent className="flex items-start gap-3 p-4">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="truncate font-semibold">{m.title}</span>
+                          <ArrowRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
                         </div>
-                      )}
-                    </div>
-                    <p className="text-muted-foreground mb-2">
-                      {mostCritical.steps[mostCritical.currentStep].description}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Step {mostCritical.currentStep + 1} of {mostCritical.steps.length} · {mostCritical.steps[mostCritical.currentStep].estimatedTime}
-                    </p>
-                  </div>
-                  <Button size="lg" className="shrink-0">
-                    {mostCritical.steps[mostCritical.currentStep].action}
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        )}
+                        <p className="truncate text-xs text-muted-foreground">
+                          {m.desc}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
 
-        {/* All Active Workflows - What's happening */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
+        {/* Browse by category */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">Active Workflows</h2>
+              <LayoutGrid className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold uppercase tracking-wider">
+                Browse by category
+              </h2>
             </div>
-            <Link to="/attention" className="text-sm text-primary hover:underline">
-              View all
-            </Link>
+            <div className="relative w-full max-w-xs">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Filter modules in this view…"
+                className="h-9 pl-8 text-sm"
+              />
+            </div>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {allJourneys.slice(0, 4).map((journey) => (
-              <JourneyCard key={journey.id} journey={journey} />
-            ))}
-          </div>
-        </section>
 
-        {/* Quick Actions - Only what's needed */}
-        <section>
-          <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
-          <div className="grid gap-3 md:grid-cols-3">
-            <Link to="/attention">
-              <Card className="border-border/60 hover:border-primary/50 transition-colors cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                    <span className="font-medium">View Attention</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {critical.length + high.length} items need action
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-            
-            <Link to="/master">
-              <Card className="border-border/60 hover:border-primary/50 transition-colors cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-primary" />
-                    <span className="font-medium">Operations</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Master operational view
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-            
-            <Card className="border-border/60 hover:border-primary/50 transition-colors cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="font-medium">System Health</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  All systems operational
-                </p>
+          {grouped.length === 0 && (
+            <Card className="border-dashed">
+              <CardContent className="py-10 text-center text-sm text-muted-foreground">
+                No modules match "{q}".
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="ml-2"
+                  onClick={() => setQ("")}
+                >
+                  Clear filter
+                </Button>
               </CardContent>
             </Card>
-          </div>
+          )}
+
+          {grouped.map(({ group, items }) => (
+            <div key={group} className="space-y-2">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {group}
+                </h3>
+                <span className="text-[10px] text-muted-foreground">
+                  · {items.length}
+                </span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {items.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <Link
+                      key={m.url}
+                      to={m.url as any}
+                      className="group flex items-center gap-2.5 rounded-lg border border-border/60 bg-card p-3 text-sm transition hover:border-primary/50 hover:bg-accent/30"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary" />
+                      <span className="min-w-0 flex-1 truncate">{m.title}</span>
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition group-hover:opacity-100" />
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </section>
+
+        <footer className="border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
+          {modules.length} total modules · {allowed.length} available for your role · Press{" "}
+          <kbd className="rounded border border-border bg-muted px-1.5 py-0.5">⌘K</kbd>{" "}
+          anywhere to search
+        </footer>
       </div>
     </AppShell>
-  );
-}
-
-function JourneyCard({ journey }: { journey: OperationalJourney }) {
-  const currentStep = journey.steps[journey.currentStep];
-  const progress = ((journey.currentStep) / journey.steps.length) * 100;
-  
-  return (
-    <Card className="border-border/60 hover:border-primary/50 transition-colors">
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1">
-            <h3 className="font-semibold mb-1">{journey.entity.name}</h3>
-            <p className="text-sm text-muted-foreground">{currentStep?.description}</p>
-          </div>
-        </div>
-        
-        <div className="mb-2">
-          <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-            <span>{currentStep?.title}</span>
-            <span>{Math.round(progress)}%</span>
-          </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-primary transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-        
-        <Button size="sm" variant="outline" className="w-full">
-          {currentStep?.action}
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
-      </CardContent>
-    </Card>
   );
 }
