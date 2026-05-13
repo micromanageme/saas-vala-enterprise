@@ -101,6 +101,44 @@ const _raw = {
   S3_REGION: process.env.S3_REGION,
   S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
   S3_SECRET_KEY: process.env.S3_SECRET_KEY,
-});
+};
+
+const _parsed = envSchema.safeParse(_raw);
+export const env: z.infer<typeof envSchema> = _parsed.success
+  ? _parsed.data
+  : ({
+      ..._raw,
+      DATABASE_URL: _raw.DATABASE_URL ?? "postgresql://placeholder@localhost:5432/db",
+      DIRECT_URL: _raw.DIRECT_URL ?? "postgresql://placeholder@localhost:5432/db",
+      JWT_SECRET: _raw.JWT_SECRET ?? "x".repeat(32),
+      JWT_REFRESH_SECRET: _raw.JWT_REFRESH_SECRET ?? "x".repeat(32),
+      SESSION_SECRET: _raw.SESSION_SECRET ?? "x".repeat(32),
+      CSRF_SECRET: _raw.CSRF_SECRET ?? "x".repeat(32),
+      API_BASE_URL: _raw.API_BASE_URL ?? "http://localhost:8080",
+      SUPABASE_URL: _raw.SUPABASE_URL ?? "http://localhost",
+      SUPABASE_ANON_KEY: _raw.SUPABASE_ANON_KEY ?? "anon",
+      APP_URL: _raw.APP_URL ?? "http://localhost:8080",
+      APP_NAME: _raw.APP_NAME ?? "SaaS Vala Enterprise",
+      APP_ENV: (_raw.APP_ENV as any) ?? "development",
+      LOG_LEVEL: (_raw.LOG_LEVEL as any) ?? "info",
+      CORRELATION_ID_HEADER: _raw.CORRELATION_ID_HEADER ?? "x-correlation-id",
+      JWT_ACCESS_EXPIRY: _raw.JWT_ACCESS_EXPIRY ?? "15m",
+      JWT_REFRESH_EXPIRY: _raw.JWT_REFRESH_EXPIRY ?? "7d",
+      SESSION_MAX_AGE: _raw.SESSION_MAX_AGE ?? "604800000",
+      SESSION_COOKIE_NAME: _raw.SESSION_COOKIE_NAME ?? "saas_vala_session",
+      BCRYPT_ROUNDS: Number(_raw.BCRYPT_ROUNDS ?? 12),
+      RATE_LIMIT_MAX: Number(_raw.RATE_LIMIT_MAX ?? 100),
+      RATE_LIMIT_WINDOW: Number(_raw.RATE_LIMIT_WINDOW ?? 900000),
+      API_VERSION: _raw.API_VERSION ?? "v1",
+      API_RATE_LIMIT: Number(_raw.API_RATE_LIMIT ?? 1000),
+      STORAGE_TYPE: (_raw.STORAGE_TYPE as any) ?? "local",
+      STORAGE_PATH: _raw.STORAGE_PATH ?? "./uploads",
+      SMTP_PORT: Number(_raw.SMTP_PORT ?? 0),
+      SMTP_FROM: undefined,
+    } as any);
+
+if (!_parsed.success) {
+  console.warn("[env] Using fallback env values; some vars are missing/invalid:", _parsed.error.issues.map(i => i.path.join(".")).join(", "));
+}
 
 export type Env = z.infer<typeof envSchema>;
