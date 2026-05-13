@@ -7,7 +7,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
-import { JWTService, PasswordService, SessionService } from '@/lib/auth/index';
 import { RBACService } from '@/lib/rbac';
 import { AuditService } from '@/lib/audit';
 
@@ -25,6 +24,9 @@ const loginSchema = z.object({
 export const Route = createFileRoute('/api/auth/login')({
   POST: async ({ request }) => {
     try {
+      const [{ JWTService, PasswordService, SessionService }] = await Promise.all([
+        import('@/lib/auth/index'),
+      ]);
       const body = await request.json();
       const validatedData = loginSchema.parse(body);
 
