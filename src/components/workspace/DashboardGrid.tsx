@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import GridLayout, { WidthProvider, type Layout } from "react-grid-layout";
+// react-grid-layout v2 types are loose; pull WidthProvider via default-namespace access.
+import RGL from "react-grid-layout";
 import { Widget } from "./Widget";
 import type { DashboardLayoutItem, WidgetConfig } from "./widget-types";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
-const ResponsiveGrid = WidthProvider(GridLayout);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const GridLayout: any = RGL;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ResponsiveGrid: any = (RGL as any).WidthProvider
+  ? (RGL as any).WidthProvider(GridLayout)
+  : GridLayout;
 
 type Props = {
   widgets: WidgetConfig[];
@@ -19,14 +25,14 @@ export function DashboardGrid({ widgets, layout, editing, onChange, onRemove }: 
   const containerRef = useRef<HTMLDivElement>(null);
   const [, force] = useState(0);
 
-  // Force a width recalc once mounted (WidthProvider needs a tick)
   useEffect(() => {
     const t = setTimeout(() => force((n) => n + 1), 0);
     return () => clearTimeout(t);
   }, []);
 
   const handleChange = useCallback(
-    (next: Layout[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (next: any[]) => {
       onChange(
         next.map((l) => ({
           i: l.i,
