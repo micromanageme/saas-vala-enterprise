@@ -252,6 +252,9 @@ function Highlight({ text, query }: { text: string; query: string }) {
   );
 }
 
+const LISTBOX_ID = "browse-modules-listbox";
+const optionId = (i: number) => `browse-option-${i}`;
+
 function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
   const [q, setQ] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
@@ -281,16 +284,33 @@ function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
     [filtered],
   );
 
-  // Flat order matches visual order so arrow nav feels natural.
   const flatOrder = useMemo(
     () => grouped.flatMap((g) => g.items),
     [grouped],
   );
 
-  // Reset selection when the result set changes
+  // Preserve selection across result changes when possible (by URL),
+  // otherwise clamp to a valid index instead of always resetting.
+  const prevActiveUrlRef = useRef<string | null>(null);
   useEffect(() => {
-    setActiveIdx(0);
-  }, [q, allowed]);
+    const prevUrl = prevActiveUrlRef.current;
+    if (prevUrl) {
+      const found = flatOrder.findIndex((m) => m.url === prevUrl);
+      if (found >= 0) {
+        setActiveIdx(found);
+        return;
+      }
+    }
+    setActiveIdx((i) => {
+      if (flatOrder.length === 0) return 0;
+      return Math.min(Math.max(i, 0), flatOrder.length - 1);
+    });
+  }, [flatOrder]);
+
+  // Track the current selection URL so we can re-find it after filter changes.
+  useEffect(() => {
+    prevActiveUrlRef.current = flatOrder[activeIdx]?.url ?? null;
+  }, [activeIdx, flatOrder]);
 
   // Keep the active item visible
   useEffect(() => {
@@ -298,14 +318,27 @@ function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
     if (el) el.scrollIntoView({ block: "nearest" });
   }, [activeIdx]);
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const move = (delta: number) => {
     if (flatOrder.length === 0) return;
+    setActiveIdx((i) => {
+      const n = flatOrder.length;
+      return ((i + delta) % n + n) % n;
+    });
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIdx((i) => (i + 1) % flatOrder.length);
+      move(1);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIdx((i) => (i - 1 + flatOrder.length) % flatOrder.length);
+      move(-1);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      if (flatOrder.length) setActiveIdx(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      if (flatOrder.length) setActiveIdx(flatOrder.length - 1);
     } else if (e.key === "Enter") {
       e.preventDefault();
       const target = flatOrder[activeIdx];
@@ -319,13 +352,17 @@ function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
   };
 
   let runningIdx = -1;
+  const activeItem = flatOrder[activeIdx];
 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <LayoutGrid className="h-4 w-4 text-primary" />
-          <h2 className="text-sm font-semibold uppercase tracking-wider">
+          <h2
+            className="text-sm font-semibold uppercase tracking-wider"
+            id="browse-modules-label"
+          >
             Browse by category
           </h2>
         </div>
@@ -338,12 +375,28 @@ function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
             onKeyDown={onKeyDown}
             placeholder="Filter modules… (↑↓ + Enter)"
             className="h-9 pl-8 pr-16 text-sm"
+            role="combobox"
             aria-label="Filter modules"
+            aria-expanded={flatOrder.length > 0}
+            aria-controls={LISTBOX_ID}
+            aria-autocomplete="list"
+            aria-activedescendant={
+              activeItem ? optionId(activeIdx) : undefined
+            }
           />
           <kbd className="pointer-events-none absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
             <CornerDownLeft className="h-3 w-3" />
           </kbd>
         </div>
+      </div>
+
+      {/* Live region announces the active selection to screen readers */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {activeItem
+          ? `${activeItem.title}, ${activeItem.group}, ${activeIdx + 1} of ${flatOrder.length}`
+          : q
+            ? `No modules match ${q}`
+            : ""}
       </div>
 
       {grouped.length === 0 && (
@@ -362,59 +415,78 @@ function BrowseByCategory({ allowed }: { allowed: ModuleItem[] }) {
         </Card>
       )}
 
-      {grouped.map(({ group, items }) => (
-        <div key={group} className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {group}
-            </h3>
-            <span className="text-[10px] text-muted-foreground">
-              · {items.length}
-            </span>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {items.map((m) => {
-              runningIdx += 1;
-              const idx = runningIdx;
-              const Icon = m.icon;
-              const isActive = idx === activeIdx;
-              return (
-                <Link
-                  key={m.url}
-                  to={m.url as any}
-                  ref={(el) => {
-                    itemRefs.current[idx] = el;
-                  }}
-                  onMouseEnter={() => setActiveIdx(idx)}
-                  className={`group flex items-center gap-2.5 rounded-lg border p-3 text-sm transition ${
-                    isActive
-                      ? "border-primary/60 bg-accent/40 ring-1 ring-primary/30"
-                      : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30"
-                  }`}
-                >
-                  <Icon
-                    className={`h-4 w-4 shrink-0 ${
+      <div
+        id={LISTBOX_ID}
+        role="listbox"
+        aria-labelledby="browse-modules-label"
+        className="space-y-4"
+      >
+        {grouped.map(({ group, items }) => (
+          <div
+            key={group}
+            role="group"
+            aria-label={group}
+            className="space-y-2"
+          >
+            <div className="flex items-center gap-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {group}
+              </h3>
+              <span className="text-[10px] text-muted-foreground">
+                · {items.length}
+              </span>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {items.map((m) => {
+                runningIdx += 1;
+                const idx = runningIdx;
+                const Icon = m.icon;
+                const isActive = idx === activeIdx;
+                return (
+                  <Link
+                    key={m.url}
+                    to={m.url as any}
+                    id={optionId(idx)}
+                    role="option"
+                    aria-selected={isActive}
+                    tabIndex={-1}
+                    ref={(el) => {
+                      itemRefs.current[idx] = el;
+                    }}
+                    onMouseEnter={() => setActiveIdx(idx)}
+                    onFocus={() => setActiveIdx(idx)}
+                    className={`group flex items-center gap-2.5 rounded-lg border p-3 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
-                        ? "text-primary"
-                        : "text-muted-foreground group-hover:text-primary"
+                        ? "border-primary/60 bg-accent/40 ring-1 ring-primary/30"
+                        : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30"
                     }`}
-                  />
-                  <span className="min-w-0 flex-1 truncate">
-                    <Highlight text={m.title} query={q} />
-                  </span>
-                  <ArrowRight
-                    className={`h-3.5 w-3.5 shrink-0 transition ${
-                      isActive
-                        ? "text-primary opacity-100"
-                        : "text-muted-foreground opacity-0 group-hover:opacity-100"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
+                  >
+                    <Icon
+                      className={`h-4 w-4 shrink-0 ${
+                        isActive
+                          ? "text-primary"
+                          : "text-muted-foreground group-hover:text-primary"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span className="min-w-0 flex-1 truncate">
+                      <Highlight text={m.title} query={q} />
+                    </span>
+                    <ArrowRight
+                      className={`h-3.5 w-3.5 shrink-0 transition ${
+                        isActive
+                          ? "text-primary opacity-100"
+                          : "text-muted-foreground opacity-0 group-hover:opacity-100"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }
