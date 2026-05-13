@@ -7,7 +7,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
-import { JWTService, SessionService } from '@/lib/auth/index';
 import { RBACService } from '@/lib/rbac';
 
 const refreshSchema = z.object({
@@ -17,6 +16,9 @@ const refreshSchema = z.object({
 export const Route = createFileRoute('/api/auth/refresh')({
   POST: async ({ request }) => {
     try {
+      const [{ JWTService, SessionService }] = await Promise.all([
+        import('@/lib/auth/index'),
+      ]);
       const body = await request.json();
       const { refreshToken } = refreshSchema.parse(body);
 

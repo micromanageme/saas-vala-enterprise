@@ -5,12 +5,13 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router';
-import { JWTService } from '@/lib/auth/index';
-import { SessionService } from '@/lib/auth/index';
 
 export const Route = createFileRoute('/api/auth/logout')({
   POST: async ({ request }) => {
     try {
+      const [{ JWTService, SessionService }] = await Promise.all([
+        import('@/lib/auth/index'),
+      ]);
       const authHeader = request.headers.get('authorization');
       const token = JWTService.extractTokenFromHeader(authHeader);
 

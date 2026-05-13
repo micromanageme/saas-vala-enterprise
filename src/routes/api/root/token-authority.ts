@@ -6,7 +6,6 @@
 
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
-import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 
 export const Route = createFileRoute('/api/root/token-authority')({
@@ -14,6 +13,9 @@ export const Route = createFileRoute('/api/root/token-authority')({
     const logger = Logger.createRequestLogger('root-token-authority-api');
 
     try {
+      const [{ AuthMiddleware }] = await Promise.all([
+        import('@/lib/middleware'),
+      ]);
       const auth = await AuthMiddleware.authenticate(request);
       
       const isRoot = auth.isSuperAdmin && request.headers.get('X-Root-Access') === 'true';
