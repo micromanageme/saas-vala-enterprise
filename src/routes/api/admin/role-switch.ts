@@ -6,7 +6,6 @@
 
 import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
-import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 import { z } from 'zod';
 
@@ -20,6 +19,9 @@ export const Route = createFileRoute('/api/admin/role-switch')({
     const logger = Logger.createRequestLogger('admin-role-switch-api');
 
     try {
+      const [{ AuthMiddleware }] = await Promise.all([
+        import('@/lib/middleware'),
+      ]);
       const auth = await AuthMiddleware.authenticate(request);
       
       if (!auth.isSuperAdmin) {
