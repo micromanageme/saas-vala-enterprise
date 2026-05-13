@@ -8,7 +8,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
-import { randomUUID } from 'node:crypto';
+// randomUUID provided by global Web Crypto
 
 export const Route = createFileRoute('/api/licenses')({
   GET: async ({ request }) => {
@@ -82,7 +82,7 @@ export const Route = createFileRoute('/api/licenses')({
       logger.info('Generating license', { userId: auth.userId, productId: body.productId });
 
       // Generate unique license key
-      const licenseKey = `SV-${randomUUID().toUpperCase().replace(/-/g, '').substring(0, 16)}`;
+      const licenseKey = `SV-${crypto.randomUUID().toUpperCase().replace(/-/g, '').substring(0, 16)}`;
 
       const license = await prisma.license.create({
         data: {
