@@ -17,11 +17,32 @@ export interface AuthState {
   isSuperAdmin: boolean;
 }
 
+const isBrowser = typeof window !== 'undefined';
+
+function getStoredToken(key: 'accessToken' | 'refreshToken') {
+  if (!isBrowser) return null;
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function clearStoredTokens() {
+  if (!isBrowser) return;
+  try {
+    window.localStorage.removeItem('accessToken');
+    window.localStorage.removeItem('refreshToken');
+  } catch {}
+}
+
 export function useAuth() {
   const queryClient = useQueryClient();
+  const [accessToken, setAccessToken] = useState<string | null>(() => getStoredToken('accessToken'));
+  const [refreshToken, setRefreshToken] = useState<string | null>(() => getStoredToken('refreshToken'));
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
-    isLoading: true,
+    isLoading: isBrowser,
     user: null,
     token: null,
     roles: [],
@@ -35,7 +56,7 @@ export function useAuth() {
     queryFn: async () => {
       const response = await fetch('/api/me', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -45,7 +66,7 @@ export function useAuth() {
 
       return response.json();
     },
-    enabled: !!localStorage.getItem('accessToken'),
+    enabled: !!accessToken,
   });
 
   // Login mutation
@@ -65,8 +86,12 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (data: any) => {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      if (isBrowser) {
+        window.localStorage.setItem('accessToken', data.accessToken);
+        window.localStorage.setItem('refreshToken', data.refreshToken);
+      }
+      setAccessToken(data.accessToken);
+      setRefreshToken(data.refreshToken);
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     },
   });
@@ -77,7 +102,7 @@ export function useAuth() {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          Authorization: `Bearer ${accessToken ?? ''}`,
         },
       });
 
@@ -88,8 +113,9 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: () => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      clearStoredTokens();
+      setAccessToken(null);
+      setRefreshToken(null);
       queryClient.clear();
       setAuthState({
         isAuthenticated: false,
@@ -109,7 +135,7 @@ export function useAuth() {
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+          Authorization: `Bearer ${refreshToken ?? ''}`,
         },
       });
 
@@ -120,10 +146,19 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (data: any) => {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      if (isBrowser) {
+        window.localStorage.setItem('accessToken', data.accessToken);
+        window.localStorage.setItem('refreshToken', data.refreshToken);
+      }
+      setAccessToken(data.accessToken);
+      setRefreshToken(data.refreshToken);
     },
   });
+
+  useEffect(() => {
+    setAccessToken(getStoredToken('accessToken'));
+    setRefreshToken(getStoredToken('refreshToken'));
+  }, []);
 
   useEffect(() => {
     if (userData) {
@@ -131,12 +166,25 @@ export function useAuth() {
         isAuthenticated: true,
         isLoading: false,
         user: userData.user,
-        token: localStorage.getItem('accessToken'),
+        token: accessToken,
         roles: userData.roles,
         permissions: userData.permissions,
         isSuperAdmin: userData.isSuperAdmin,
       });
     } else if (userError) {
+      clearStoredTokens();
+      setAccessToken(null);
+      setRefreshToken(null);
+      setAuthState({
+        isAuthenticated: false,
+        isLoading: false,
+        user: null,
+        token: null,
+        roles: [],
+        permissions: [],
+        isSuperAdmin: false,
+      });
+    } else if (!accessToken) {
       setAuthState({
         isAuthenticated: false,
         isLoading: false,
@@ -147,7 +195,7 @@ export function useAuth() {
         isSuperAdmin: false,
       });
     }
-  }, [userData, userError]);
+  }, [accessToken, userData, userError]);
 
   return {
     ...authState,
