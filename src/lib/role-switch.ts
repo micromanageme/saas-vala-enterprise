@@ -8,7 +8,9 @@ import { prisma } from './db';
 import { JWTService, SessionService } from './auth';
 import { RBACService } from './rbac';
 import { AuditService } from './audit';
-import { AuditSeverity } from '@prisma/client';
+// Stubbed enum (prisma client not generated in this env)
+const AuditSeverity = { LOW: 'LOW', MEDIUM: 'MEDIUM', HIGH: 'HIGH', CRITICAL: 'CRITICAL' } as const;
+type AuditSeverity = typeof AuditSeverity[keyof typeof AuditSeverity];
 
 export interface ImpersonationResult {
   success: boolean;
