@@ -8,7 +8,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export const Route = createFileRoute('/api/licenses')({
   GET: async ({ request }) => {
