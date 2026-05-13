@@ -23,6 +23,7 @@ export const modules: ModuleItem[] = [
   // Overview
   { title: "Welcome", url: "/welcome", icon: Sparkles, group: "Overview", desc: "Onboarding & quick start" },
   { title: "AI Dashboard", url: "/dashboard", icon: LayoutDashboard, group: "Overview", desc: "Live KPIs & insights" },
+  { title: "Workspace Builder", url: "/workspace-builder", icon: KanbanSquare, group: "Overview", desc: "Drag-drop dashboards, dock panels, split screen" },
   { title: "Executive", url: "/executive", icon: TrendingUp, group: "Overview", desc: "C-suite overview" },
   { title: "Live Analytics", url: "/live", icon: Activity, group: "Overview", desc: "Real-time metrics" },
   { title: "Calendar", url: "/calendar", icon: Calendar, group: "Overview", desc: "Schedule & events" },

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ZooOperationsManagerRouteImport } from './routes/zoo-operations-manager'
 import { Route as ZoneManagerRouteImport } from './routes/zone-manager'
 import { Route as ZeroTrustAdminRouteImport } from './routes/zero-trust-admin'
+import { Route as WorkspaceBuilderRouteImport } from './routes/workspace-builder'
 import { Route as WorkforcePlannerRouteImport } from './routes/workforce-planner'
 import { Route as WorkflowOrchestratorRouteImport } from './routes/workflow-orchestrator'
 import { Route as WorkflowManagerRouteImport } from './routes/workflow-manager'
@@ -939,6 +940,11 @@ const ZoneManagerRoute = ZoneManagerRouteImport.update({
 const ZeroTrustAdminRoute = ZeroTrustAdminRouteImport.update({
   id: '/zero-trust-admin',
   path: '/zero-trust-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspaceBuilderRoute = WorkspaceBuilderRouteImport.update({
+  id: '/workspace-builder',
+  path: '/workspace-builder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkforcePlannerRoute = WorkforcePlannerRouteImport.update({
@@ -6349,6 +6355,7 @@ export interface FileRoutesByFullPath {
   '/workflow-manager': typeof WorkflowManagerRoute
   '/workflow-orchestrator': typeof WorkflowOrchestratorRoute
   '/workforce-planner': typeof WorkforcePlannerRoute
+  '/workspace-builder': typeof WorkspaceBuilderRoute
   '/zero-trust-admin': typeof ZeroTrustAdminRoute
   '/zone-manager': typeof ZoneManagerRoute
   '/zoo-operations-manager': typeof ZooOperationsManagerRoute
@@ -7267,6 +7274,7 @@ export interface FileRoutesByTo {
   '/workflow-manager': typeof WorkflowManagerRoute
   '/workflow-orchestrator': typeof WorkflowOrchestratorRoute
   '/workforce-planner': typeof WorkforcePlannerRoute
+  '/workspace-builder': typeof WorkspaceBuilderRoute
   '/zero-trust-admin': typeof ZeroTrustAdminRoute
   '/zone-manager': typeof ZoneManagerRoute
   '/zoo-operations-manager': typeof ZooOperationsManagerRoute
@@ -8185,6 +8193,7 @@ export interface FileRoutesById {
   '/workflow-manager': typeof WorkflowManagerRoute
   '/workflow-orchestrator': typeof WorkflowOrchestratorRoute
   '/workforce-planner': typeof WorkforcePlannerRoute
+  '/workspace-builder': typeof WorkspaceBuilderRoute
   '/zero-trust-admin': typeof ZeroTrustAdminRoute
   '/zone-manager': typeof ZoneManagerRoute
   '/zoo-operations-manager': typeof ZooOperationsManagerRoute
@@ -9105,6 +9114,7 @@ export interface FileRouteTypes {
     | '/workflow-manager'
     | '/workflow-orchestrator'
     | '/workforce-planner'
+    | '/workspace-builder'
     | '/zero-trust-admin'
     | '/zone-manager'
     | '/zoo-operations-manager'
@@ -10023,6 +10033,7 @@ export interface FileRouteTypes {
     | '/workflow-manager'
     | '/workflow-orchestrator'
     | '/workforce-planner'
+    | '/workspace-builder'
     | '/zero-trust-admin'
     | '/zone-manager'
     | '/zoo-operations-manager'
@@ -10940,6 +10951,7 @@ export interface FileRouteTypes {
     | '/workflow-manager'
     | '/workflow-orchestrator'
     | '/workforce-planner'
+    | '/workspace-builder'
     | '/zero-trust-admin'
     | '/zone-manager'
     | '/zoo-operations-manager'
@@ -11859,6 +11871,7 @@ export interface RootRouteChildren {
   WorkflowManagerRoute: typeof WorkflowManagerRoute
   WorkflowOrchestratorRoute: typeof WorkflowOrchestratorRoute
   WorkforcePlannerRoute: typeof WorkforcePlannerRoute
+  WorkspaceBuilderRoute: typeof WorkspaceBuilderRoute
   ZeroTrustAdminRoute: typeof ZeroTrustAdminRoute
   ZoneManagerRoute: typeof ZoneManagerRoute
   ZooOperationsManagerRoute: typeof ZooOperationsManagerRoute
@@ -12053,6 +12066,13 @@ declare module '@tanstack/react-router' {
       path: '/zero-trust-admin'
       fullPath: '/zero-trust-admin'
       preLoaderRoute: typeof ZeroTrustAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workspace-builder': {
+      id: '/workspace-builder'
+      path: '/workspace-builder'
+      fullPath: '/workspace-builder'
+      preLoaderRoute: typeof WorkspaceBuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/workforce-planner': {
@@ -19319,6 +19339,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkflowManagerRoute: WorkflowManagerRoute,
   WorkflowOrchestratorRoute: WorkflowOrchestratorRoute,
   WorkforcePlannerRoute: WorkforcePlannerRoute,
+  WorkspaceBuilderRoute: WorkspaceBuilderRoute,
   ZeroTrustAdminRoute: ZeroTrustAdminRoute,
   ZoneManagerRoute: ZoneManagerRoute,
   ZooOperationsManagerRoute: ZooOperationsManagerRoute,
