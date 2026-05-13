@@ -5,7 +5,9 @@
  */
 
 import { prisma } from '../db';
-import { DeviceType } from '@prisma/client';
+// Stubbed enum
+const DeviceType = { DESKTOP: 'DESKTOP', MOBILE: 'MOBILE', TABLET: 'TABLET', UNKNOWN: 'UNKNOWN' } as const;
+type DeviceType = typeof DeviceType[keyof typeof DeviceType];
 
 export interface SessionData {
   userId: string;

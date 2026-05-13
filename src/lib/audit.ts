@@ -5,7 +5,9 @@
  */
 
 import { prisma } from './db';
-import { AuditSeverity } from '@prisma/client';
+// Stubbed enum (prisma client not generated in this env)
+const AuditSeverity = { LOW: 'LOW', MEDIUM: 'MEDIUM', HIGH: 'HIGH', CRITICAL: 'CRITICAL' } as const;
+type AuditSeverity = typeof AuditSeverity[keyof typeof AuditSeverity];
 
 export interface AuditLogData {
   userId?: string;
