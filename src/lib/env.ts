@@ -62,7 +62,10 @@ const envSchema = z.object({
   S3_SECRET_KEY: z.string().optional(),
 });
 
-export const env = envSchema.parse({
+// Use safeParse + permissive fallbacks so a missing/invalid env var
+// (e.g. SMTP_FROM not set) does NOT crash SSR. Modules that need a real
+// value should validate it at the call site.
+const _raw = {
   DATABASE_URL: process.env.DATABASE_URL,
   DIRECT_URL: process.env.DIRECT_URL,
   JWT_SECRET: process.env.JWT_SECRET,
