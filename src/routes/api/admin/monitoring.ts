@@ -8,7 +8,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
-import { ApiMonitor } from '@/lib/api-monitor';
+import { apiMonitor } from '@/lib/api-monitor';
 
 export const Route = createFileRoute('/api/admin/monitoring')({
   GET: async ({ request }) => {
@@ -50,7 +50,7 @@ export const Route = createFileRoute('/api/admin/monitoring')({
       ]);
 
       // Get API metrics
-      const apiMetrics = ApiMonitor.getSummary(24 * 60 * 60 * 1000); // Last 24 hours
+      const apiMetrics = apiMonitor.getSummary(24 * 60 * 60 * 1000); // Last 24 hours
 
       // Get recent activities
       const recentActivities = await prisma.activity.findMany({
