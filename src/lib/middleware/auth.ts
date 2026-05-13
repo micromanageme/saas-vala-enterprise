@@ -4,8 +4,6 @@
  * Enterprise authentication middleware for API routes
  */
 
-import { JWTService } from '../auth/jwt';
-import { SessionService } from '../auth/session';
 import { RBACService } from '../rbac';
 import { AuditService } from '../audit';
 
@@ -26,6 +24,10 @@ export class AuthMiddleware {
    * Authenticate request and return user context
    */
   static async authenticate(request: Request): Promise<AuthContext> {
+    const [{ JWTService }, { SessionService }] = await Promise.all([
+      import('../auth/jwt'),
+      import('../auth/session'),
+    ]);
     const authHeader = request.headers.get('authorization');
     const token = JWTService.extractTokenFromHeader(authHeader);
 
