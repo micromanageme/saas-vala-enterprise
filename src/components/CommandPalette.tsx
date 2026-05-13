@@ -30,6 +30,8 @@ export function CommandPalette() {
   const role = session?.role;
   const isSuper = session?.baseRole === "SUPER_ADMIN";
   const inputRef = useRef<HTMLInputElement>(null);
+  // Element that had focus before the palette opened, so we can restore it on close.
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   // Modules visible to this role
   const allowedModules = useMemo<ModuleItem[]>(() => {
@@ -52,34 +54,76 @@ export function CommandPalette() {
       .filter((g) => g.items.length > 0);
   }, [allowedModules]);
 
+  // Centralized open setter: capture/restore focus around state change.
+  const openPalette = (next: boolean) => {
+    if (next) {
+      if (typeof document !== "undefined") {
+        const el = document.activeElement as HTMLElement | null;
+        // Don't capture body — that means nothing was focused.
+        if (el && el !== document.body) lastFocusedRef.current = el;
+      }
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((o) => !o);
+        openPalette(!open);
       }
     };
     window.addEventListener("keydown", onKey);
-    const off = ui.on(UI_EVENTS.openCommand, () => setOpen(true));
+    const off = ui.on(UI_EVENTS.openCommand, () => openPalette(true));
     return () => {
       window.removeEventListener("keydown", onKey);
       off();
     };
-  }, []);
+  }, [open]);
 
-  // Reset search when reopening
+  // Focus the search input as soon as the dialog opens.
   useEffect(() => {
-    if (open) {
-      setSearchQuery("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    if (!open) return;
+    setSearchQuery("");
+    // Radix Dialog mounts content asynchronously; retry until input exists.
+    let attempts = 0;
+    const id = window.setInterval(() => {
+      attempts += 1;
+      const el = inputRef.current;
+      if (el) {
+        el.focus();
+        el.select?.();
+        window.clearInterval(id);
+      } else if (attempts > 20) {
+        window.clearInterval(id);
+      }
+    }, 25);
+    return () => window.clearInterval(id);
+  }, [open]);
+
+  // Restore focus to the previously focused element after the dialog closes.
+  useEffect(() => {
+    if (open) return;
+    const target = lastFocusedRef.current;
+    if (!target) return;
+    // Wait one frame so Radix has finished its own focus restoration first.
+    const id = window.setTimeout(() => {
+      if (typeof document !== "undefined" && document.contains(target)) {
+        target.focus({ preventScroll: true });
+      }
+      lastFocusedRef.current = null;
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [open]);
 
   const handleSelect = (url: string) => {
     setOpen(false);
-    // Defer navigation so the dialog unmounts cleanly first
+    // Navigate after the dialog unmounts so focus restoration completes cleanly.
     setTimeout(() => navigate({ to: url as any }), 0);
   };
+
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
