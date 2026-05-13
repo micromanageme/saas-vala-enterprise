@@ -9,7 +9,7 @@ import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 import { z } from 'zod';
-import { randomUUID } from 'crypto';
+// randomUUID provided by global Web Crypto
 
 const impersonateSchema = z.object({
   targetUserId: z.string(),
@@ -62,7 +62,7 @@ export const Route = createFileRoute('/api/admin/impersonate')({
       }
 
       // Create impersonation session
-      const impersonationToken = randomUUID();
+      const impersonationToken = crypto.randomUUID();
       const impersonationSession = await prisma.session.create({
         data: {
           userId: auth.userId,

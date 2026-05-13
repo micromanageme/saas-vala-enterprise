@@ -5,8 +5,8 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router';
-import { JWTService } from '@/lib/auth';
-import { SessionService } from '@/lib/audit';
+import { JWTService } from '@/lib/auth/index';
+import { SessionService } from '@/lib/auth/index';
 
 export const Route = createFileRoute('/api/auth/logout')({
   POST: async ({ request }) => {

@@ -8,7 +8,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
-import { randomUUID } from 'crypto';
+// randomUUID provided by global Web Crypto
 
 export const Route = createFileRoute('/api/products/$productId/download')({
   POST: async ({ request, params }) => {
@@ -64,7 +64,7 @@ export const Route = createFileRoute('/api/products/$productId/download')({
       }
 
       // Generate signed download URL (in production, use cloud storage signed URLs)
-      const downloadToken = randomUUID();
+      const downloadToken = crypto.randomUUID();
       const downloadUrl = `${productVersion.downloadUrl}?token=${downloadToken}`;
 
       // Record download

@@ -7,7 +7,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
-import { JWTService, SessionService } from '@/lib/auth';
+import { JWTService, SessionService } from '@/lib/auth/index';
 import { RBACService } from '@/lib/rbac';
 
 const refreshSchema = z.object({

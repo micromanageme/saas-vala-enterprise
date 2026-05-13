@@ -9,7 +9,7 @@ import { prisma } from '@/lib/db';
 import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 import { z } from 'zod';
-import { randomUUID } from 'crypto';
+// randomUUID provided by global Web Crypto
 
 const createPaymentSchema = z.object({
   amount: z.number(),
@@ -35,7 +35,7 @@ export const Route = createFileRoute('/api/billing/payment')({
       logger.info('Processing payment', { userId: auth.userId, amount: validatedData.amount });
 
       // Generate payment reference
-      const paymentReference = `PAY-${Date.now()}-${randomUUID().substring(0, 8).toUpperCase()}`;
+      const paymentReference = `PAY-${Date.now()}-${crypto.randomUUID().substring(0, 8).toUpperCase()}`;
 
       // Create transaction record
       const transaction = await prisma.transaction.create({
