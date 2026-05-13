@@ -7,7 +7,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
-import { JWTService, PasswordService, SessionService } from '@/lib/auth';
+import { JWTService, PasswordService, SessionService } from '@/lib/auth/index';
 import { RBACService } from '@/lib/rbac';
 import { AuditService } from '@/lib/audit';
 
