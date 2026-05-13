@@ -40,7 +40,7 @@ function Page() {
     { label: "Signal Quality", value: "98%", delta: "+1%", up: true },
     { label: "Coverage Area", value: "95%", delta: "+2%", up: true },
     { label: "Interference", value: "0.5%", delta: "-0.2%", up: true },
-    { label: "Capacity", label: "88%", delta: "+3%", up: true },
+    { label: "Capacity", value: "88%", delta: "+3%", up: true },
   ];
 
   const columns = [
