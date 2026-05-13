@@ -1,29 +1,38 @@
 // @ts-nocheck
 /**
- * SaaS Vala Enterprise - Database Client
- * Prisma client singleton with connection pooling and error handling
+ * SaaS Vala Enterprise - Database Client (stub)
+ *
+ * Prisma client is intentionally NOT imported at module top-level.
+ * The generated client (.prisma/client) is missing/invalid in this
+ * environment, and importing it causes the SSR worker to fail with
+ * "No such module assets/.prisma/client/default" during routing.
+ *
+ * This stub returns a Proxy that throws only when an API route actually
+ * tries to use the database — keeping the UI fully functional.
  */
 
-import { PrismaClient } from '@prisma/client';
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+const notReady = () => {
+  throw new Error(
+    "Database is not configured in this environment. Run `prisma generate` and provide DATABASE_URL.",
+  );
 };
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    errorFormat: 'pretty',
-  });
+const stub: any = new Proxy(
+  {},
+  {
+    get: (_t, prop) => {
+      if (prop === "then") return undefined; // not a thenable
+      if (prop === "$disconnect" || prop === "$connect") return async () => {};
+      // Model accessors (prisma.user.findMany, etc.) — return another proxy
+      return new Proxy(
+        {},
+        {
+          get: () => notReady,
+        },
+      );
+    },
+  },
+);
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
-
-// Graceful shutdown
-process.on('beforeExit', async () => {
-  await prisma.$disconnect();
-});
-
-export default prisma;
+export const prisma = stub;
+export default stub;
