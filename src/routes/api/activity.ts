@@ -9,51 +9,55 @@ import { AuthMiddleware } from '@/lib/middleware';
 import { Logger } from '@/lib/logger';
 
 export const Route = createFileRoute('/api/activity')({
-  GET: async ({ request }) => {
-    const logger = Logger.createRequestLogger('activity-api');
+  server: {
+    handlers: {
+      GET: async ({ request }) => {
+        const logger = Logger.createRequestLogger('activity-api');
 
-    try {
-      const auth = await AuthMiddleware.authenticate(request);
-      logger.info('Fetching activity feed', { userId: auth.userId });
+        try {
+          const auth = await AuthMiddleware.authenticate(request);
+          logger.info('Fetching activity feed', { userId: auth.userId });
 
-      const companyId = auth.companyId;
+          const companyId = auth.companyId;
 
-      const activities = await prisma.activity.findMany({
-        where: {
-          ...(companyId ? { user: { companyId } } : {}),
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              displayName: true,
-              avatar: true,
+          const activities = await prisma.activity.findMany({
+            where: {
+              ...(companyId ? { user: { companyId } } : {}),
             },
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 50,
-      });
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  displayName: true,
+                  avatar: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: 50,
+          });
 
-      logger.info('Activity feed fetched successfully', { count: activities.length });
+          logger.info('Activity feed fetched successfully', { count: activities.length });
 
-      return Response.json({ activities });
-    } catch (error: any) {
-      if (error.message === 'No authentication token provided') {
-        return Response.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
+          return Response.json({ activities });
+        } catch (error: any) {
+          if (error.message === 'No authentication token provided') {
+            return Response.json(
+              { error: 'Authentication required' },
+              { status: 401 }
+            );
+          }
 
-      logger.error('Failed to fetch activity feed', error);
+          logger.error('Failed to fetch activity feed', error);
 
-      return Response.json(
-        { error: 'Internal server error' },
-        { status: 500 }
-      );
-    }
+          return Response.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+          );
+        }
+      },
+    },
   },
 });

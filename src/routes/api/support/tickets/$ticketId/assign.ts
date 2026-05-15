@@ -15,74 +15,78 @@ const assignTicketSchema = z.object({
 });
 
 export const Route = createFileRoute('/api/support/tickets/$ticketId/assign')({
-  POST: async ({ request, params }) => {
-    const logger = Logger.createRequestLogger('ticket-assignment-api');
+  server: {
+    handlers: {
+      POST: async ({ request, params }) => {
+        const logger = Logger.createRequestLogger('ticket-assignment-api');
 
-    try {
-      const auth = await AuthMiddleware.authenticate(request);
-      const body = await request.json();
-      const validatedData = assignTicketSchema.parse(body);
+        try {
+          const auth = await AuthMiddleware.authenticate(request);
+          const body = await request.json();
+          const validatedData = assignTicketSchema.parse(body);
 
-      logger.info('Assigning ticket', { userId: auth.userId, ticketId: params.ticketId });
+          logger.info('Assigning ticket', { userId: auth.userId, ticketId: params.ticketId });
 
-      // Check if ticket exists
-      const ticket = await prisma.supportTicket.findUnique({
-        where: { id: params.ticketId },
-      });
+          // Check if ticket exists
+          const ticket = await prisma.supportTicket.findUnique({
+            where: { id: params.ticketId },
+          });
 
-      if (!ticket) {
-        return Response.json(
-          { error: 'Ticket not found' },
-          { status: 404 }
-        );
-      }
+          if (!ticket) {
+            return Response.json(
+              { error: 'Ticket not found' },
+              { status: 404 }
+            );
+          }
 
-      // Update ticket assignment
-      const updatedTicket = await prisma.supportTicket.update({
-        where: { id: params.ticketId },
-        data: {
-          assignedTo: validatedData.assignedTo,
-          status: 'IN_PROGRESS',
-        },
-      });
+          // Update ticket assignment
+          const updatedTicket = await prisma.supportTicket.update({
+            where: { id: params.ticketId },
+            data: {
+              assignedTo: validatedData.assignedTo,
+              status: 'IN_PROGRESS',
+            },
+          });
 
-      // Log activity
-      await prisma.activity.create({
-        data: {
-          userId: auth.userId,
-          action: 'ticket.assigned',
-          entity: 'support_ticket',
-          entityId: params.ticketId,
-          metadata: {
-            assignedTo: validatedData.assignedTo,
-          },
-        },
-      });
+          // Log activity
+          await prisma.activity.create({
+            data: {
+              userId: auth.userId,
+              action: 'ticket.assigned',
+              entity: 'support_ticket',
+              entityId: params.ticketId,
+              metadata: {
+                assignedTo: validatedData.assignedTo,
+              },
+            },
+          });
 
-      logger.info('Ticket assigned successfully', { ticketId: params.ticketId });
+          logger.info('Ticket assigned successfully', { ticketId: params.ticketId });
 
-      return Response.json({ ticket: updatedTicket });
-    } catch (error: any) {
-      if (error.message === 'No authentication token provided') {
-        return Response.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
+          return Response.json({ ticket: updatedTicket });
+        } catch (error: any) {
+          if (error.message === 'No authentication token provided') {
+            return Response.json(
+              { error: 'Authentication required' },
+              { status: 401 }
+            );
+          }
 
-      if (error instanceof z.ZodError) {
-        return Response.json(
-          { error: 'Validation error', details: error.errors },
-          { status: 400 }
-        );
-      }
+          if (error instanceof z.ZodError) {
+            return Response.json(
+              { error: 'Validation error', details: error.errors },
+              { status: 400 }
+            );
+          }
 
-      logger.error('Failed to assign ticket', error);
+          logger.error('Failed to assign ticket', error);
 
-      return Response.json(
-        { error: 'Internal server error' },
-        { status: 500 }
-      );
-    }
+          return Response.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+          );
+        }
+      },
+    },
   },
 });
