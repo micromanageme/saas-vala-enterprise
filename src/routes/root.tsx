@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root")({
@@ -9,24 +10,22 @@ export const Route = createFileRoute("/root")({
 });
 
 function Page() {
-  const { data: rootData, isLoading, error } = useQuery({
+  const { data: rootData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/root/dashboard?type=all", {
-        headers: {
-          'X-Root-Access': 'true',
-        },
+        headers: { 'X-Root-Access': 'true' },
       });
       if (!response.ok) throw new Error("Failed to fetch Root Admin data");
       return response.json();
     },
-    refetchInterval: 10000, // 10-second refresh for root-level monitoring
+    refetchInterval: 10000,
   });
 
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Access Admin" subtitle="Topmost Root Control Panel" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Access Admin" subtitle="Topmost Root Control Panel" kpiCount={8} />
       </AppShell>
     );
   }
@@ -34,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Admin data - Root access required</div>
+        <DashboardError
+          title="Universal Access Admin"
+          subtitle="Topmost Root Control Panel"
+          message="Root access is required to view this panel, or the service is currently unavailable."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }
