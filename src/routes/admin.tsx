@@ -10,20 +10,20 @@ export const Route = createFileRoute("/admin")({
 });
 
 function Page() {
-  const { data: dashboardData, isLoading, error } = useQuery({
+  const { data: dashboardData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
       if (!response.ok) throw new Error("Failed to fetch Super Admin dashboard data");
       return response.json();
     },
-    refetchInterval: 30000, // Refresh every 30 seconds for realtime feel
+    refetchInterval: 30000,
   });
 
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Super Admin Command Center" subtitle="Ultimate Enterprise Command Center" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Super Admin Command Center" subtitle="Ultimate Enterprise Command Center" kpiCount={12} />
       </AppShell>
     );
   }
@@ -31,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Super Admin dashboard data</div>
+        <DashboardError
+          title="Super Admin Command Center"
+          subtitle="Ultimate Enterprise Command Center"
+          message="The admin dashboard service is unavailable or you don't have permission to view this data."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }
