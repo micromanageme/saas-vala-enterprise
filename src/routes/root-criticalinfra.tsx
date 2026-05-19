@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-criticalinfra")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-criticalinfra")({
 });
 
 function Page() {
-  const { data: infraData, isLoading, error } = useQuery({
+  const { data: infraData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-criticalinfra"],
     queryFn: async () => {
       const response = await fetch("/api/root/critical-infrastructure?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Critical Infrastructure Control" subtitle="Mission-critical systems, high-availability zones, emergency routing, national-grade redundancy" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Critical Infrastructure Control" subtitle="Mission-critical systems, high-availability zones, emergency routing, national-grade redundancy" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Critical Infrastructure Control data</div>
+        <DashboardError
+          title="Root Critical Infrastructure Control"
+          subtitle="Mission-critical systems, high-availability zones, emergency routing, national-grade redundancy"
+          message="We couldn't load Root Critical Infrastructure Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

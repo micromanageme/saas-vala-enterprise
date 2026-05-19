@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/message-delivery-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/message-delivery-analyst")({
 });
 
 function Page() {
-  const { data: deliveryData, isLoading, error } = useQuery({
+  const { data: deliveryData, isLoading, error, refetch } = useQuery({
     queryKey: ["message-delivery-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Message Delivery Analyst" subtitle="Message delivery analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Message Delivery Analyst" subtitle="Message delivery analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Message Delivery Analyst data</div>
+        <DashboardError
+          title="Message Delivery Analyst"
+          subtitle="Message delivery analysis workspace"
+          message="We couldn't load Message Delivery Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/inventory")({
   head: () => ({ meta: [{ title: "Inventory — SaaS Vala" }, { name: "description", content: "Stock, warehouses & moves" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/inventory")({
 });
 
 function Page() {
-  const { data: inventoryData, isLoading, error } = useQuery({
+  const { data: inventoryData, isLoading, error, refetch } = useQuery({
     queryKey: ["inventory"],
     queryFn: async () => {
       const response = await fetch("/api/inventory?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Inventory" subtitle="Stock, warehouses & moves" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Inventory" subtitle="Stock, warehouses & moves" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Inventory data</div>
+        <DashboardError
+          title="Inventory"
+          subtitle="Stock, warehouses & moves"
+          message="We couldn't load Inventory data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

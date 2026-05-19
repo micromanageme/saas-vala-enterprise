@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-runtimevalidator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-runtimevalidator")({
 });
 
 function Page() {
-  const { data: validatorData, isLoading, error } = useQuery({
+  const { data: validatorData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-runtimevalidator"],
     queryFn: async () => {
       const response = await fetch("/api/root/runtime-validator?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Runtime Validator" subtitle="Runtime integrity scan, hot module verification, unstable isolation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Runtime Validator" subtitle="Runtime integrity scan, hot module verification, unstable isolation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Runtime Validator data</div>
+        <DashboardError
+          title="Root Runtime Validator"
+          subtitle="Runtime integrity scan, hot module verification, unstable isolation"
+          message="We couldn't load Root Runtime Validator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

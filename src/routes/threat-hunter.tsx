@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/threat-hunter")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/threat-hunter")({
 });
 
 function Page() {
-  const { data: threatHunterData, isLoading, error } = useQuery({
+  const { data: threatHunterData, isLoading, error, refetch } = useQuery({
     queryKey: ["threat-hunter-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Threat Hunter" subtitle="Threat hunting workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Threat Hunter" subtitle="Threat hunting workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Threat Hunter data</div>
+        <DashboardError
+          title="Threat Hunter"
+          subtitle="Threat hunting workspace"
+          message="We couldn't load Threat Hunter data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

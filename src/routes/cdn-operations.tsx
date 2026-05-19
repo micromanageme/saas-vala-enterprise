@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/cdn-operations")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/cdn-operations")({
 });
 
 function Page() {
-  const { data: cdnOpsData, isLoading, error } = useQuery({
+  const { data: cdnOpsData, isLoading, error, refetch } = useQuery({
     queryKey: ["cdn-operations-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CDN Operations" subtitle="CDN operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CDN Operations" subtitle="CDN operations workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CDN Operations data</div>
+        <DashboardError
+          title="CDN Operations"
+          subtitle="CDN operations workspace"
+          message="We couldn't load CDN Operations data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

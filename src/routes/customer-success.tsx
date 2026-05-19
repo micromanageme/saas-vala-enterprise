@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/customer-success")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/customer-success")({
 });
 
 function Page() {
-  const { data: csData, isLoading, error } = useQuery({
+  const { data: csData, isLoading, error, refetch } = useQuery({
     queryKey: ["customer-success-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Customer Success" subtitle="Customer success workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Customer Success" subtitle="Customer success workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Customer Success data</div>
+        <DashboardError
+          title="Customer Success"
+          subtitle="Customer success workspace"
+          message="We couldn't load Customer Success data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

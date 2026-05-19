@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-workflowfabric")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-workflowfabric")({
 });
 
 function Page() {
-  const { data: workflowData, isLoading, error } = useQuery({
+  const { data: workflowData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-workflowfabric"],
     queryFn: async () => {
       const response = await fetch("/api/root/workflow-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Workflow Fabric" subtitle="Cross-module workflow chaining, replay, rollback, state-machine validation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Workflow Fabric" subtitle="Cross-module workflow chaining, replay, rollback, state-machine validation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Workflow Fabric data</div>
+        <DashboardError
+          title="Universal Workflow Fabric"
+          subtitle="Cross-module workflow chaining, replay, rollback, state-machine validation"
+          message="We couldn't load Universal Workflow Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/launch-director")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/launch-director")({
 });
 
 function Page() {
-  const { data: launchData, isLoading, error } = useQuery({
+  const { data: launchData, isLoading, error, refetch } = useQuery({
     queryKey: ["launch-director-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Launch Director" subtitle="Launch direction workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Launch Director" subtitle="Launch direction workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Launch Director data</div>
+        <DashboardError
+          title="Launch Director"
+          subtitle="Launch direction workspace"
+          message="We couldn't load Launch Director data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

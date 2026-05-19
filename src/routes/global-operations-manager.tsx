@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/global-operations-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/global-operations-manager")({
 });
 
 function Page() {
-  const { data: globalOpsData, isLoading, error } = useQuery({
+  const { data: globalOpsData, isLoading, error, refetch } = useQuery({
     queryKey: ["global-operations-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Global Operations Manager" subtitle="Global operations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Global Operations Manager" subtitle="Global operations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Global Operations Manager data</div>
+        <DashboardError
+          title="Global Operations Manager"
+          subtitle="Global operations management"
+          message="We couldn't load Global Operations Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

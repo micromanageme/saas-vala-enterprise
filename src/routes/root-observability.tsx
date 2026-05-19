@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-observability")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-observability")({
 });
 
 function Page() {
-  const { data: observabilityData, isLoading, error } = useQuery({
+  const { data: observabilityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-observability"],
     queryFn: async () => {
       const response = await fetch("/api/root/observability?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Observability Center" subtitle="Root-level logs, metrics, and tracing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Observability Center" subtitle="Root-level logs, metrics, and tracing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Observability Center data</div>
+        <DashboardError
+          title="Observability Center"
+          subtitle="Root-level logs, metrics, and tracing"
+          message="We couldn't load Observability Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

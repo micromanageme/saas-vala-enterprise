@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-messagebus")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-messagebus")({
 });
 
 function Page() {
-  const { data: busData, isLoading, error } = useQuery({
+  const { data: busData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-messagebus"],
     queryFn: async () => {
       const response = await fetch("/api/root/message-bus?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Message Bus Control" subtitle="Kafka/RabbitMQ/NATS, queue health, dead-letter queues" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Message Bus Control" subtitle="Kafka/RabbitMQ/NATS, queue health, dead-letter queues" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Message Bus Control data</div>
+        <DashboardError
+          title="Root Message Bus Control"
+          subtitle="Kafka/RabbitMQ/NATS, queue health, dead-letter queues"
+          message="We couldn't load Root Message Bus Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

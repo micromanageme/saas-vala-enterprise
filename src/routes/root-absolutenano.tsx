@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-absolutenano")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-absolutenano")({
 });
 
 function Page() {
-  const { data: nanoData, isLoading, error } = useQuery({
+  const { data: nanoData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-absolutenano"],
     queryFn: async () => {
       const response = await fetch("/api/root/absolute-nano-validation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Absolute Nano Root Validation" subtitle="Microstate determinism, authority mutation traceability, async chain recoverability, render path observability" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Absolute Nano Root Validation" subtitle="Microstate determinism, authority mutation traceability, async chain recoverability, render path observability" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Absolute Nano Root Validation data</div>
+        <DashboardError
+          title="Absolute Nano Root Validation"
+          subtitle="Microstate determinism, authority mutation traceability, async chain recoverability, render path observability"
+          message="We couldn't load Absolute Nano Root Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

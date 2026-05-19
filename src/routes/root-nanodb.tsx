@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanodb")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanodb")({
 });
 
 function Page() {
-  const { data: dbData, isLoading, error } = useQuery({
+  const { data: dbData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanodb"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-db-consistency?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Database Consistency Lock" subtitle="Phantom read detection, isolation-level enforcement, transactional lineage graph" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Database Consistency Lock" subtitle="Phantom read detection, isolation-level enforcement, transactional lineage graph" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Database Consistency Lock data</div>
+        <DashboardError
+          title="Nano Database Consistency Lock"
+          subtitle="Phantom read detection, isolation-level enforcement, transactional lineage graph"
+          message="We couldn't load Nano Database Consistency Lock data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

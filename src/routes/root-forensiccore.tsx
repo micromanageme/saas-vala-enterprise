@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-forensiccore")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-forensiccore")({
 });
 
 function Page() {
-  const { data: forensicData, isLoading, error } = useQuery({
+  const { data: forensicData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-forensiccore"],
     queryFn: async () => {
       const response = await fetch("/api/root/immutable-forensic-core?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Immutable Forensic Core" subtitle="Tamper-proof activity chain, cryptographic audit sealing, forensic reconstruction" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Immutable Forensic Core" subtitle="Tamper-proof activity chain, cryptographic audit sealing, forensic reconstruction" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Immutable Forensic Core data</div>
+        <DashboardError
+          title="Root Immutable Forensic Core"
+          subtitle="Tamper-proof activity chain, cryptographic audit sealing, forensic reconstruction"
+          message="We couldn't load Root Immutable Forensic Core data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

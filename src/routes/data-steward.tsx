@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/data-steward")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/data-steward")({
 });
 
 function Page() {
-  const { data: stewardData, isLoading, error } = useQuery({
+  const { data: stewardData, isLoading, error, refetch } = useQuery({
     queryKey: ["data-steward-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Data Steward" subtitle="Data stewardship workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Data Steward" subtitle="Data stewardship workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Data Steward data</div>
+        <DashboardError
+          title="Data Steward"
+          subtitle="Data stewardship workspace"
+          message="We couldn't load Data Steward data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanocache")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanocache")({
 });
 
 function Page() {
-  const { data: cacheData, isLoading, error } = useQuery({
+  const { data: cacheData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanocache"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-cache-coherency?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Cache Coherency Fabric" subtitle="Distributed cache reconciliation, cache mutation sequencing, stale propagation detection" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Cache Coherency Fabric" subtitle="Distributed cache reconciliation, cache mutation sequencing, stale propagation detection" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Cache Coherency Fabric data</div>
+        <DashboardError
+          title="Nano Cache Coherency Fabric"
+          subtitle="Distributed cache reconciliation, cache mutation sequencing, stale propagation detection"
+          message="We couldn't load Nano Cache Coherency Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

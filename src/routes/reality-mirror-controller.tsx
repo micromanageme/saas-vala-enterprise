@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/reality-mirror-controller")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/reality-mirror-controller")({
 });
 
 function Page() {
-  const { data: realityData, isLoading, error } = useQuery({
+  const { data: realityData, isLoading, error, refetch } = useQuery({
     queryKey: ["reality-mirror-controller-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Reality Mirror Controller" subtitle="Reality mirror control workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Reality Mirror Controller" subtitle="Reality mirror control workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Reality Mirror Controller data</div>
+        <DashboardError
+          title="Reality Mirror Controller"
+          subtitle="Reality mirror control workspace"
+          message="We couldn't load Reality Mirror Controller data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

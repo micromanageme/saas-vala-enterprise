@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/compliance-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/compliance-commander")({
 });
 
 function Page() {
-  const { data: complianceData, isLoading, error } = useQuery({
+  const { data: complianceData, isLoading, error, refetch } = useQuery({
     queryKey: ["compliance-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Compliance Commander" subtitle="Compliance command center" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Compliance Commander" subtitle="Compliance command center" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Compliance Commander data</div>
+        <DashboardError
+          title="Compliance Commander"
+          subtitle="Compliance command center"
+          message="We couldn't load Compliance Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

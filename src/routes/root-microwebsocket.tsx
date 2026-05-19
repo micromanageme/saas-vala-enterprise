@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microwebsocket")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microwebsocket")({
 });
 
 function Page() {
-  const { data: wsData, isLoading, error } = useQuery({
+  const { data: wsData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microwebsocket"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-websocket-recovery?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro WebSocket Recovery" subtitle="Socket resurrection flow, packet sequence correction, realtime state convergence" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro WebSocket Recovery" subtitle="Socket resurrection flow, packet sequence correction, realtime state convergence" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro WebSocket Recovery data</div>
+        <DashboardError
+          title="Micro WebSocket Recovery"
+          subtitle="Socket resurrection flow, packet sequence correction, realtime state convergence"
+          message="We couldn't load Micro WebSocket Recovery data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

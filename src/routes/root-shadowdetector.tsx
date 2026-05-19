@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-shadowdetector")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-shadowdetector")({
 });
 
 function Page() {
-  const { data: shadowData, isLoading, error } = useQuery({
+  const { data: shadowData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-shadowdetector"],
     queryFn: async () => {
       const response = await fetch("/api/root/shadow-system-detector?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Shadow System Detector" subtitle="Hidden process detection, rogue service discovery, unauthorized dependency discovery" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Shadow System Detector" subtitle="Hidden process detection, rogue service discovery, unauthorized dependency discovery" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Shadow System Detector data</div>
+        <DashboardError
+          title="Universal Shadow System Detector"
+          subtitle="Hidden process detection, rogue service discovery, unauthorized dependency discovery"
+          message="We couldn't load Universal Shadow System Detector data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

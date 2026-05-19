@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/architectural-coordinator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/architectural-coordinator")({
 });
 
 function Page() {
-  const { data: architecturalData, isLoading, error } = useQuery({
+  const { data: architecturalData, isLoading, error, refetch } = useQuery({
     queryKey: ["architectural-coordinator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Architectural Coordinator" subtitle="Architectural coordination workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Architectural Coordinator" subtitle="Architectural coordination workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Architectural Coordinator data</div>
+        <DashboardError
+          title="Architectural Coordinator"
+          subtitle="Architectural coordination workspace"
+          message="We couldn't load Architectural Coordinator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

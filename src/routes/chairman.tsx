@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/chairman")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/chairman")({
 });
 
 function Page() {
-  const { data: chairmanData, isLoading, error } = useQuery({
+  const { data: chairmanData, isLoading, error, refetch } = useQuery({
     queryKey: ["chairman-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/root/dashboard?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Chairman" subtitle="Board Chairman oversight" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Chairman" subtitle="Board Chairman oversight" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Chairman data</div>
+        <DashboardError
+          title="Chairman"
+          subtitle="Board Chairman oversight"
+          message="We couldn't load Chairman data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

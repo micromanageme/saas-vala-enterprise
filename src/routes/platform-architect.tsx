@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/platform-architect")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/platform-architect")({
 });
 
 function Page() {
-  const { data: platformData, isLoading, error } = useQuery({
+  const { data: platformData, isLoading, error, refetch } = useQuery({
     queryKey: ["platform-architect-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Platform Architect" subtitle="Platform architecture workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Platform Architect" subtitle="Platform architecture workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Platform Architect data</div>
+        <DashboardError
+          title="Platform Architect"
+          subtitle="Platform architecture workspace"
+          message="We couldn't load Platform Architect data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

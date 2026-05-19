@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/sales-executive")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/sales-executive")({
 });
 
 function Page() {
-  const { data: salesExecData, isLoading, error } = useQuery({
+  const { data: salesExecData, isLoading, error, refetch } = useQuery({
     queryKey: ["sales-executive-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Sales Executive" subtitle="Sales executive workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Sales Executive" subtitle="Sales executive workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Sales Executive data</div>
+        <DashboardError
+          title="Sales Executive"
+          subtitle="Sales executive workspace"
+          message="We couldn't load Sales Executive data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

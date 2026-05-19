@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/observability-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/observability-lead")({
 });
 
 function Page() {
-  const { data: obsLeadData, isLoading, error } = useQuery({
+  const { data: obsLeadData, isLoading, error, refetch } = useQuery({
     queryKey: ["observability-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Observability Lead" subtitle="Observability leadership" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Observability Lead" subtitle="Observability leadership" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Observability Lead data</div>
+        <DashboardError
+          title="Observability Lead"
+          subtitle="Observability leadership"
+          message="We couldn't load Observability Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

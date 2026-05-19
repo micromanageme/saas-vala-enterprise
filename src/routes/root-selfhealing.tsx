@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-selfhealing")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-selfhealing")({
 });
 
 function Page() {
-  const { data: healingData, isLoading, error } = useQuery({
+  const { data: healingData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-selfhealing"],
     queryFn: async () => {
       const response = await fetch("/api/root/self-healing?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Self-Healing Core" subtitle="Automatic service recovery, cache repair, queue repair, websocket recovery" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Self-Healing Core" subtitle="Automatic service recovery, cache repair, queue repair, websocket recovery" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Self-Healing Core data</div>
+        <DashboardError
+          title="Universal Self-Healing Core"
+          subtitle="Automatic service recovery, cache repair, queue repair, websocket recovery"
+          message="We couldn't load Universal Self-Healing Core data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

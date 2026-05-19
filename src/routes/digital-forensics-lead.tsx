@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/digital-forensics-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/digital-forensics-lead")({
 });
 
 function Page() {
-  const { data: forensicsData, isLoading, error } = useQuery({
+  const { data: forensicsData, isLoading, error, refetch } = useQuery({
     queryKey: ["digital-forensics-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Digital Forensics Lead" subtitle="Digital forensics leadership workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Digital Forensics Lead" subtitle="Digital forensics leadership workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Digital Forensics Lead data</div>
+        <DashboardError
+          title="Digital Forensics Lead"
+          subtitle="Digital forensics leadership workspace"
+          message="We couldn't load Digital Forensics Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

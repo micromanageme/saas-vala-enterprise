@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-executionsandbox")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-executionsandbox")({
 });
 
 function Page() {
-  const { data: sandboxData, isLoading, error } = useQuery({
+  const { data: sandboxData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-executionsandbox"],
     queryFn: async () => {
       const response = await fetch("/api/root/execution-sandbox?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Execution Sandbox" subtitle="Isolated runtime execution, privileged simulation, unsafe containment" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Execution Sandbox" subtitle="Isolated runtime execution, privileged simulation, unsafe containment" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Execution Sandbox data</div>
+        <DashboardError
+          title="Root Execution Sandbox"
+          subtitle="Isolated runtime execution, privileged simulation, unsafe containment"
+          message="We couldn't load Root Execution Sandbox data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-trustless")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-trustless")({
 });
 
 function Page() {
-  const { data: trustlessData, isLoading, error } = useQuery({
+  const { data: trustlessData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-trustless"],
     queryFn: async () => {
       const response = await fetch("/api/root/trustless-verification?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Trustless Verification" subtitle="Zero-trust validation chains, cryptographic proof verification, decentralized integrity" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Trustless Verification" subtitle="Zero-trust validation chains, cryptographic proof verification, decentralized integrity" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Trustless Verification data</div>
+        <DashboardError
+          title="Universal Trustless Verification"
+          subtitle="Zero-trust validation chains, cryptographic proof verification, decentralized integrity"
+          message="We couldn't load Universal Trustless Verification data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

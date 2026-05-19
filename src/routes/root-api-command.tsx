@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-api-command")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-api-command")({
 });
 
 function Page() {
-  const { data: apiData, isLoading, error } = useQuery({
+  const { data: apiData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-api-command"],
     queryFn: async () => {
       const response = await fetch("/api/root/api-command?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root API Command Center" subtitle="API contracts, schema validation, API replay, throttling" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root API Command Center" subtitle="API contracts, schema validation, API replay, throttling" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root API Command Center data</div>
+        <DashboardError
+          title="Root API Command Center"
+          subtitle="API contracts, schema validation, API replay, throttling"
+          message="We couldn't load Root API Command Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

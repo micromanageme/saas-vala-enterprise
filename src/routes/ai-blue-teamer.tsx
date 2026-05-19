@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ai-blue-teamer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ai-blue-teamer")({
 });
 
 function Page() {
-  const { data: blueTeamData, isLoading, error } = useQuery({
+  const { data: blueTeamData, isLoading, error, refetch } = useQuery({
     queryKey: ["ai-blue-teamer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Blue Teamer" subtitle="AI blue teaming workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Blue Teamer" subtitle="AI blue teaming workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI Blue Teamer data</div>
+        <DashboardError
+          title="AI Blue Teamer"
+          subtitle="AI blue teaming workspace"
+          message="We couldn't load AI Blue Teamer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

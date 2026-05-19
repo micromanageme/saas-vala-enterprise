@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-token")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-token")({
 });
 
 function Page() {
-  const { data: tokenData, isLoading, error } = useQuery({
+  const { data: tokenData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-token"],
     queryFn: async () => {
       const response = await fetch("/api/root/token-authority?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Token Authority" subtitle="Token minting, revocation, JWT lifecycle, session token graph" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Token Authority" subtitle="Token minting, revocation, JWT lifecycle, session token graph" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Token Authority data</div>
+        <DashboardError
+          title="Root Token Authority"
+          subtitle="Token minting, revocation, JWT lifecycle, session token graph"
+          message="We couldn't load Root Token Authority data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

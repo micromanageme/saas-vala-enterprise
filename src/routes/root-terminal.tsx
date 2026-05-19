@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-terminal")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-terminal")({
 });
 
 function Page() {
-  const { data: terminalData, isLoading, error } = useQuery({
+  const { data: terminalData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-terminal"],
     queryFn: async () => {
       const response = await fetch("/api/root/terminal?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Command Terminal" subtitle="Secure command execution, diagnostic console, emergency scripts" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Command Terminal" subtitle="Secure command execution, diagnostic console, emergency scripts" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Command Terminal data</div>
+        <DashboardError
+          title="Universal Command Terminal"
+          subtitle="Secure command execution, diagnostic console, emergency scripts"
+          message="We couldn't load Universal Command Terminal data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

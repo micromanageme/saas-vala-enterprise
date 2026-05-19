@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/regular-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/regular-admin")({
 });
 
 function Page() {
-  const { data: adminData, isLoading, error } = useQuery({
+  const { data: adminData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Admin" subtitle="Standard administration dashboard" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Admin" subtitle="Standard administration dashboard" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Admin data</div>
+        <DashboardError
+          title="Admin"
+          subtitle="Standard administration dashboard"
+          message="We couldn't load Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

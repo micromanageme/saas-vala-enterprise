@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-omegavalidation")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-omegavalidation")({
 });
 
 function Page() {
-  const { data: omegaData, isLoading, error } = useQuery({
+  const { data: omegaData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-omegavalidation"],
     queryFn: async () => {
       const response = await fetch("/api/root/omega-validation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Final Omega Validation" subtitle="Authority paths, hidden dependencies, privilege boundaries, orchestration reversibility, runtime observability" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Final Omega Validation" subtitle="Authority paths, hidden dependencies, privilege boundaries, orchestration reversibility, runtime observability" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Final Omega Validation data</div>
+        <DashboardError
+          title="Root Final Omega Validation"
+          subtitle="Authority paths, hidden dependencies, privilege boundaries, orchestration reversibility, runtime observability"
+          message="We couldn't load Root Final Omega Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

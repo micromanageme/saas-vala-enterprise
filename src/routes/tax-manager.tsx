@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/tax-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/tax-manager")({
 });
 
 function Page() {
-  const { data: taxData, isLoading, error } = useQuery({
+  const { data: taxData, isLoading, error, refetch } = useQuery({
     queryKey: ["tax-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Tax Manager" subtitle="Tax management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Tax Manager" subtitle="Tax management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Tax Manager data</div>
+        <DashboardError
+          title="Tax Manager"
+          subtitle="Tax management"
+          message="We couldn't load Tax Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

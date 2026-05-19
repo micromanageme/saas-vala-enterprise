@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/humanitarian-operations-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/humanitarian-operations-manager")({
 });
 
 function Page() {
-  const { data: humanitarianData, isLoading, error } = useQuery({
+  const { data: humanitarianData, isLoading, error, refetch } = useQuery({
     queryKey: ["humanitarian-operations-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Humanitarian Operations Manager" subtitle="Humanitarian operations management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Humanitarian Operations Manager" subtitle="Humanitarian operations management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Humanitarian Operations Manager data</div>
+        <DashboardError
+          title="Humanitarian Operations Manager"
+          subtitle="Humanitarian operations management workspace"
+          message="We couldn't load Humanitarian Operations Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

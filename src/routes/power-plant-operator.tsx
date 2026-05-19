@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/power-plant-operator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/power-plant-operator")({
 });
 
 function Page() {
-  const { data: powerData, isLoading, error } = useQuery({
+  const { data: powerData, isLoading, error, refetch } = useQuery({
     queryKey: ["power-plant-operator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Power Plant Operator" subtitle="Power plant operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Power Plant Operator" subtitle="Power plant operations workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Power Plant Operator data</div>
+        <DashboardError
+          title="Power Plant Operator"
+          subtitle="Power plant operations workspace"
+          message="We couldn't load Power Plant Operator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

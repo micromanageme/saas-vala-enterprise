@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/live")({
   head: () => ({ meta: [{ title: "Live Analytics — SaaS Vala" }, { name: "description", content: "Real-time metrics" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/live")({
 });
 
 function Page() {
-  const { data: liveData, isLoading, error } = useQuery({
+  const { data: liveData, isLoading, error, refetch } = useQuery({
     queryKey: ["live"],
     queryFn: async () => {
       const response = await fetch("/api/live?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Live Analytics" subtitle="Real-time metrics" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Live Analytics" subtitle="Real-time metrics" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Live Analytics data</div>
+        <DashboardError
+          title="Live Analytics"
+          subtitle="Real-time metrics"
+          message="We couldn't load Live Analytics data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

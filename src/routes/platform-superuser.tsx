@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/platform-superuser")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/platform-superuser")({
 });
 
 function Page() {
-  const { data: superuserData, isLoading, error } = useQuery({
+  const { data: superuserData, isLoading, error, refetch } = useQuery({
     queryKey: ["platform-superuser-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/root/dashboard?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Platform Superuser" subtitle="Platform superuser access" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Platform Superuser" subtitle="Platform superuser access" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Platform Superuser data</div>
+        <DashboardError
+          title="Platform Superuser"
+          subtitle="Platform superuser access"
+          message="We couldn't load Platform Superuser data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

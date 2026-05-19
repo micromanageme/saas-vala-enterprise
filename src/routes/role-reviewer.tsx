@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/role-reviewer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/role-reviewer")({
 });
 
 function Page() {
-  const { data: roleData, isLoading, error } = useQuery({
+  const { data: roleData, isLoading, error, refetch } = useQuery({
     queryKey: ["role-reviewer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Role Reviewer" subtitle="Role review workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Role Reviewer" subtitle="Role review workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Role Reviewer data</div>
+        <DashboardError
+          title="Role Reviewer"
+          subtitle="Role review workspace"
+          message="We couldn't load Role Reviewer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

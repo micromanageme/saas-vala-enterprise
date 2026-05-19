@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/prompt-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/prompt-engineer")({
 });
 
 function Page() {
-  const { data: promptData, isLoading, error } = useQuery({
+  const { data: promptData, isLoading, error, refetch } = useQuery({
     queryKey: ["prompt-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Prompt Engineer" subtitle="AI prompt engineering" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Prompt Engineer" subtitle="AI prompt engineering" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Prompt Engineer data</div>
+        <DashboardError
+          title="Prompt Engineer"
+          subtitle="AI prompt engineering"
+          message="We couldn't load Prompt Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

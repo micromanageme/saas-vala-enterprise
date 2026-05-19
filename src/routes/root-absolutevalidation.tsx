@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-absolutevalidation")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-absolutevalidation")({
 });
 
 function Page() {
-  const { data: validationData, isLoading, error } = useQuery({
+  const { data: validationData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-absolutevalidation"],
     queryFn: async () => {
       const response = await fetch("/api/root/absolute-validation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Final Absolute Root Validation" subtitle="Complete ecosystem verification, absolute root authority validation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Final Absolute Root Validation" subtitle="Complete ecosystem verification, absolute root authority validation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Final Absolute Root Validation data</div>
+        <DashboardError
+          title="Final Absolute Root Validation"
+          subtitle="Complete ecosystem verification, absolute root authority validation"
+          message="We couldn't load Final Absolute Root Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

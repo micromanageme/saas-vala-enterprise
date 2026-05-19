@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/helpdesk-agent")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/helpdesk-agent")({
 });
 
 function Page() {
-  const { data: helpdeskData, isLoading, error } = useQuery({
+  const { data: helpdeskData, isLoading, error, refetch } = useQuery({
     queryKey: ["helpdesk-agent-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Helpdesk Agent" subtitle="Helpdesk agent workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Helpdesk Agent" subtitle="Helpdesk agent workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Helpdesk Agent data</div>
+        <DashboardError
+          title="Helpdesk Agent"
+          subtitle="Helpdesk agent workspace"
+          message="We couldn't load Helpdesk Agent data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

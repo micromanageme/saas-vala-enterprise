@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-configgraph")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-configgraph")({
 });
 
 function Page() {
-  const { data: configData, isLoading, error } = useQuery({
+  const { data: configData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-configgraph"],
     queryFn: async () => {
       const response = await fetch("/api/root/config-graph?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Configuration Graph" subtitle="Config dependency mapping, validation, drift detection" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Configuration Graph" subtitle="Config dependency mapping, validation, drift detection" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Configuration Graph data</div>
+        <DashboardError
+          title="Root Configuration Graph"
+          subtitle="Config dependency mapping, validation, drift detection"
+          message="We couldn't load Root Configuration Graph data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

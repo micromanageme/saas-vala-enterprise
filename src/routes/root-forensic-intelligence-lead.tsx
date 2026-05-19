@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-forensic-intelligence-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-forensic-intelligence-lead")({
 });
 
 function Page() {
-  const { data: forensicData, isLoading, error } = useQuery({
+  const { data: forensicData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-forensic-intelligence-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Forensic Intelligence Lead" subtitle="Root forensic intelligence workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Forensic Intelligence Lead" subtitle="Root forensic intelligence workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Forensic Intelligence Lead data</div>
+        <DashboardError
+          title="Root Forensic Intelligence Lead"
+          subtitle="Root forensic intelligence workspace"
+          message="We couldn't load Root Forensic Intelligence Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

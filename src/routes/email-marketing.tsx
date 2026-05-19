@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/email-marketing")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/email-marketing")({
 });
 
 function Page() {
-  const { data: emailData, isLoading, error } = useQuery({
+  const { data: emailData, isLoading, error, refetch } = useQuery({
     queryKey: ["email-marketing-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Email Marketing" subtitle="Email marketing management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Email Marketing" subtitle="Email marketing management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Email Marketing data</div>
+        <DashboardError
+          title="Email Marketing"
+          subtitle="Email marketing management"
+          message="We couldn't load Email Marketing data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

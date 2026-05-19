@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/subscriptions")({
   head: () => ({ meta: [{ title: "Subscriptions — SaaS Vala" }, { name: "description", content: "Recurring billing & MRR" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/subscriptions")({
 });
 
 function Page() {
-  const { data: subscriptionsData, isLoading, error } = useQuery({
+  const { data: subscriptionsData, isLoading, error, refetch } = useQuery({
     queryKey: ["subscriptions"],
     queryFn: async () => {
       const response = await fetch("/api/subscriptions?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Subscriptions" subtitle="Recurring billing & MRR" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Subscriptions" subtitle="Recurring billing & MRR" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Subscriptions data</div>
+        <DashboardError
+          title="Subscriptions"
+          subtitle="Recurring billing & MRR"
+          message="We couldn't load Subscriptions data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

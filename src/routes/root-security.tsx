@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-security")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-security")({
 });
 
 function Page() {
-  const { data: securityData, isLoading, error } = useQuery({
+  const { data: securityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-security"],
     queryFn: async () => {
       const response = await fetch("/api/root/security?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Security Center" subtitle="Root-level security control" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Security Center" subtitle="Root-level security control" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Security Center data</div>
+        <DashboardError
+          title="Universal Security Center"
+          subtitle="Root-level security control"
+          message="We couldn't load Universal Security Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

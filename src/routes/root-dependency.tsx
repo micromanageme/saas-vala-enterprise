@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-dependency")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-dependency")({
 });
 
 function Page() {
-  const { data: dependencyData, isLoading, error } = useQuery({
+  const { data: dependencyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-dependency"],
     queryFn: async () => {
       const response = await fetch("/api/root/dependency-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Dependency Engine" subtitle="Dependency graph visualization, circular detection, runtime healing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Dependency Engine" subtitle="Dependency graph visualization, circular detection, runtime healing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Dependency Engine data</div>
+        <DashboardError
+          title="Universal Dependency Engine"
+          subtitle="Dependency graph visualization, circular detection, runtime healing"
+          message="We couldn't load Universal Dependency Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

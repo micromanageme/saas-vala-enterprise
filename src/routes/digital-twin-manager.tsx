@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/digital-twin-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/digital-twin-manager")({
 });
 
 function Page() {
-  const { data: twinData, isLoading, error } = useQuery({
+  const { data: twinData, isLoading, error, refetch } = useQuery({
     queryKey: ["digital-twin-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Digital Twin Manager" subtitle="Digital twin management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Digital Twin Manager" subtitle="Digital twin management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Digital Twin Manager data</div>
+        <DashboardError
+          title="Digital Twin Manager"
+          subtitle="Digital twin management workspace"
+          message="We couldn't load Digital Twin Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

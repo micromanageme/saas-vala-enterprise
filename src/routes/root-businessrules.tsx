@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-businessrules")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-businessrules")({
 });
 
 function Page() {
-  const { data: ruleData, isLoading, error } = useQuery({
+  const { data: ruleData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-businessrules"],
     queryFn: async () => {
       const response = await fetch("/api/root/business-rule-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Business Rule Fabric" subtitle="Centralized business logic, runtime rule execution, dynamic injection" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Business Rule Fabric" subtitle="Centralized business logic, runtime rule execution, dynamic injection" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Business Rule Fabric data</div>
+        <DashboardError
+          title="Universal Business Rule Fabric"
+          subtitle="Centralized business logic, runtime rule execution, dynamic injection"
+          message="We couldn't load Universal Business Rule Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

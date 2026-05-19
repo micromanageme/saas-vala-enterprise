@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-parliament")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-parliament")({
 });
 
 function Page() {
-  const { data: parliamentData, isLoading, error } = useQuery({
+  const { data: parliamentData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-parliament"],
     queryFn: async () => {
       const response = await fetch("/api/root/execution-parliament?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Execution Parliament" subtitle="Distributed approval governance, multi-authority consensus, conflict arbitration" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Execution Parliament" subtitle="Distributed approval governance, multi-authority consensus, conflict arbitration" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Execution Parliament data</div>
+        <DashboardError
+          title="Universal Execution Parliament"
+          subtitle="Distributed approval governance, multi-authority consensus, conflict arbitration"
+          message="We couldn't load Universal Execution Parliament data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

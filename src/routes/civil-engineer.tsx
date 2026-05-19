@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/civil-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/civil-engineer")({
 });
 
 function Page() {
-  const { data: civilData, isLoading, error } = useQuery({
+  const { data: civilData, isLoading, error, refetch } = useQuery({
     queryKey: ["civil-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Civil Engineer" subtitle="Civil engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Civil Engineer" subtitle="Civil engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Civil Engineer data</div>
+        <DashboardError
+          title="Civil Engineer"
+          subtitle="Civil engineering workspace"
+          message="We couldn't load Civil Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

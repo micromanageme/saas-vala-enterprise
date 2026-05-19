@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/client")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/client")({
 });
 
 function Page() {
-  const { data: clientData, isLoading, error } = useQuery({
+  const { data: clientData, isLoading, error, refetch } = useQuery({
     queryKey: ["client-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Client" subtitle="Client portal" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Client" subtitle="Client portal" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Client data</div>
+        <DashboardError
+          title="Client"
+          subtitle="Client portal"
+          message="We couldn't load Client data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

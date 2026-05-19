@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-overridelock")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-overridelock")({
 });
 
 function Page() {
-  const { data: overrideData, isLoading, error } = useQuery({
+  const { data: overrideData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-overridelock"],
     queryFn: async () => {
       const response = await fetch("/api/root/universal-override-lock?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Universal Override Lock" subtitle="Override conflict arbitration, emergency override sequencing, irreversible safeguard barriers" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Universal Override Lock" subtitle="Override conflict arbitration, emergency override sequencing, irreversible safeguard barriers" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Universal Override Lock data</div>
+        <DashboardError
+          title="Root Universal Override Lock"
+          subtitle="Override conflict arbitration, emergency override sequencing, irreversible safeguard barriers"
+          message="We couldn't load Root Universal Override Lock data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

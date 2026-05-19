@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-predictivefailure")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-predictivefailure")({
 });
 
 function Page() {
-  const { data: failureData, isLoading, error } = useQuery({
+  const { data: failureData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-predictivefailure"],
     queryFn: async () => {
       const response = await fetch("/api/root/predictive-failure-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Predictive Failure Engine" subtitle="Predictive outage detection, anomaly forecasting, proactive remediation planning" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Predictive Failure Engine" subtitle="Predictive outage detection, anomaly forecasting, proactive remediation planning" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Predictive Failure Engine data</div>
+        <DashboardError
+          title="Root Predictive Failure Engine"
+          subtitle="Predictive outage detection, anomaly forecasting, proactive remediation planning"
+          message="We couldn't load Root Predictive Failure Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

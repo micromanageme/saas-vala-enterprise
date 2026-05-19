@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/tenant-owner")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/tenant-owner")({
 });
 
 function Page() {
-  const { data: tenantOwnerData, isLoading, error } = useQuery({
+  const { data: tenantOwnerData, isLoading, error, refetch } = useQuery({
     queryKey: ["tenant-owner-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Tenant Owner" subtitle="Tenant ownership workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Tenant Owner" subtitle="Tenant ownership workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Tenant Owner data</div>
+        <DashboardError
+          title="Tenant Owner"
+          subtitle="Tenant ownership workspace"
+          message="We couldn't load Tenant Owner data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

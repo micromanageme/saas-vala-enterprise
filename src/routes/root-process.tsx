@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-process")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-process")({
 });
 
 function Page() {
-  const { data: processData, isLoading, error } = useQuery({
+  const { data: processData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-process"],
     queryFn: async () => {
       const response = await fetch("/api/root/process-orchestrator?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Process Orchestrator" subtitle="Process lifecycle management, watchdog, recovery" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Process Orchestrator" subtitle="Process lifecycle management, watchdog, recovery" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Process Orchestrator data</div>
+        <DashboardError
+          title="Universal Process Orchestrator"
+          subtitle="Process lifecycle management, watchdog, recovery"
+          message="We couldn't load Universal Process Orchestrator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/board-member")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/board-member")({
 });
 
 function Page() {
-  const { data: boardMemberData, isLoading, error } = useQuery({
+  const { data: boardMemberData, isLoading, error, refetch } = useQuery({
     queryKey: ["board-member-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/root/dashboard?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Board Member" subtitle="Board member workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Board Member" subtitle="Board member workspace" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Board Member data</div>
+        <DashboardError
+          title="Board Member"
+          subtitle="Board member workspace"
+          message="We couldn't load Board Member data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

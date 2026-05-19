@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/employee")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/employee")({
 });
 
 function Page() {
-  const { data: empData, isLoading, error } = useQuery({
+  const { data: empData, isLoading, error, refetch } = useQuery({
     queryKey: ["employee-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Employee Dashboard" subtitle="Employee workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Employee Dashboard" subtitle="Employee workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Employee data</div>
+        <DashboardError
+          title="Employee Dashboard"
+          subtitle="Employee workspace"
+          message="We couldn't load Employee data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

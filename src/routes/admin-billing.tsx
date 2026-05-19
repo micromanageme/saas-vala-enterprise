@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin-billing")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/admin-billing")({
 });
 
 function Page() {
-  const { data: billingData, isLoading, error } = useQuery({
+  const { data: billingData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-billing"],
     queryFn: async () => {
       const response = await fetch("/api/admin/billing?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Billing & Finance" subtitle="Global billing and financial management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Billing & Finance" subtitle="Global billing and financial management" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load billing data</div>
+        <DashboardError
+          title="Billing & Finance"
+          subtitle="Global billing and financial management"
+          message="We couldn't load billing data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

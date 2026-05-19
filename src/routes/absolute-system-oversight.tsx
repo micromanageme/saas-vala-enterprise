@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/absolute-system-oversight")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/absolute-system-oversight")({
 });
 
 function Page() {
-  const { data: oversightData, isLoading, error } = useQuery({
+  const { data: oversightData, isLoading, error, refetch } = useQuery({
     queryKey: ["absolute-system-oversight-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Absolute System Oversight" subtitle="Absolute system oversight workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Absolute System Oversight" subtitle="Absolute system oversight workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Absolute System Oversight data</div>
+        <DashboardError
+          title="Absolute System Oversight"
+          subtitle="Absolute system oversight workspace"
+          message="We couldn't load Absolute System Oversight data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

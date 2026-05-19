@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/executive")({
   head: () => ({ meta: [{ title: "Executive Dashboard — SaaS Vala" }, { name: "description", content: "C-suite overview" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/executive")({
 });
 
 function Page() {
-  const { data: executiveData, isLoading, error } = useQuery({
+  const { data: executiveData, isLoading, error, refetch } = useQuery({
     queryKey: ["executive"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Executive Dashboard" subtitle="C-suite overview" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Executive Dashboard" subtitle="C-suite overview" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Executive data</div>
+        <DashboardError
+          title="Executive Dashboard"
+          subtitle="C-suite overview"
+          message="We couldn't load Executive data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

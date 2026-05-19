@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-knowledgefabric")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-knowledgefabric")({
 });
 
 function Page() {
-  const { data: knowledgeData, isLoading, error } = useQuery({
+  const { data: knowledgeData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-knowledgefabric"],
     queryFn: async () => {
       const response = await fetch("/api/root/knowledge-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Knowledge Fabric" subtitle="Cross-module semantic graph, enterprise knowledge linking, AI retrieval" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Knowledge Fabric" subtitle="Cross-module semantic graph, enterprise knowledge linking, AI retrieval" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Knowledge Fabric data</div>
+        <DashboardError
+          title="Universal Knowledge Fabric"
+          subtitle="Cross-module semantic graph, enterprise knowledge linking, AI retrieval"
+          message="We couldn't load Universal Knowledge Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

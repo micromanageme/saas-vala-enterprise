@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/hospital-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/hospital-admin")({
 });
 
 function Page() {
-  const { data: hospitalData, isLoading, error } = useQuery({
+  const { data: hospitalData, isLoading, error, refetch } = useQuery({
     queryKey: ["hospital-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Hospital Admin" subtitle="Hospital administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Hospital Admin" subtitle="Hospital administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Hospital Admin data</div>
+        <DashboardError
+          title="Hospital Admin"
+          subtitle="Hospital administration workspace"
+          message="We couldn't load Hospital Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

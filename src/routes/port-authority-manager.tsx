@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/port-authority-manager")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/port-authority-manager")({
 });
 
 function Page() {
-  const { data: portData, isLoading, error } = useQuery({
+  const { data: portData, isLoading, error, refetch } = useQuery({
     queryKey: ["port-authority-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Port Authority Manager" subtitle="Port authority management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Port Authority Manager" subtitle="Port authority management workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Port Authority Manager data</div>
+        <DashboardError
+          title="Port Authority Manager"
+          subtitle="Port authority management workspace"
+          message="We couldn't load Port Authority Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

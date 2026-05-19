@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/crisis-response-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/crisis-response-commander")({
 });
 
 function Page() {
-  const { data: crisisData, isLoading, error } = useQuery({
+  const { data: crisisData, isLoading, error, refetch } = useQuery({
     queryKey: ["crisis-response-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Crisis Response Commander" subtitle="Crisis response command workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Crisis Response Commander" subtitle="Crisis response command workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Crisis Response Commander data</div>
+        <DashboardError
+          title="Crisis Response Commander"
+          subtitle="Crisis response command workspace"
+          message="We couldn't load Crisis Response Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

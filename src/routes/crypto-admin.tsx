@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/crypto-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/crypto-admin")({
 });
 
 function Page() {
-  const { data: cryptoData, isLoading, error } = useQuery({
+  const { data: cryptoData, isLoading, error, refetch } = useQuery({
     queryKey: ["crypto-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Crypto Admin" subtitle="Cryptocurrency administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Crypto Admin" subtitle="Cryptocurrency administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Crypto Admin data</div>
+        <DashboardError
+          title="Crypto Admin"
+          subtitle="Cryptocurrency administration workspace"
+          message="We couldn't load Crypto Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

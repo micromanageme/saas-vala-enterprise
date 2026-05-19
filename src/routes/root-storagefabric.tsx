@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-storagefabric")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-storagefabric")({
 });
 
 function Page() {
-  const { data: storageData, isLoading, error } = useQuery({
+  const { data: storageData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-storagefabric"],
     queryFn: async () => {
       const response = await fetch("/api/root/storage-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Storage Fabric" subtitle="Object storage federation, replication, durability validation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Storage Fabric" subtitle="Object storage federation, replication, durability validation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Storage Fabric data</div>
+        <DashboardError
+          title="Universal Storage Fabric"
+          subtitle="Object storage federation, replication, durability validation"
+          message="We couldn't load Universal Storage Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

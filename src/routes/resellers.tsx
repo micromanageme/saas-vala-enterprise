@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/resellers")({
   head: () => ({ meta: [{ title: "Reseller System — SaaS Vala" }, { name: "description", content: "Channel partners & commissions" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/resellers")({
 });
 
 function Page() {
-  const { data: resellersData, isLoading, error } = useQuery({
+  const { data: resellersData, isLoading, error, refetch } = useQuery({
     queryKey: ["resellers"],
     queryFn: async () => {
       const response = await fetch("/api/resellers?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Reseller System" subtitle="Channel partners & commissions" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Reseller System" subtitle="Channel partners & commissions" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Resellers data</div>
+        <DashboardError
+          title="Reseller System"
+          subtitle="Channel partners & commissions"
+          message="We couldn't load Resellers data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

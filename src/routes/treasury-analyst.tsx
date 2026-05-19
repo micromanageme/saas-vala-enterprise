@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/treasury-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/treasury-analyst")({
 });
 
 function Page() {
-  const { data: treasuryData, isLoading, error } = useQuery({
+  const { data: treasuryData, isLoading, error, refetch } = useQuery({
     queryKey: ["treasury-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Treasury Analyst" subtitle="Treasury analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Treasury Analyst" subtitle="Treasury analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Treasury Analyst data</div>
+        <DashboardError
+          title="Treasury Analyst"
+          subtitle="Treasury analysis workspace"
+          message="We couldn't load Treasury Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

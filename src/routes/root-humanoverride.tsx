@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-humanoverride")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-humanoverride")({
 });
 
 function Page() {
-  const { data: overrideData, isLoading, error } = useQuery({
+  const { data: overrideData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-humanoverride"],
     queryFn: async () => {
       const response = await fetch("/api/root/human-override?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Human-Override Layer" subtitle="Manual authority override, emergency command priority, irreversible action arbitration" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Human-Override Layer" subtitle="Manual authority override, emergency command priority, irreversible action arbitration" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Human-Override Layer data</div>
+        <DashboardError
+          title="Universal Human-Override Layer"
+          subtitle="Manual authority override, emergency command priority, irreversible action arbitration"
+          message="We couldn't load Universal Human-Override Layer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

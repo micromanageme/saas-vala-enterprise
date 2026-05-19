@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanomemory")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanomemory")({
 });
 
 function Page() {
-  const { data: memoryData, isLoading, error } = useQuery({
+  const { data: memoryData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanomemory"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-memory-stability?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Memory Stability Layer" subtitle="Retained-reference isolation, heap fragmentation tracking, memory leak ancestry" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Memory Stability Layer" subtitle="Retained-reference isolation, heap fragmentation tracking, memory leak ancestry" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Memory Stability Layer data</div>
+        <DashboardError
+          title="Nano Memory Stability Layer"
+          subtitle="Retained-reference isolation, heap fragmentation tracking, memory leak ancestry"
+          message="We couldn't load Nano Memory Stability Layer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

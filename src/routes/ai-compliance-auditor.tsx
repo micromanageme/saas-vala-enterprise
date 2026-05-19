@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ai-compliance-auditor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ai-compliance-auditor")({
 });
 
 function Page() {
-  const { data: auditData, isLoading, error } = useQuery({
+  const { data: auditData, isLoading, error, refetch } = useQuery({
     queryKey: ["ai-compliance-auditor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Compliance Auditor" subtitle="AI compliance auditing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Compliance Auditor" subtitle="AI compliance auditing" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI Compliance Auditor data</div>
+        <DashboardError
+          title="AI Compliance Auditor"
+          subtitle="AI compliance auditing"
+          message="We couldn't load AI Compliance Auditor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/volunteer-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/volunteer-manager")({
 });
 
 function Page() {
-  const { data: volunteerData, isLoading, error } = useQuery({
+  const { data: volunteerData, isLoading, error, refetch } = useQuery({
     queryKey: ["volunteer-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Volunteer Manager" subtitle="Volunteer management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Volunteer Manager" subtitle="Volunteer management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Volunteer Manager data</div>
+        <DashboardError
+          title="Volunteer Manager"
+          subtitle="Volunteer management workspace"
+          message="We couldn't load Volunteer Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

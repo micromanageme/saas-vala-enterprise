@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/naval-operations-command")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/naval-operations-command")({
 });
 
 function Page() {
-  const { data: navalData, isLoading, error } = useQuery({
+  const { data: navalData, isLoading, error, refetch } = useQuery({
     queryKey: ["naval-operations-command-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Naval Operations Command" subtitle="Naval operations command workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Naval Operations Command" subtitle="Naval operations command workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Naval Operations Command data</div>
+        <DashboardError
+          title="Naval Operations Command"
+          subtitle="Naval operations command workspace"
+          message="We couldn't load Naval Operations Command data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

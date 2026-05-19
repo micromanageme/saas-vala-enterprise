@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/social-media-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/social-media-manager")({
 });
 
 function Page() {
-  const { data: socialData, isLoading, error } = useQuery({
+  const { data: socialData, isLoading, error, refetch } = useQuery({
     queryKey: ["social-media-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Social Media Manager" subtitle="Social media management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Social Media Manager" subtitle="Social media management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Social Media Manager data</div>
+        <DashboardError
+          title="Social Media Manager"
+          subtitle="Social media management"
+          message="We couldn't load Social Media Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

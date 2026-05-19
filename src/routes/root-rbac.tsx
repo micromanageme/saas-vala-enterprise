@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-rbac")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-rbac")({
 });
 
 function Page() {
-  const { data: rbacData, isLoading, error } = useQuery({
+  const { data: rbacData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-rbac"],
     queryFn: async () => {
       const response = await fetch("/api/root/rbac?type=all", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root RBAC Engine" subtitle="Universal permission control at root level" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root RBAC Engine" subtitle="Universal permission control at root level" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root RBAC Engine data</div>
+        <DashboardError
+          title="Root RBAC Engine"
+          subtitle="Universal permission control at root level"
+          message="We couldn't load Root RBAC Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

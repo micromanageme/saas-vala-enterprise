@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/data-protection-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/data-protection-officer")({
 });
 
 function Page() {
-  const { data: dpoData, isLoading, error } = useQuery({
+  const { data: dpoData, isLoading, error, refetch } = useQuery({
     queryKey: ["data-protection-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Data Protection Officer" subtitle="Data protection officer workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Data Protection Officer" subtitle="Data protection officer workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Data Protection Officer data</div>
+        <DashboardError
+          title="Data Protection Officer"
+          subtitle="Data protection officer workspace"
+          message="We couldn't load Data Protection Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

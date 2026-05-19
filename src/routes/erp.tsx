@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/erp")({
   head: () => ({ meta: [{ title: "Sales / ERP — SaaS Vala" }, { name: "description", content: "Quotations, orders & invoicing" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/erp")({
 });
 
 function Page() {
-  const { data: erpData, isLoading, error } = useQuery({
+  const { data: erpData, isLoading, error, refetch } = useQuery({
     queryKey: ["erp"],
     queryFn: async () => {
       const response = await fetch("/api/erp?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Sales / ERP" subtitle="Quotations, orders & invoicing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Sales / ERP" subtitle="Quotations, orders & invoicing" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load ERP data</div>
+        <DashboardError
+          title="Sales / ERP"
+          subtitle="Quotations, orders & invoicing"
+          message="We couldn't load ERP data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

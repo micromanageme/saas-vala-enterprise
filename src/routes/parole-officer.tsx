@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/parole-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/parole-officer")({
 });
 
 function Page() {
-  const { data: paroleData, isLoading, error } = useQuery({
+  const { data: paroleData, isLoading, error, refetch } = useQuery({
     queryKey: ["parole-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Parole Officer" subtitle="Parole supervision workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Parole Officer" subtitle="Parole supervision workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Parole Officer data</div>
+        <DashboardError
+          title="Parole Officer"
+          subtitle="Parole supervision workspace"
+          message="We couldn't load Parole Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

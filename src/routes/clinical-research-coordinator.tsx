@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/clinical-research-coordinator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/clinical-research-coordinator")({
 });
 
 function Page() {
-  const { data: clinicalData, isLoading, error } = useQuery({
+  const { data: clinicalData, isLoading, error, refetch } = useQuery({
     queryKey: ["clinical-research-coordinator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Clinical Research Coordinator" subtitle="Clinical research coordination workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Clinical Research Coordinator" subtitle="Clinical research coordination workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Clinical Research Coordinator data</div>
+        <DashboardError
+          title="Clinical Research Coordinator"
+          subtitle="Clinical research coordination workspace"
+          message="We couldn't load Clinical Research Coordinator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

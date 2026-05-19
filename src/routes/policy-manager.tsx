@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/policy-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/policy-manager")({
 });
 
 function Page() {
-  const { data: policyData, isLoading, error } = useQuery({
+  const { data: policyData, isLoading, error, refetch } = useQuery({
     queryKey: ["policy-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Policy Manager" subtitle="Policy management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Policy Manager" subtitle="Policy management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Policy Manager data</div>
+        <DashboardError
+          title="Policy Manager"
+          subtitle="Policy management"
+          message="We couldn't load Policy Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

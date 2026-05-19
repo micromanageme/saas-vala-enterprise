@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-realitymirror")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-realitymirror")({
 });
 
 function Page() {
-  const { data: realityData, isLoading, error } = useQuery({
+  const { data: realityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-realitymirror"],
     queryFn: async () => {
       const response = await fetch("/api/root/reality-mirror?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Reality Mirror" subtitle="Complete live ecosystem twin, realtime topology sync, operational simulation overlay" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Reality Mirror" subtitle="Complete live ecosystem twin, realtime topology sync, operational simulation overlay" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Reality Mirror data</div>
+        <DashboardError
+          title="Universal Reality Mirror"
+          subtitle="Complete live ecosystem twin, realtime topology sync, operational simulation overlay"
+          message="We couldn't load Universal Reality Mirror data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

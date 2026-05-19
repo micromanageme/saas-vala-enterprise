@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/guest-user")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/guest-user")({
 });
 
 function Page() {
-  const { data: guestData, isLoading, error } = useQuery({
+  const { data: guestData, isLoading, error, refetch } = useQuery({
     queryKey: ["guest-user-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/public/dashboard");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Guest User" subtitle="Guest user portal" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Guest User" subtitle="Guest user portal" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Guest User data</div>
+        <DashboardError
+          title="Guest User"
+          subtitle="Guest user portal"
+          message="We couldn't load Guest User data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

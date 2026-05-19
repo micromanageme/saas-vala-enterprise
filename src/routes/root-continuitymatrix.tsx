@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-continuitymatrix")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-continuitymatrix")({
 });
 
 function Page() {
-  const { data: continuityData, isLoading, error } = useQuery({
+  const { data: continuityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-continuitymatrix"],
     queryFn: async () => {
       const response = await fetch("/api/root/continuity-matrix?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Continuity Matrix" subtitle="Civilization-grade resilience, ultra-long-term archival, multi-region continuity" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Continuity Matrix" subtitle="Civilization-grade resilience, ultra-long-term archival, multi-region continuity" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Continuity Matrix data</div>
+        <DashboardError
+          title="Universal Continuity Matrix"
+          subtitle="Civilization-grade resilience, ultra-long-term archival, multi-region continuity"
+          message="We couldn't load Universal Continuity Matrix data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

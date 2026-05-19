@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/child-welfare-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/child-welfare-officer")({
 });
 
 function Page() {
-  const { data: childData, isLoading, error } = useQuery({
+  const { data: childData, isLoading, error, refetch } = useQuery({
     queryKey: ["child-welfare-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Child Welfare Officer" subtitle="Child welfare workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Child Welfare Officer" subtitle="Child welfare workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Child Welfare Officer data</div>
+        <DashboardError
+          title="Child Welfare Officer"
+          subtitle="Child welfare workspace"
+          message="We couldn't load Child Welfare Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

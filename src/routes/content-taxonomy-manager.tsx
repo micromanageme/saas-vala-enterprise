@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/content-taxonomy-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/content-taxonomy-manager")({
 });
 
 function Page() {
-  const { data: taxonomyData, isLoading, error } = useQuery({
+  const { data: taxonomyData, isLoading, error, refetch } = useQuery({
     queryKey: ["content-taxonomy-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Content Taxonomy Manager" subtitle="Content taxonomy management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Content Taxonomy Manager" subtitle="Content taxonomy management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Content Taxonomy Manager data</div>
+        <DashboardError
+          title="Content Taxonomy Manager"
+          subtitle="Content taxonomy management workspace"
+          message="We couldn't load Content Taxonomy Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

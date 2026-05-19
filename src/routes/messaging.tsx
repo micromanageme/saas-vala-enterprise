@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/messaging")({
   head: () => ({ meta: [{ title: "Messaging — SaaS Vala" }, { name: "description", content: "WhatsApp · SMS · Email" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/messaging")({
 });
 
 function Page() {
-  const { data: messagingData, isLoading, error } = useQuery({
+  const { data: messagingData, isLoading, error, refetch } = useQuery({
     queryKey: ["messaging"],
     queryFn: async () => {
       const response = await fetch("/api/messaging?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Messaging" subtitle="WhatsApp · SMS · Email" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Messaging" subtitle="WhatsApp · SMS · Email" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Messaging data</div>
+        <DashboardError
+          title="Messaging"
+          subtitle="WhatsApp · SMS · Email"
+          message="We couldn't load Messaging data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

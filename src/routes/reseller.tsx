@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/reseller")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/reseller")({
 });
 
 function Page() {
-  const { data: resellerData, isLoading, error } = useQuery({
+  const { data: resellerData, isLoading, error, refetch } = useQuery({
     queryKey: ["reseller-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Reseller Dashboard" subtitle="Reseller portal" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Reseller Dashboard" subtitle="Reseller portal" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Reseller data</div>
+        <DashboardError
+          title="Reseller Dashboard"
+          subtitle="Reseller portal"
+          message="We couldn't load Reseller data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

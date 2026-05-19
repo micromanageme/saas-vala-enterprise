@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanotenant")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanotenant")({
 });
 
 function Page() {
-  const { data: tenantData, isLoading, error } = useQuery({
+  const { data: tenantData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanotenant"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-tenant-isolation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Tenant Isolation Matrix" subtitle="Cross-tenant leakage detection, tenant-state quarantine, permission bleed prevention" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Tenant Isolation Matrix" subtitle="Cross-tenant leakage detection, tenant-state quarantine, permission bleed prevention" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Tenant Isolation Matrix data</div>
+        <DashboardError
+          title="Nano Tenant Isolation Matrix"
+          subtitle="Cross-tenant leakage detection, tenant-state quarantine, permission bleed prevention"
+          message="We couldn't load Nano Tenant Isolation Matrix data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

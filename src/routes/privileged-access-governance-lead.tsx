@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/privileged-access-governance-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/privileged-access-governance-lead")({
 });
 
 function Page() {
-  const { data: privilegedData, isLoading, error } = useQuery({
+  const { data: privilegedData, isLoading, error, refetch } = useQuery({
     queryKey: ["privileged-access-governance-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Privileged Access Governance Lead" subtitle="Privileged access governance workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Privileged Access Governance Lead" subtitle="Privileged access governance workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Privileged Access Governance Lead data</div>
+        <DashboardError
+          title="Privileged Access Governance Lead"
+          subtitle="Privileged access governance workspace"
+          message="We couldn't load Privileged Access Governance Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

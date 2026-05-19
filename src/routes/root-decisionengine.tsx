@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-decisionengine")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-decisionengine")({
 });
 
 function Page() {
-  const { data: decisionData, isLoading, error } = useQuery({
+  const { data: decisionData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-decisionengine"],
     queryFn: async () => {
       const response = await fetch("/api/root/decision-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Decision Engine" subtitle="Automated governance decisions, risk-aware execution, approval intelligence" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Decision Engine" subtitle="Automated governance decisions, risk-aware execution, approval intelligence" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Decision Engine data</div>
+        <DashboardError
+          title="Root Decision Engine"
+          subtitle="Automated governance decisions, risk-aware execution, approval intelligence"
+          message="We couldn't load Root Decision Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

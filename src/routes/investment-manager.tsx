@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/investment-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/investment-manager")({
 });
 
 function Page() {
-  const { data: investmentData, isLoading, error } = useQuery({
+  const { data: investmentData, isLoading, error, refetch } = useQuery({
     queryKey: ["investment-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Investment Manager" subtitle="Investment management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Investment Manager" subtitle="Investment management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Investment Manager data</div>
+        <DashboardError
+          title="Investment Manager"
+          subtitle="Investment management"
+          message="We couldn't load Investment Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

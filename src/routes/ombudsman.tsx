@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ombudsman")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ombudsman")({
 });
 
 function Page() {
-  const { data: ombudsmanData, isLoading, error } = useQuery({
+  const { data: ombudsmanData, isLoading, error, refetch } = useQuery({
     queryKey: ["ombudsman-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Ombudsman" subtitle="Ombudsman office" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Ombudsman" subtitle="Ombudsman office" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Ombudsman data</div>
+        <DashboardError
+          title="Ombudsman"
+          subtitle="Ombudsman office"
+          message="We couldn't load Ombudsman data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/log-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/log-engineer")({
 });
 
 function Page() {
-  const { data: logData, isLoading, error } = useQuery({
+  const { data: logData, isLoading, error, refetch } = useQuery({
     queryKey: ["log-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Log Engineer" subtitle="Log engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Log Engineer" subtitle="Log engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Log Engineer data</div>
+        <DashboardError
+          title="Log Engineer"
+          subtitle="Log engineering workspace"
+          message="We couldn't load Log Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

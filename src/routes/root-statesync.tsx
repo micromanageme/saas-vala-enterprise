@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-statesync")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-statesync")({
 });
 
 function Page() {
-  const { data: syncData, isLoading, error } = useQuery({
+  const { data: syncData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-statesync"],
     queryFn: async () => {
       const response = await fetch("/api/root/state-synchronizer?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root State Synchronizer" subtitle="Cross-tab sync, cross-device sync, realtime propagation, stale state cleanup" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root State Synchronizer" subtitle="Cross-tab sync, cross-device sync, realtime propagation, stale state cleanup" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root State Synchronizer data</div>
+        <DashboardError
+          title="Root State Synchronizer"
+          subtitle="Cross-tab sync, cross-device sync, realtime propagation, stale state cleanup"
+          message="We couldn't load Root State Synchronizer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

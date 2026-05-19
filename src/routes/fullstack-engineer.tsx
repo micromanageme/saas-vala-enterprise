@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/fullstack-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/fullstack-engineer")({
 });
 
 function Page() {
-  const { data: fsData, isLoading, error } = useQuery({
+  const { data: fsData, isLoading, error, refetch } = useQuery({
     queryKey: ["fullstack-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Full Stack Engineer" subtitle="Full stack development" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Full Stack Engineer" subtitle="Full stack development" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Full Stack Engineer data</div>
+        <DashboardError
+          title="Full Stack Engineer"
+          subtitle="Full stack development"
+          message="We couldn't load Full Stack Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/prison-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/prison-admin")({
 });
 
 function Page() {
-  const { data: prisonData, isLoading, error } = useQuery({
+  const { data: prisonData, isLoading, error, refetch } = useQuery({
     queryKey: ["prison-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Prison Admin" subtitle="Prison administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Prison Admin" subtitle="Prison administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Prison Admin data</div>
+        <DashboardError
+          title="Prison Admin"
+          subtitle="Prison administration workspace"
+          message="We couldn't load Prison Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/sovereign-data-officer")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/sovereign-data-officer")({
 });
 
 function Page() {
-  const { data: sovereignData, isLoading, error } = useQuery({
+  const { data: sovereignData, isLoading, error, refetch } = useQuery({
     queryKey: ["sovereign-data-officer-dashboard"],
     queryFn: async () => {
       const response = fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Sovereign Data Officer" subtitle="Sovereign data management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Sovereign Data Officer" subtitle="Sovereign data management workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Sovereign Data Officer data</div>
+        <DashboardError
+          title="Sovereign Data Officer"
+          subtitle="Sovereign data management workspace"
+          message="We couldn't load Sovereign Data Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

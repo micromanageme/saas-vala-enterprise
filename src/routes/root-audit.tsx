@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-audit")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-audit")({
 });
 
 function Page() {
-  const { data: auditData, isLoading, error } = useQuery({
+  const { data: auditData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-audit"],
     queryFn: async () => {
       const response = await fetch("/api/root/audit-vault?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Audit Vault" subtitle="Immutable audit logs, forensic tracking, compliance export" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Audit Vault" subtitle="Immutable audit logs, forensic tracking, compliance export" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Audit Vault data</div>
+        <DashboardError
+          title="Universal Audit Vault"
+          subtitle="Immutable audit logs, forensic tracking, compliance export"
+          message="We couldn't load Universal Audit Vault data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

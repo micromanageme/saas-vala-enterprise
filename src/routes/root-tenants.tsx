@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-tenants")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-tenants")({
 });
 
 function Page() {
-  const { data: tenantsData, isLoading, error } = useQuery({
+  const { data: tenantsData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-tenants"],
     queryFn: async () => {
       const response = await fetch("/api/admin/tenants", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Global Tenant Control" subtitle="Root-level tenant management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Global Tenant Control" subtitle="Root-level tenant management" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Global Tenant Control data</div>
+        <DashboardError
+          title="Global Tenant Control"
+          subtitle="Root-level tenant management"
+          message="We couldn't load Global Tenant Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

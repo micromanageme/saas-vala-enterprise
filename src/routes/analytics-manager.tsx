@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/analytics-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/analytics-manager")({
 });
 
 function Page() {
-  const { data: analyticsData, isLoading, error } = useQuery({
+  const { data: analyticsData, isLoading, error, refetch } = useQuery({
     queryKey: ["analytics-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Analytics Manager" subtitle="Analytics operations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Analytics Manager" subtitle="Analytics operations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Analytics Manager data</div>
+        <DashboardError
+          title="Analytics Manager"
+          subtitle="Analytics operations management"
+          message="We couldn't load Analytics Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({ meta: [{ title: "Calendar — SaaS Vala" }, { name: "description", content: "Schedule & events" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/calendar")({
 });
 
 function Page() {
-  const { data: calendarData, isLoading, error } = useQuery({
+  const { data: calendarData, isLoading, error, refetch } = useQuery({
     queryKey: ["calendar"],
     queryFn: async () => {
       const response = await fetch("/api/calendar?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Calendar" subtitle="Schedule & events" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Calendar" subtitle="Schedule & events" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Calendar data</div>
+        <DashboardError
+          title="Calendar"
+          subtitle="Schedule & events"
+          message="We couldn't load Calendar data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

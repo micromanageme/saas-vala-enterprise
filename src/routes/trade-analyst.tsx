@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/trade-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/trade-analyst")({
 });
 
 function Page() {
-  const { data: tradeData, isLoading, error } = useQuery({
+  const { data: tradeData, isLoading, error, refetch } = useQuery({
     queryKey: ["trade-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Trade Analyst" subtitle="Trade analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Trade Analyst" subtitle="Trade analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Trade Analyst data</div>
+        <DashboardError
+          title="Trade Analyst"
+          subtitle="Trade analysis workspace"
+          message="We couldn't load Trade Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

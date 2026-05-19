@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/service-orchestrator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/service-orchestrator")({
 });
 
 function Page() {
-  const { data: orchestrationData, isLoading, error } = useQuery({
+  const { data: orchestrationData, isLoading, error, refetch } = useQuery({
     queryKey: ["service-orchestrator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Service Orchestrator" subtitle="Service orchestration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Service Orchestrator" subtitle="Service orchestration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Service Orchestrator data</div>
+        <DashboardError
+          title="Service Orchestrator"
+          subtitle="Service orchestration workspace"
+          message="We couldn't load Service Orchestrator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

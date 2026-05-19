@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-multiverse")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-multiverse")({
 });
 
 function Page() {
-  const { data: multiverseData, isLoading, error } = useQuery({
+  const { data: multiverseData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-multiverse"],
     queryFn: async () => {
       const response = await fetch("/api/root/multiverse-environment?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Multiverse Environment Control" subtitle="Dev/staging/prod isolation, sandbox universes, branch environment orchestration" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Multiverse Environment Control" subtitle="Dev/staging/prod isolation, sandbox universes, branch environment orchestration" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Multiverse Environment Control data</div>
+        <DashboardError
+          title="Universal Multiverse Environment Control"
+          subtitle="Dev/staging/prod isolation, sandbox universes, branch environment orchestration"
+          message="We couldn't load Universal Multiverse Environment Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

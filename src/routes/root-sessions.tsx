@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-sessions")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-sessions")({
 });
 
 function Page() {
-  const { data: sessionData, isLoading, error } = useQuery({
+  const { data: sessionData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-sessions"],
     queryFn: async () => {
       const response = await fetch("/api/root/session-command?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Global Session Command Center" subtitle="Active sessions, forced logout, hijack detection" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Global Session Command Center" subtitle="Active sessions, forced logout, hijack detection" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Global Session Command Center data</div>
+        <DashboardError
+          title="Global Session Command Center"
+          subtitle="Active sessions, forced logout, hijack detection"
+          message="We couldn't load Global Session Command Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

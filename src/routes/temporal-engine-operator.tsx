@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/temporal-engine-operator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/temporal-engine-operator")({
 });
 
 function Page() {
-  const { data: temporalData, isLoading, error } = useQuery({
+  const { data: temporalData, isLoading, error, refetch } = useQuery({
     queryKey: ["temporal-engine-operator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Temporal Engine Operator" subtitle="Temporal engine operation workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Temporal Engine Operator" subtitle="Temporal engine operation workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Temporal Engine Operator data</div>
+        <DashboardError
+          title="Temporal Engine Operator"
+          subtitle="Temporal engine operation workspace"
+          message="We couldn't load Temporal Engine Operator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-authoritygraph")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-authoritygraph")({
 });
 
 function Page() {
-  const { data: authorityData, isLoading, error } = useQuery({
+  const { data: authorityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-authoritygraph"],
     queryFn: async () => {
       const response = await fetch("/api/root/absolute-authority-graph?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Absolute Authority Graph" subtitle="Authority chain visualization, privilege escalation tracing, conflict resolution" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Absolute Authority Graph" subtitle="Authority chain visualization, privilege escalation tracing, conflict resolution" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Absolute Authority Graph data</div>
+        <DashboardError
+          title="Root Absolute Authority Graph"
+          subtitle="Authority chain visualization, privilege escalation tracing, conflict resolution"
+          message="We couldn't load Root Absolute Authority Graph data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/claims-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/claims-manager")({
 });
 
 function Page() {
-  const { data: claimsData, isLoading, error } = useQuery({
+  const { data: claimsData, isLoading, error, refetch } = useQuery({
     queryKey: ["claims-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Claims Manager" subtitle="Claims management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Claims Manager" subtitle="Claims management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Claims Manager data</div>
+        <DashboardError
+          title="Claims Manager"
+          subtitle="Claims management workspace"
+          message="We couldn't load Claims Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

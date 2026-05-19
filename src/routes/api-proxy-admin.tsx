@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/api-proxy-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/api-proxy-admin")({
 });
 
 function Page() {
-  const { data: proxyData, isLoading, error } = useQuery({
+  const { data: proxyData, isLoading, error, refetch } = useQuery({
     queryKey: ["api-proxy-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="API Proxy Admin" subtitle="API proxy administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="API Proxy Admin" subtitle="API proxy administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load API Proxy Admin data</div>
+        <DashboardError
+          title="API Proxy Admin"
+          subtitle="API proxy administration workspace"
+          message="We couldn't load API Proxy Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

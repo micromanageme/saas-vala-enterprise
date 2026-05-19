@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-users")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-users")({
 });
 
 function Page() {
-  const { data: usersData, isLoading, error } = useQuery({
+  const { data: usersData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-users"],
     queryFn: async () => {
       const response = await fetch("/api/root/users?type=all", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root User Control" subtitle="Universal user management at root level" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root User Control" subtitle="Universal user management at root level" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root User Control data</div>
+        <DashboardError
+          title="Root User Control"
+          subtitle="Universal user management at root level"
+          message="We couldn't load Root User Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

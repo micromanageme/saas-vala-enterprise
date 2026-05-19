@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-autonomousops")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-autonomousops")({
 });
 
 function Page() {
-  const { data: autonomousData, isLoading, error } = useQuery({
+  const { data: autonomousData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-autonomousops"],
     queryFn: async () => {
       const response = await fetch("/api/root/autonomous-operations?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Autonomous Operations Core" subtitle="Autonomous remediation, optimization, scaling, anomaly correction" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Autonomous Operations Core" subtitle="Autonomous remediation, optimization, scaling, anomaly correction" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Autonomous Operations Core data</div>
+        <DashboardError
+          title="Root Autonomous Operations Core"
+          subtitle="Autonomous remediation, optimization, scaling, anomaly correction"
+          message="We couldn't load Root Autonomous Operations Core data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

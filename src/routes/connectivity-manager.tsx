@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/connectivity-manager")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/connectivity-manager")({
 });
 
 function Page() {
-  const { data: connectivityData, isLoading, error } = useQuery({
+  const { data: connectivityData, isLoading, error, refetch } = useQuery({
     queryKey: ["connectivity-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Connectivity Manager" subtitle="Connectivity management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Connectivity Manager" subtitle="Connectivity management workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Connectivity Manager data</div>
+        <DashboardError
+          title="Connectivity Manager"
+          subtitle="Connectivity management workspace"
+          message="We couldn't load Connectivity Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

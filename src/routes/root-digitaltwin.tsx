@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-digitaltwin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-digitaltwin")({
 });
 
 function Page() {
-  const { data: twinData, isLoading, error } = useQuery({
+  const { data: twinData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-digitaltwin"],
     queryFn: async () => {
       const response = await fetch("/api/root/digital-twin?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Digital Twin" subtitle="Live infrastructure mirror, topology graph, health overlays" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Digital Twin" subtitle="Live infrastructure mirror, topology graph, health overlays" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Digital Twin data</div>
+        <DashboardError
+          title="Root Digital Twin"
+          subtitle="Live infrastructure mirror, topology graph, health overlays"
+          message="We couldn't load Root Digital Twin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

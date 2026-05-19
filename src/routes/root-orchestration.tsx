@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-orchestration")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-orchestration")({
 });
 
 function Page() {
-  const { data: orchestrationData, isLoading, error } = useQuery({
+  const { data: orchestrationData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-orchestration"],
     queryFn: async () => {
       const response = await fetch("/api/root/orchestration?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Orchestration Engine" subtitle="Root-level workflow and automation control" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Orchestration Engine" subtitle="Root-level workflow and automation control" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Orchestration Engine data</div>
+        <DashboardError
+          title="Orchestration Engine"
+          subtitle="Root-level workflow and automation control"
+          message="We couldn't load Orchestration Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

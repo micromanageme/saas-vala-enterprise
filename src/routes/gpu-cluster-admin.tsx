@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/gpu-cluster-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/gpu-cluster-admin")({
 });
 
 function Page() {
-  const { data: gpuData, isLoading, error } = useQuery({
+  const { data: gpuData, isLoading, error, refetch } = useQuery({
     queryKey: ["gpu-cluster-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="GPU Cluster Admin" subtitle="GPU cluster administration" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="GPU Cluster Admin" subtitle="GPU cluster administration" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load GPU Cluster Admin data</div>
+        <DashboardError
+          title="GPU Cluster Admin"
+          subtitle="GPU cluster administration"
+          message="We couldn't load GPU Cluster Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

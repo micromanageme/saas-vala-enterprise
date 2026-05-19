@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/franchises")({
   head: () => ({ meta: [{ title: "Franchise System — SaaS Vala" }, { name: "description", content: "Franchisee network" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/franchises")({
 });
 
 function Page() {
-  const { data: franchisesData, isLoading, error } = useQuery({
+  const { data: franchisesData, isLoading, error, refetch } = useQuery({
     queryKey: ["franchises"],
     queryFn: async () => {
       const response = await fetch("/api/franchises?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Franchise System" subtitle="Franchisee network" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Franchise System" subtitle="Franchisee network" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Franchises data</div>
+        <DashboardError
+          title="Franchise System"
+          subtitle="Franchisee network"
+          message="We couldn't load Franchises data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

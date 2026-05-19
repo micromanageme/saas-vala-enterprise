@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-database")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-database")({
 });
 
 function Page() {
-  const { data: dbData, isLoading, error } = useQuery({
+  const { data: dbData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-database"],
     queryFn: async () => {
       const response = await fetch("/api/root/database?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Database Control" subtitle="Root-level database management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Database Control" subtitle="Root-level database management" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Database Control data</div>
+        <DashboardError
+          title="Database Control"
+          subtitle="Root-level database management"
+          message="We couldn't load Database Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

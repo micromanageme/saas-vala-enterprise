@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/affiliate-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/affiliate-manager")({
 });
 
 function Page() {
-  const { data: affiliateData, isLoading, error } = useQuery({
+  const { data: affiliateData, isLoading, error, refetch } = useQuery({
     queryKey: ["affiliate-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Affiliate Manager" subtitle="Affiliate management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Affiliate Manager" subtitle="Affiliate management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Affiliate Manager data</div>
+        <DashboardError
+          title="Affiliate Manager"
+          subtitle="Affiliate management"
+          message="We couldn't load Affiliate Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

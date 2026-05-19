@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/data-governance-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/data-governance-lead")({
 });
 
 function Page() {
-  const { data: dgLeadData, isLoading, error } = useQuery({
+  const { data: dgLeadData, isLoading, error, refetch } = useQuery({
     queryKey: ["data-governance-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Data Governance Lead" subtitle="Data governance management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Data Governance Lead" subtitle="Data governance management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Data Governance Lead data</div>
+        <DashboardError
+          title="Data Governance Lead"
+          subtitle="Data governance management"
+          message="We couldn't load Data Governance Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

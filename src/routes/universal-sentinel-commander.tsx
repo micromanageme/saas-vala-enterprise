@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/universal-sentinel-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/universal-sentinel-commander")({
 });
 
 function Page() {
-  const { data: sentinelData, isLoading, error } = useQuery({
+  const { data: sentinelData, isLoading, error, refetch } = useQuery({
     queryKey: ["universal-sentinel-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Sentinel Commander" subtitle="Universal sentinel command workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Sentinel Commander" subtitle="Universal sentinel command workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Sentinel Commander data</div>
+        <DashboardError
+          title="Universal Sentinel Commander"
+          subtitle="Universal sentinel command workspace"
+          message="We couldn't load Universal Sentinel Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

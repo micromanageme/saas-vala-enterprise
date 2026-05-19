@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-failurecontainment")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-failurecontainment")({
 });
 
 function Page() {
-  const { data: containmentData, isLoading, error } = useQuery({
+  const { data: containmentData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-failurecontainment"],
     queryFn: async () => {
       const response = await fetch("/api/root/failure-containment?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Failure Containment" subtitle="Fault isolation, blast-radius control, cascading failure prevention" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Failure Containment" subtitle="Fault isolation, blast-radius control, cascading failure prevention" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Failure Containment data</div>
+        <DashboardError
+          title="Root Failure Containment"
+          subtitle="Fault isolation, blast-radius control, cascading failure prevention"
+          message="We couldn't load Root Failure Containment data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

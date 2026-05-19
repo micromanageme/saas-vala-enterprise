@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/crm-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/crm-manager")({
 });
 
 function Page() {
-  const { data: crmData, isLoading, error } = useQuery({
+  const { data: crmData, isLoading, error, refetch } = useQuery({
     queryKey: ["crm-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CRM Manager" subtitle="CRM operations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CRM Manager" subtitle="CRM operations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CRM Manager data</div>
+        <DashboardError
+          title="CRM Manager"
+          subtitle="CRM operations management"
+          message="We couldn't load CRM Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

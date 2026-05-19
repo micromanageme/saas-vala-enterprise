@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/accounting")({
   head: () => ({ meta: [{ title: "Accounting — SaaS Vala" }, { name: "description", content: "Ledger, taxes & reports" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/accounting")({
 });
 
 function Page() {
-  const { data: accountingData, isLoading, error } = useQuery({
+  const { data: accountingData, isLoading, error, refetch } = useQuery({
     queryKey: ["accounting"],
     queryFn: async () => {
       const response = await fetch("/api/accounting?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Accounting" subtitle="Ledger, taxes & reports" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Accounting" subtitle="Ledger, taxes & reports" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Accounting data</div>
+        <DashboardError
+          title="Accounting"
+          subtitle="Ledger, taxes & reports"
+          message="We couldn't load Accounting data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

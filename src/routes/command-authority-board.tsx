@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/command-authority-board")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/command-authority-board")({
 });
 
 function Page() {
-  const { data: authorityData, isLoading, error } = useQuery({
+  const { data: authorityData, isLoading, error, refetch } = useQuery({
     queryKey: ["command-authority-board-dashboard"],
     queryFn: async () => {
       const response = fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Command Authority Board" subtitle="Command authority board workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Command Authority Board" subtitle="Command authority board workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Command Authority Board data</div>
+        <DashboardError
+          title="Command Authority Board"
+          subtitle="Command authority board workspace"
+          message="We couldn't load Command Authority Board data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

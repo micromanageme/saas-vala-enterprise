@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-events")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-events")({
 });
 
 function Page() {
-  const { data: eventData, isLoading, error } = useQuery({
+  const { data: eventData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-events"],
     queryFn: async () => {
       const response = await fetch("/api/root/event-orchestrator?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Event Orchestrator" subtitle="Event stream monitoring, replay, and distributed tracing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Event Orchestrator" subtitle="Event stream monitoring, replay, and distributed tracing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Event Orchestrator data</div>
+        <DashboardError
+          title="Root Event Orchestrator"
+          subtitle="Event stream monitoring, replay, and distributed tracing"
+          message="We couldn't load Root Event Orchestrator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

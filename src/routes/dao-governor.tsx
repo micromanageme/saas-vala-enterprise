@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dao-governor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/dao-governor")({
 });
 
 function Page() {
-  const { data: daoData, isLoading, error } = useQuery({
+  const { data: daoData, isLoading, error, refetch } = useQuery({
     queryKey: ["dao-governor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="DAO Governor" subtitle="DAO governance workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="DAO Governor" subtitle="DAO governance workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load DAO Governor data</div>
+        <DashboardError
+          title="DAO Governor"
+          subtitle="DAO governance workspace"
+          message="We couldn't load DAO Governor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

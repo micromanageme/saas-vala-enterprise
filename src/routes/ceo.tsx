@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ceo")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ceo")({
 });
 
 function Page() {
-  const { data: ceoData, isLoading, error } = useQuery({
+  const { data: ceoData, isLoading, error, refetch } = useQuery({
     queryKey: ["ceo-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CEO" subtitle="Chief Executive Officer" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CEO" subtitle="Chief Executive Officer" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CEO data</div>
+        <DashboardError
+          title="CEO"
+          subtitle="Chief Executive Officer"
+          message="We couldn't load CEO data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

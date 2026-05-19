@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/directory-services-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/directory-services-admin")({
 });
 
 function Page() {
-  const { data: directoryData, isLoading, error } = useQuery({
+  const { data: directoryData, isLoading, error, refetch } = useQuery({
     queryKey: ["directory-services-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Directory Services Admin" subtitle="Directory services administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Directory Services Admin" subtitle="Directory services administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Directory Services Admin data</div>
+        <DashboardError
+          title="Directory Services Admin"
+          subtitle="Directory services administration workspace"
+          message="We couldn't load Directory Services Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }
