@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/customs-broker")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/customs-broker")({
 });
 
 function Page() {
-  const { data: customsData, isLoading, error } = useQuery({
+  const { data: customsData, isLoading, error, refetch } = useQuery({
     queryKey: ["customs-broker-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Customs Broker" subtitle="Customs brokerage workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Customs Broker" subtitle="Customs brokerage workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Customs Broker data</div>
+        <DashboardError
+          title="Customs Broker"
+          subtitle="Customs brokerage workspace"
+          message="We couldn't load Customs Broker data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

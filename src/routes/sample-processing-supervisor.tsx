@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/sample-processing-supervisor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/sample-processing-supervisor")({
 });
 
 function Page() {
-  const { data: sampleData, isLoading, error } = useQuery({
+  const { data: sampleData, isLoading, error, refetch } = useQuery({
     queryKey: ["sample-processing-supervisor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Sample Processing Supervisor" subtitle="Sample processing supervision workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Sample Processing Supervisor" subtitle="Sample processing supervision workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Sample Processing Supervisor data</div>
+        <DashboardError
+          title="Sample Processing Supervisor"
+          subtitle="Sample processing supervision workspace"
+          message="We couldn't load Sample Processing Supervisor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/hrm")({
   head: () => ({ meta: [{ title: "HRM — SaaS Vala" }, { name: "description", content: "Employees, payroll & leave" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/hrm")({
 });
 
 function Page() {
-  const { data: hrmData, isLoading, error } = useQuery({
+  const { data: hrmData, isLoading, error, refetch } = useQuery({
     queryKey: ["hrm"],
     queryFn: async () => {
       const response = await fetch("/api/hrm?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="HRM" subtitle="Employees, payroll & leave" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="HRM" subtitle="Employees, payroll & leave" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load HRM data</div>
+        <DashboardError
+          title="HRM"
+          subtitle="Employees, payroll & leave"
+          message="We couldn't load HRM data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

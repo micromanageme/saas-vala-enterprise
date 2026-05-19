@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/risk-underwriter")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/risk-underwriter")({
 });
 
 function Page() {
-  const { data: riskData, isLoading, error } = useQuery({
+  const { data: riskData, isLoading, error, refetch } = useQuery({
     queryKey: ["risk-underwriter-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Risk Underwriter" subtitle="Risk underwriting workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Risk Underwriter" subtitle="Risk underwriting workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Risk Underwriter data</div>
+        <DashboardError
+          title="Risk Underwriter"
+          subtitle="Risk underwriting workspace"
+          message="We couldn't load Risk Underwriter data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

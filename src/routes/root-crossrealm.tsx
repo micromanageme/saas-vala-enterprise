@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-crossrealm")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-crossrealm")({
 });
 
 function Page() {
-  const { data: realmData, isLoading, error } = useQuery({
+  const { data: realmData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-crossrealm"],
     queryFn: async () => {
       const response = await fetch("/api/root/cross-realm-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Cross-Realm Fabric" subtitle="Cloud-edge-onprem federation, hybrid infrastructure orchestration, multi-region authority" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Cross-Realm Fabric" subtitle="Cloud-edge-onprem federation, hybrid infrastructure orchestration, multi-region authority" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Cross-Realm Fabric data</div>
+        <DashboardError
+          title="Universal Cross-Realm Fabric"
+          subtitle="Cloud-edge-onprem federation, hybrid infrastructure orchestration, multi-region authority"
+          message="We couldn't load Universal Cross-Realm Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

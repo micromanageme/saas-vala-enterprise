@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/incident-responder")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/incident-responder")({
 });
 
 function Page() {
-  const { data: incidentData, isLoading, error } = useQuery({
+  const { data: incidentData, isLoading, error, refetch } = useQuery({
     queryKey: ["incident-responder-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Incident Responder" subtitle="Incident response workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Incident Responder" subtitle="Incident response workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Incident Responder data</div>
+        <DashboardError
+          title="Incident Responder"
+          subtitle="Incident response workspace"
+          message="We couldn't load Incident Responder data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

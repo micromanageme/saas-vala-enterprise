@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microorchestration")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microorchestration")({
 });
 
 function Page() {
-  const { data: orchestrationData, isLoading, error } = useQuery({
+  const { data: orchestrationData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microorchestration"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-orchestration-recovery?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Orchestration Recovery" subtitle="Orchestration deadlock prevention, workflow replay convergence, queue-state reconciliation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Orchestration Recovery" subtitle="Orchestration deadlock prevention, workflow replay convergence, queue-state reconciliation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Orchestration Recovery data</div>
+        <DashboardError
+          title="Micro Orchestration Recovery"
+          subtitle="Orchestration deadlock prevention, workflow replay convergence, queue-state reconciliation"
+          message="We couldn't load Micro Orchestration Recovery data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

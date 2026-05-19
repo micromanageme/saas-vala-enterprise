@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/religious-organization-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/religious-organization-admin")({
 });
 
 function Page() {
-  const { data: religiousData, isLoading, error } = useQuery({
+  const { data: religiousData, isLoading, error, refetch } = useQuery({
     queryKey: ["religious-organization-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Religious Organization Admin" subtitle="Religious organization administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Religious Organization Admin" subtitle="Religious organization administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Religious Organization Admin data</div>
+        <DashboardError
+          title="Religious Organization Admin"
+          subtitle="Religious organization administration workspace"
+          message="We couldn't load Religious Organization Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

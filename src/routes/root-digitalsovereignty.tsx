@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-digitalsovereignty")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-digitalsovereignty")({
 });
 
 function Page() {
-  const { data: sovereigntyData, isLoading, error } = useQuery({
+  const { data: sovereigntyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-digitalsovereignty"],
     queryFn: async () => {
       const response = await fetch("/api/root/digital-sovereignty?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Digital Sovereignty Control" subtitle="Jurisdiction-aware storage, regional compliance isolation, sovereign cloud governance" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Digital Sovereignty Control" subtitle="Jurisdiction-aware storage, regional compliance isolation, sovereign cloud governance" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Digital Sovereignty Control data</div>
+        <DashboardError
+          title="Universal Digital Sovereignty Control"
+          subtitle="Jurisdiction-aware storage, regional compliance isolation, sovereign cloud governance"
+          message="We couldn't load Universal Digital Sovereignty Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

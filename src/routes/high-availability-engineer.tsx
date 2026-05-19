@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/high-availability-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/high-availability-engineer")({
 });
 
 function Page() {
-  const { data: haData, isLoading, error } = useQuery({
+  const { data: haData, isLoading, error, refetch } = useQuery({
     queryKey: ["high-availability-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="High Availability Engineer" subtitle="High availability engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="High Availability Engineer" subtitle="High availability engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load High Availability Engineer data</div>
+        <DashboardError
+          title="High Availability Engineer"
+          subtitle="High availability engineering workspace"
+          message="We couldn't load High Availability Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-filesystem")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-filesystem")({
 });
 
 function Page() {
-  const { data: fsData, isLoading, error } = useQuery({
+  const { data: fsData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-filesystem"],
     queryFn: async () => {
       const response = await fetch("/api/root/filesystem?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Filesystem Control" subtitle="Storage explorer, object storage, CDN sync" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Filesystem Control" subtitle="Storage explorer, object storage, CDN sync" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Filesystem Control data</div>
+        <DashboardError
+          title="Universal Filesystem Control"
+          subtitle="Storage explorer, object storage, CDN sync"
+          message="We couldn't load Universal Filesystem Control data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

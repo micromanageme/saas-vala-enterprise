@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-transcendentvalidation")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-transcendentvalidation")({
 });
 
 function Page() {
-  const { data: transcendentData, isLoading, error } = useQuery({
+  const { data: transcendentData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-transcendentvalidation"],
     queryFn: async () => {
       const response = await fetch("/api/root/transcendent-validation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Transcendent Validation" subtitle="Authority chains, runtime paths, dependencies, state reproducibility, orchestration reversibility" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Transcendent Validation" subtitle="Authority chains, runtime paths, dependencies, state reproducibility, orchestration reversibility" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Transcendent Validation data</div>
+        <DashboardError
+          title="Root Transcendent Validation"
+          subtitle="Authority chains, runtime paths, dependencies, state reproducibility, orchestration reversibility"
+          message="We couldn't load Root Transcendent Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

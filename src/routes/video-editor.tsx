@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/video-editor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/video-editor")({
 });
 
 function Page() {
-  const { data: videoData, isLoading, error } = useQuery({
+  const { data: videoData, isLoading, error, refetch } = useQuery({
     queryKey: ["video-editor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Video Editor" subtitle="Video editing workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Video Editor" subtitle="Video editing workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Video Editor data</div>
+        <DashboardError
+          title="Video Editor"
+          subtitle="Video editing workspace"
+          message="We couldn't load Video Editor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

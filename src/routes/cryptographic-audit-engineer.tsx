@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/cryptographic-audit-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/cryptographic-audit-engineer")({
 });
 
 function Page() {
-  const { data: cryptoData, isLoading, error } = useQuery({
+  const { data: cryptoData, isLoading, error, refetch } = useQuery({
     queryKey: ["cryptographic-audit-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Cryptographic Audit Engineer" subtitle="Cryptographic audit engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Cryptographic Audit Engineer" subtitle="Cryptographic audit engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Cryptographic Audit Engineer data</div>
+        <DashboardError
+          title="Cryptographic Audit Engineer"
+          subtitle="Cryptographic audit engineering workspace"
+          message="We couldn't load Cryptographic Audit Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

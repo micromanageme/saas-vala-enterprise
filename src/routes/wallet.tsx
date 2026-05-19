@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/wallet")({
   head: () => ({ meta: [{ title: "Wallet — SaaS Vala" }, { name: "description", content: "Balance, payouts & commissions" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/wallet")({
 });
 
 function Page() {
-  const { data: walletData, isLoading, error } = useQuery({
+  const { data: walletData, isLoading, error, refetch } = useQuery({
     queryKey: ["wallet"],
     queryFn: async () => {
       const response = await fetch("/api/wallet?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Wallet" subtitle="Balance, payouts & commissions" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Wallet" subtitle="Balance, payouts & commissions" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Wallet data</div>
+        <DashboardError
+          title="Wallet"
+          subtitle="Balance, payouts & commissions"
+          message="We couldn't load Wallet data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

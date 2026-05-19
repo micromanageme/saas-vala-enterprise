@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microtimeline")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microtimeline")({
 });
 
 function Page() {
-  const { data: timelineData, isLoading, error } = useQuery({
+  const { data: timelineData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microtimeline"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-observability-timeline?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Observability Timeline" subtitle="Trace chronology reconstruction, distributed timestamp normalization, telemetry causality mapping" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Observability Timeline" subtitle="Trace chronology reconstruction, distributed timestamp normalization, telemetry causality mapping" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Observability Timeline data</div>
+        <DashboardError
+          title="Micro Observability Timeline"
+          subtitle="Trace chronology reconstruction, distributed timestamp normalization, telemetry causality mapping"
+          message="We couldn't load Micro Observability Timeline data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

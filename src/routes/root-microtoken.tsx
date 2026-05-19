@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microtoken")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microtoken")({
 });
 
 function Page() {
-  const { data: tokenData, isLoading, error } = useQuery({
+  const { data: tokenData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microtoken"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-token-validation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Token Chain Validation" subtitle="Token ancestry mapping, refresh lineage tracking, replay attack isolation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Token Chain Validation" subtitle="Token ancestry mapping, refresh lineage tracking, replay attack isolation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Token Chain Validation data</div>
+        <DashboardError
+          title="Micro Token Chain Validation"
+          subtitle="Token ancestry mapping, refresh lineage tracking, replay attack isolation"
+          message="We couldn't load Micro Token Chain Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

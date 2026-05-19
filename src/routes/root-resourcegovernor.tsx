@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-resourcegovernor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-resourcegovernor")({
 });
 
 function Page() {
-  const { data: resourceData, isLoading, error } = useQuery({
+  const { data: resourceData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-resourcegovernor"],
     queryFn: async () => {
       const response = await fetch("/api/root/resource-governor?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Resource Governor" subtitle="CPU/RAM/GPU governance, tenant resource quotas" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Resource Governor" subtitle="CPU/RAM/GPU governance, tenant resource quotas" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Resource Governor data</div>
+        <DashboardError
+          title="Universal Resource Governor"
+          subtitle="CPU/RAM/GPU governance, tenant resource quotas"
+          message="We couldn't load Universal Resource Governor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

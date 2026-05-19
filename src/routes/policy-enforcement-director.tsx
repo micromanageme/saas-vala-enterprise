@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/policy-enforcement-director")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/policy-enforcement-director")({
 });
 
 function Page() {
-  const { data: policyData, isLoading, error } = useQuery({
+  const { data: policyData, isLoading, error, refetch } = useQuery({
     queryKey: ["policy-enforcement-director-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Policy Enforcement Director" subtitle="Policy enforcement direction workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Policy Enforcement Director" subtitle="Policy enforcement direction workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Policy Enforcement Director data</div>
+        <DashboardError
+          title="Policy Enforcement Director"
+          subtitle="Policy enforcement direction workspace"
+          message="We couldn't load Policy Enforcement Director data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

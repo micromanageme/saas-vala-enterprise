@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-infrastructure")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-infrastructure")({
 });
 
 function Page() {
-  const { data: infraData, isLoading, error } = useQuery({
+  const { data: infraData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-infrastructure"],
     queryFn: async () => {
       const response = await fetch("/api/root/infrastructure?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Infrastructure Core" subtitle="Root-level infrastructure control" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Infrastructure Core" subtitle="Root-level infrastructure control" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Infrastructure Core data</div>
+        <DashboardError
+          title="Infrastructure Core"
+          subtitle="Root-level infrastructure control"
+          message="We couldn't load Infrastructure Core data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

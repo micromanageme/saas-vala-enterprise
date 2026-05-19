@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanoservicehealth")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanoservicehealth")({
 });
 
 function Page() {
-  const { data: healthData, isLoading, error } = useQuery({
+  const { data: healthData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanoservicehealth"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-service-health?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Service Health Propagation" subtitle="Cascading degradation mapping, partial-failure isolation, dependency health synthesis" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Service Health Propagation" subtitle="Cascading degradation mapping, partial-failure isolation, dependency health synthesis" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Service Health Propagation data</div>
+        <DashboardError
+          title="Nano Service Health Propagation"
+          subtitle="Cascading degradation mapping, partial-failure isolation, dependency health synthesis"
+          message="We couldn't load Nano Service Health Propagation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

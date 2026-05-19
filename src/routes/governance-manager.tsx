@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/governance-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/governance-manager")({
 });
 
 function Page() {
-  const { data: govData, isLoading, error } = useQuery({
+  const { data: govData, isLoading, error, refetch } = useQuery({
     queryKey: ["governance-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Governance Manager" subtitle="Governance management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Governance Manager" subtitle="Governance management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Governance Manager data</div>
+        <DashboardError
+          title="Governance Manager"
+          subtitle="Governance management"
+          message="We couldn't load Governance Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

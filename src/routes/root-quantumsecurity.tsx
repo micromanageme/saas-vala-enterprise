@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-quantumsecurity")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-quantumsecurity")({
 });
 
 function Page() {
-  const { data: quantumData, isLoading, error } = useQuery({
+  const { data: quantumData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-quantumsecurity"],
     queryFn: async () => {
       const response = await fetch("/api/root/quantum-security?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Quantum Security Layer" subtitle="Post-quantum encryption readiness, quantum-safe key exchange, entropy verification" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Quantum Security Layer" subtitle="Post-quantum encryption readiness, quantum-safe key exchange, entropy verification" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Quantum Security Layer data</div>
+        <DashboardError
+          title="Root Quantum Security Layer"
+          subtitle="Post-quantum encryption readiness, quantum-safe key exchange, entropy verification"
+          message="We couldn't load Root Quantum Security Layer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

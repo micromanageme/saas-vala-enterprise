@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/system-root")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/system-root")({
 });
 
 function Page() {
-  const { data: systemRootData, isLoading, error } = useQuery({
+  const { data: systemRootData, isLoading, error, refetch } = useQuery({
     queryKey: ["system-root-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/root/dashboard?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="System Root" subtitle="System root access" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="System Root" subtitle="System root access" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load System Root data</div>
+        <DashboardError
+          title="System Root"
+          subtitle="System root access"
+          message="We couldn't load System Root data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

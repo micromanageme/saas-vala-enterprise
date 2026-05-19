@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/rd-director")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/rd-director")({
 });
 
 function Page() {
-  const { data: rdData, isLoading, error } = useQuery({
+  const { data: rdData, isLoading, error, refetch } = useQuery({
     queryKey: ["rd-director-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="R&D Director" subtitle="Research and Development leadership" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="R&D Director" subtitle="Research and Development leadership" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load R&D Director data</div>
+        <DashboardError
+          title="R&D Director"
+          subtitle="Research and Development leadership"
+          message="We couldn't load R&D Director data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/master-controller")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/master-controller")({
 });
 
 function Page() {
-  const { data: controllerData, isLoading, error } = useQuery({
+  const { data: controllerData, isLoading, error, refetch } = useQuery({
     queryKey: ["master-controller-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Master Controller" subtitle="Master controller workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Master Controller" subtitle="Master controller workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Master Controller data</div>
+        <DashboardError
+          title="Master Controller"
+          subtitle="Master controller workspace"
+          message="We couldn't load Master Controller data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

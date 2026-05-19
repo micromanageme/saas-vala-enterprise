@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/data-quality-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/data-quality-engineer")({
 });
 
 function Page() {
-  const { data: dqData, isLoading, error } = useQuery({
+  const { data: dqData, isLoading, error, refetch } = useQuery({
     queryKey: ["data-quality-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Data Quality Engineer" subtitle="Data quality engineering" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Data Quality Engineer" subtitle="Data quality engineering" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Data Quality Engineer data</div>
+        <DashboardError
+          title="Data Quality Engineer"
+          subtitle="Data quality engineering"
+          message="We couldn't load Data Quality Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

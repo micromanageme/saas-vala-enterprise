@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-identity")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-identity")({
 });
 
 function Page() {
-  const { data: identityData, isLoading, error } = useQuery({
+  const { data: identityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-identity"],
     queryFn: async () => {
       const response = await fetch("/api/root/identity-fabric?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Identity Fabric" subtitle="Federated identities, SSO mesh, cross-domain mapping" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Identity Fabric" subtitle="Federated identities, SSO mesh, cross-domain mapping" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Identity Fabric data</div>
+        <DashboardError
+          title="Universal Identity Fabric"
+          subtitle="Federated identities, SSO mesh, cross-domain mapping"
+          message="We couldn't load Universal Identity Fabric data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

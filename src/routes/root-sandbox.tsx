@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-sandbox")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-sandbox")({
 });
 
 function Page() {
-  const { data: sandboxData, isLoading, error } = useQuery({
+  const { data: sandboxData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-sandbox"],
     queryFn: async () => {
       const response = await fetch("/api/root/sandbox?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Sandbox Environment" subtitle="Isolated testing, deployment simulation, compatibility validation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Sandbox Environment" subtitle="Isolated testing, deployment simulation, compatibility validation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Sandbox Environment data</div>
+        <DashboardError
+          title="Root Sandbox Environment"
+          subtitle="Isolated testing, deployment simulation, compatibility validation"
+          message="We couldn't load Root Sandbox Environment data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

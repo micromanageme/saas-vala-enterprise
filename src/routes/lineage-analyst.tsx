@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/lineage-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/lineage-analyst")({
 });
 
 function Page() {
-  const { data: lineageData, isLoading, error } = useQuery({
+  const { data: lineageData, isLoading, error, refetch } = useQuery({
     queryKey: ["lineage-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Lineage Analyst" subtitle="Data lineage analysis" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Lineage Analyst" subtitle="Data lineage analysis" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Lineage Analyst data</div>
+        <DashboardError
+          title="Lineage Analyst"
+          subtitle="Data lineage analysis"
+          message="We couldn't load Lineage Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

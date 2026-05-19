@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-aigrid")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-aigrid")({
 });
 
 function Page() {
-  const { data: aiGridData, isLoading, error } = useQuery({
+  const { data: aiGridData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-aigrid"],
     queryFn: async () => {
       const response = await fetch("/api/root/ai-orchestration-grid?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal AI Orchestration Grid" subtitle="Multi-agent coordination, AI workflow graph, inference balancing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal AI Orchestration Grid" subtitle="Multi-agent coordination, AI workflow graph, inference balancing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal AI Orchestration Grid data</div>
+        <DashboardError
+          title="Universal AI Orchestration Grid"
+          subtitle="Multi-agent coordination, AI workflow graph, inference balancing"
+          message="We couldn't load Universal AI Orchestration Grid data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/threat-response-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/threat-response-commander")({
 });
 
 function Page() {
-  const { data: threatData, isLoading, error } = useQuery({
+  const { data: threatData, isLoading, error, refetch } = useQuery({
     queryKey: ["threat-response-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Threat Response Commander" subtitle="Threat response command" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Threat Response Commander" subtitle="Threat response command" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Threat Response Commander data</div>
+        <DashboardError
+          title="Threat Response Commander"
+          subtitle="Threat response command"
+          message="We couldn't load Threat Response Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

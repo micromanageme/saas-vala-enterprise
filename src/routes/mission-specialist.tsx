@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/mission-specialist")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/mission-specialist")({
 });
 
 function Page() {
-  const { data: missionData, isLoading, error } = useQuery({
+  const { data: missionData, isLoading, error, refetch } = useQuery({
     queryKey: ["mission-specialist-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Mission Specialist" subtitle="Mission specialist workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Mission Specialist" subtitle="Mission specialist workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Mission Specialist data</div>
+        <DashboardError
+          title="Mission Specialist"
+          subtitle="Mission specialist workspace"
+          message="We couldn't load Mission Specialist data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

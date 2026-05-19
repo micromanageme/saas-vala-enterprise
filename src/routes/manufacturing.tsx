@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/manufacturing")({
   head: () => ({ meta: [{ title: "Manufacturing — SaaS Vala" }, { name: "description", content: "BoM, MO & work centers" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/manufacturing")({
 });
 
 function Page() {
-  const { data: manufacturingData, isLoading, error } = useQuery({
+  const { data: manufacturingData, isLoading, error, refetch } = useQuery({
     queryKey: ["manufacturing"],
     queryFn: async () => {
       const response = await fetch("/api/manufacturing?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Manufacturing" subtitle="BoM, MO & work centers" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Manufacturing" subtitle="BoM, MO & work centers" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Manufacturing data</div>
+        <DashboardError
+          title="Manufacturing"
+          subtitle="BoM, MO & work centers"
+          message="We couldn't load Manufacturing data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

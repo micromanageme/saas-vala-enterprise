@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/college-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/college-admin")({
 });
 
 function Page() {
-  const { data: collegeData, isLoading, error } = useQuery({
+  const { data: collegeData, isLoading, error, refetch } = useQuery({
     queryKey: ["college-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="College Admin" subtitle="College administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="College Admin" subtitle="College administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load College Admin data</div>
+        <DashboardError
+          title="College Admin"
+          subtitle="College administration workspace"
+          message="We couldn't load College Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

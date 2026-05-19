@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-disaster")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-disaster")({
 });
 
 function Page() {
-  const { data: disasterData, isLoading, error } = useQuery({
+  const { data: disasterData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-disaster"],
     queryFn: async () => {
       const response = await fetch("/api/root/disaster-recovery?type=all", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Disaster Recovery Center" subtitle="Root-level backup, restore, and failover control" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Disaster Recovery Center" subtitle="Root-level backup, restore, and failover control" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Disaster Recovery Center data</div>
+        <DashboardError
+          title="Disaster Recovery Center"
+          subtitle="Root-level backup, restore, and failover control"
+          message="We couldn't load Disaster Recovery Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

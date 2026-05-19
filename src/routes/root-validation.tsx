@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-validation")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/root-validation")({
 });
 
 function Page() {
-  const { data: validationData, isLoading, error } = useQuery({
+  const { data: validationData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-validation"],
     queryFn: async () => {
       const response = await fetch("/api/root/validation?type=all", {
@@ -25,7 +26,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Final Root Validation" subtitle="System validation, dependency mapping, service monitoring" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Final Root Validation" subtitle="System validation, dependency mapping, service monitoring" />
       </AppShell>
     );
   }
@@ -33,7 +34,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Final Root Validation data</div>
+        <DashboardError
+          title="Final Root Validation"
+          subtitle="System validation, dependency mapping, service monitoring"
+          message="We couldn't load Final Root Validation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

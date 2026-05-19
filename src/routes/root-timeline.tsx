@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-timeline")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-timeline")({
 });
 
 function Page() {
-  const { data: timelineData, isLoading, error } = useQuery({
+  const { data: timelineData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-timeline"],
     queryFn: async () => {
       const response = await fetch("/api/root/execution-timeline?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Execution Timeline" subtitle="Timeline replay, event chronology, audit reconstruction, forensic sequencing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Execution Timeline" subtitle="Timeline replay, event chronology, audit reconstruction, forensic sequencing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Execution Timeline data</div>
+        <DashboardError
+          title="Root Execution Timeline"
+          subtitle="Timeline replay, event chronology, audit reconstruction, forensic sequencing"
+          message="We couldn't load Root Execution Timeline data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

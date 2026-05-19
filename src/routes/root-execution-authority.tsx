@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-execution-authority")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-execution-authority")({
 });
 
 function Page() {
-  const { data: executionData, isLoading, error } = useQuery({
+  const { data: executionData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-execution-authority-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Execution Authority" subtitle="Root execution authority workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Execution Authority" subtitle="Root execution authority workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Execution Authority data</div>
+        <DashboardError
+          title="Root Execution Authority"
+          subtitle="Root execution authority workspace"
+          message="We couldn't load Root Execution Authority data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

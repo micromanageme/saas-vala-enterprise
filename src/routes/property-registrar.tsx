@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/property-registrar")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/property-registrar")({
 });
 
 function Page() {
-  const { data: registrarData, isLoading, error } = useQuery({
+  const { data: registrarData, isLoading, error, refetch } = useQuery({
     queryKey: ["property-registrar-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Property Registrar" subtitle="Property registration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Property Registrar" subtitle="Property registration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Property Registrar data</div>
+        <DashboardError
+          title="Property Registrar"
+          subtitle="Property registration workspace"
+          message="We couldn't load Property Registrar data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

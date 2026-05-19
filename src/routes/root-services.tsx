@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-services")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-services")({
 });
 
 function Page() {
-  const { data: serviceData, isLoading, error } = useQuery({
+  const { data: serviceData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-services"],
     queryFn: async () => {
       const response = await fetch("/api/root/service-registry?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Service Registry" subtitle="Microservices, dependency registry, and service discovery" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Service Registry" subtitle="Microservices, dependency registry, and service discovery" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Service Registry data</div>
+        <DashboardError
+          title="Universal Service Registry"
+          subtitle="Microservices, dependency registry, and service discovery"
+          message="We couldn't load Universal Service Registry data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

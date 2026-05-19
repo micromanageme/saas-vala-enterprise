@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ground-control-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ground-control-engineer")({
 });
 
 function Page() {
-  const { data: groundData, isLoading, error } = useQuery({
+  const { data: groundData, isLoading, error, refetch } = useQuery({
     queryKey: ["ground-control-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Ground Control Engineer" subtitle="Ground control engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Ground Control Engineer" subtitle="Ground control engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Ground Control Engineer data</div>
+        <DashboardError
+          title="Ground Control Engineer"
+          subtitle="Ground control engineering workspace"
+          message="We couldn't load Ground Control Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

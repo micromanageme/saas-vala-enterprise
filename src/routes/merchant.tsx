@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/merchant")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/merchant")({
 });
 
 function Page() {
-  const { data: merchantData, isLoading, error } = useQuery({
+  const { data: merchantData, isLoading, error, refetch } = useQuery({
     queryKey: ["merchant-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Merchant Dashboard" subtitle="Merchant portal" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Merchant Dashboard" subtitle="Merchant portal" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Merchant data</div>
+        <DashboardError
+          title="Merchant Dashboard"
+          subtitle="Merchant portal"
+          message="We couldn't load Merchant data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

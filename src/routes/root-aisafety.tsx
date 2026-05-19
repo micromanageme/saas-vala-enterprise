@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-aisafety")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-aisafety")({
 });
 
 function Page() {
-  const { data: safetyData, isLoading, error } = useQuery({
+  const { data: safetyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-aisafety"],
     queryFn: async () => {
       const response = await fetch("/api/root/ai-safety?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root AI Safety Center" subtitle="Hallucination monitoring, abuse detection, policy enforcement" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root AI Safety Center" subtitle="Hallucination monitoring, abuse detection, policy enforcement" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root AI Safety Center data</div>
+        <DashboardError
+          title="Root AI Safety Center"
+          subtitle="Hallucination monitoring, abuse detection, policy enforcement"
+          message="We couldn't load Root AI Safety Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

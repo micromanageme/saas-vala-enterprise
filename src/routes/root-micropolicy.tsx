@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-micropolicy")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-micropolicy")({
 });
 
 function Page() {
-  const { data: policyData, isLoading, error } = useQuery({
+  const { data: policyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-micropolicy"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-policy-pipeline?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Policy Evaluation Pipeline" subtitle="Pre-policy validation, chained policy execution, runtime policy rollback" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Policy Evaluation Pipeline" subtitle="Pre-policy validation, chained policy execution, runtime policy rollback" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Policy Evaluation Pipeline data</div>
+        <DashboardError
+          title="Micro Policy Evaluation Pipeline"
+          subtitle="Pre-policy validation, chained policy execution, runtime policy rollback"
+          message="We couldn't load Micro Policy Evaluation Pipeline data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

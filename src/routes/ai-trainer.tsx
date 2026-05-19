@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ai-trainer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ai-trainer")({
 });
 
 function Page() {
-  const { data: trainerData, isLoading, error } = useQuery({
+  const { data: trainerData, isLoading, error, refetch } = useQuery({
     queryKey: ["ai-trainer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Trainer" subtitle="AI model training" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Trainer" subtitle="AI model training" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI Trainer data</div>
+        <DashboardError
+          title="AI Trainer"
+          subtitle="AI model training"
+          message="We couldn't load AI Trainer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

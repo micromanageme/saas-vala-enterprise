@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microdeployment")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microdeployment")({
 });
 
 function Page() {
-  const { data: deploymentData, isLoading, error } = useQuery({
+  const { data: deploymentData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microdeployment"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-deployment-consistency?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Deployment Consistency Engine" subtitle="Artifact checksum lineage, environment parity validation, deployment mutation diffing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Deployment Consistency Engine" subtitle="Artifact checksum lineage, environment parity validation, deployment mutation diffing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Deployment Consistency Engine data</div>
+        <DashboardError
+          title="Micro Deployment Consistency Engine"
+          subtitle="Artifact checksum lineage, environment parity validation, deployment mutation diffing"
+          message="We couldn't load Micro Deployment Consistency Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

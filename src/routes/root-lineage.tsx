@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-lineage")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-lineage")({
 });
 
 function Page() {
-  const { data: lineageData, isLoading, error } = useQuery({
+  const { data: lineageData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-lineage"],
     queryFn: async () => {
       const response = await fetch("/api/root/data-lineage?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Data Lineage" subtitle="Source tracing, transformation map, ownership graph" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Data Lineage" subtitle="Source tracing, transformation map, ownership graph" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Data Lineage data</div>
+        <DashboardError
+          title="Universal Data Lineage"
+          subtitle="Source tracing, transformation map, ownership graph"
+          message="We couldn't load Universal Data Lineage data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

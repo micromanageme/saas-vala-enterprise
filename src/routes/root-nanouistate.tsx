@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanouistate")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanouistate")({
 });
 
 function Page() {
-  const { data: uiData, isLoading, error } = useQuery({
+  const { data: uiData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanouistate"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-ui-state?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano UI State Synthesis" subtitle="Hidden state convergence, stale UI invalidation, render dependency reconciliation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano UI State Synthesis" subtitle="Hidden state convergence, stale UI invalidation, render dependency reconciliation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano UI State Synthesis data</div>
+        <DashboardError
+          title="Nano UI State Synthesis"
+          subtitle="Hidden state convergence, stale UI invalidation, render dependency reconciliation"
+          message="We couldn't load Nano UI State Synthesis data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

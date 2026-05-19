@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/soc-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/soc-manager")({
 });
 
 function Page() {
-  const { data: socData, isLoading, error } = useQuery({
+  const { data: socData, isLoading, error, refetch } = useQuery({
     queryKey: ["soc-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="SOC Manager" subtitle="Security Operations Center management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="SOC Manager" subtitle="Security Operations Center management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load SOC Manager data</div>
+        <DashboardError
+          title="SOC Manager"
+          subtitle="Security Operations Center management"
+          message="We couldn't load SOC Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

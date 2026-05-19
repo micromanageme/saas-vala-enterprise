@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/operations-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/operations-commander")({
 });
 
 function Page() {
-  const { data: opsCommanderData, isLoading, error } = useQuery({
+  const { data: opsCommanderData, isLoading, error, refetch } = useQuery({
     queryKey: ["operations-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Operations Commander" subtitle="Operations command center" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Operations Commander" subtitle="Operations command center" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Operations Commander data</div>
+        <DashboardError
+          title="Operations Commander"
+          subtitle="Operations command center"
+          message="We couldn't load Operations Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

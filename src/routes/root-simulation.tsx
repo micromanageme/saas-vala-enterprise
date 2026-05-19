@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-simulation")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-simulation")({
 });
 
 function Page() {
-  const { data: simulationData, isLoading, error } = useQuery({
+  const { data: simulationData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-simulation"],
     queryFn: async () => {
       const response = await fetch("/api/root/simulation-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Simulation Engine" subtitle="Infrastructure simulation, deployment simulation, disaster simulation, load simulation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Simulation Engine" subtitle="Infrastructure simulation, deployment simulation, disaster simulation, load simulation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Simulation Engine data</div>
+        <DashboardError
+          title="Root Simulation Engine"
+          subtitle="Infrastructure simulation, deployment simulation, disaster simulation, load simulation"
+          message="We couldn't load Root Simulation Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

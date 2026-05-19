@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-ethicalgovernance")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-ethicalgovernance")({
 });
 
 function Page() {
-  const { data: ethicalData, isLoading, error } = useQuery({
+  const { data: ethicalData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-ethicalgovernance"],
     queryFn: async () => {
       const response = await fetch("/api/root/ethical-governance?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Ethical Governance Engine" subtitle="AI ethics enforcement, bias monitoring, explainability tracking" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Ethical Governance Engine" subtitle="AI ethics enforcement, bias monitoring, explainability tracking" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Ethical Governance Engine data</div>
+        <DashboardError
+          title="Root Ethical Governance Engine"
+          subtitle="AI ethics enforcement, bias monitoring, explainability tracking"
+          message="We couldn't load Root Ethical Governance Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

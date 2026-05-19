@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/quality-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/quality-manager")({
 });
 
 function Page() {
-  const { data: qualityData, isLoading, error } = useQuery({
+  const { data: qualityData, isLoading, error, refetch } = useQuery({
     queryKey: ["quality-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Quality Manager" subtitle="Quality assurance management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Quality Manager" subtitle="Quality assurance management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Quality Manager data</div>
+        <DashboardError
+          title="Quality Manager"
+          subtitle="Quality assurance management"
+          message="We couldn't load Quality Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

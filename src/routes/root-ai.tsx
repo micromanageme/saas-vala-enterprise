@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-ai")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-ai")({
 });
 
 function Page() {
-  const { data: aiData, isLoading, error } = useQuery({
+  const { data: aiData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-ai"],
     queryFn: async () => {
       const response = await fetch("/api/root/ai-orchestration?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Orchestration Center" subtitle="Root-level AI model and agent control" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Orchestration Center" subtitle="Root-level AI model and agent control" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI Orchestration Center data</div>
+        <DashboardError
+          title="AI Orchestration Center"
+          subtitle="Root-level AI model and agent control"
+          message="We couldn't load AI Orchestration Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

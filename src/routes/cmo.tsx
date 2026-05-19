@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/cmo")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/cmo")({
 });
 
 function Page() {
-  const { data: cmoData, isLoading, error } = useQuery({
+  const { data: cmoData, isLoading, error, refetch } = useQuery({
     queryKey: ["cmo-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CMO Dashboard" subtitle="Chief Marketing Officer - Marketing oversight" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CMO Dashboard" subtitle="Chief Marketing Officer - Marketing oversight" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CMO data</div>
+        <DashboardError
+          title="CMO Dashboard"
+          subtitle="Chief Marketing Officer - Marketing oversight"
+          message="We couldn't load CMO data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

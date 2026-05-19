@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/internal-qa-commander")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/internal-qa-commander")({
 });
 
 function Page() {
-  const { data: qaData, isLoading, error } = useQuery({
+  const { data: qaData, isLoading, error, refetch } = useQuery({
     queryKey: ["internal-qa-commander-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Internal QA Commander" subtitle="Internal QA command workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Internal QA Commander" subtitle="Internal QA command workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Internal QA Commander data</div>
+        <DashboardError
+          title="Internal QA Commander"
+          subtitle="Internal QA command workspace"
+          message="We couldn't load Internal QA Commander data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

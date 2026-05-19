@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/customer-visit-coordinator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/customer-visit-coordinator")({
 });
 
 function Page() {
-  const { data: visitData, isLoading, error } = useQuery({
+  const { data: visitData, isLoading, error, refetch } = useQuery({
     queryKey: ["customer-visit-coordinator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Customer Visit Coordinator" subtitle="Customer visit coordination workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Customer Visit Coordinator" subtitle="Customer visit coordination workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Customer Visit Coordinator data</div>
+        <DashboardError
+          title="Customer Visit Coordinator"
+          subtitle="Customer visit coordination workspace"
+          message="We couldn't load Customer Visit Coordinator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

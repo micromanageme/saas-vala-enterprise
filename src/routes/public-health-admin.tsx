@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/public-health-admin")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/public-health-admin")({
 });
 
 function Page() {
-  const { data: healthData, isLoading, error } = useQuery({
+  const { data: healthData, isLoading, error, refetch } = useQuery({
     queryKey: ["public-health-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Public Health Admin" subtitle="Public health administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Public Health Admin" subtitle="Public health administration workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Public Health Admin data</div>
+        <DashboardError
+          title="Public Health Admin"
+          subtitle="Public health administration workspace"
+          message="We couldn't load Public Health Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

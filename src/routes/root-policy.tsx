@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-policy")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-policy")({
 });
 
 function Page() {
-  const { data: policyData, isLoading, error } = useQuery({
+  const { data: policyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-policy"],
     queryFn: async () => {
       const response = await fetch("/api/root/policy-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Policy Engine" subtitle="Centralized policy execution, runtime injection, enforcement" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Policy Engine" subtitle="Centralized policy execution, runtime injection, enforcement" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Policy Engine data</div>
+        <DashboardError
+          title="Universal Policy Engine"
+          subtitle="Centralized policy execution, runtime injection, enforcement"
+          message="We couldn't load Universal Policy Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

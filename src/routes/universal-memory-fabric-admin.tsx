@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/universal-memory-fabric-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/universal-memory-fabric-admin")({
 });
 
 function Page() {
-  const { data: memoryData, isLoading, error } = useQuery({
+  const { data: memoryData, isLoading, error, refetch } = useQuery({
     queryKey: ["universal-memory-fabric-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Memory Fabric Admin" subtitle="Universal memory fabric administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Memory Fabric Admin" subtitle="Universal memory fabric administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Memory Fabric Admin data</div>
+        <DashboardError
+          title="Universal Memory Fabric Admin"
+          subtitle="Universal memory fabric administration workspace"
+          message="We couldn't load Universal Memory Fabric Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

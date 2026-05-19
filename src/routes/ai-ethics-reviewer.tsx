@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ai-ethics-reviewer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ai-ethics-reviewer")({
 });
 
 function Page() {
-  const { data: aiEthicsData, isLoading, error } = useQuery({
+  const { data: aiEthicsData, isLoading, error, refetch } = useQuery({
     queryKey: ["ai-ethics-reviewer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Ethics Reviewer" subtitle="AI ethics review workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Ethics Reviewer" subtitle="AI ethics review workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI Ethics Reviewer data</div>
+        <DashboardError
+          title="AI Ethics Reviewer"
+          subtitle="AI ethics review workspace"
+          message="We couldn't load AI Ethics Reviewer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

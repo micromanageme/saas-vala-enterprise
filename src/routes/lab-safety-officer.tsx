@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/lab-safety-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/lab-safety-officer")({
 });
 
 function Page() {
-  const { data: safetyData, isLoading, error } = useQuery({
+  const { data: safetyData, isLoading, error, refetch } = useQuery({
     queryKey: ["lab-safety-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Lab Safety Officer" subtitle="Lab safety workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Lab Safety Officer" subtitle="Lab safety workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Lab Safety Officer data</div>
+        <DashboardError
+          title="Lab Safety Officer"
+          subtitle="Lab safety workspace"
+          message="We couldn't load Lab Safety Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

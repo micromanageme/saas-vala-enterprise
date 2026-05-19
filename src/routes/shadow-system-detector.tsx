@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/shadow-system-detector")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/shadow-system-detector")({
 });
 
 function Page() {
-  const { data: shadowData, isLoading, error } = useQuery({
+  const { data: shadowData, isLoading, error, refetch } = useQuery({
     queryKey: ["shadow-system-detector-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Shadow System Detector" subtitle="Shadow system detection workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Shadow System Detector" subtitle="Shadow system detection workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Shadow System Detector data</div>
+        <DashboardError
+          title="Shadow System Detector"
+          subtitle="Shadow system detection workspace"
+          message="We couldn't load Shadow System Detector data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

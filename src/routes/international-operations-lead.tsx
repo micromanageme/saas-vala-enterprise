@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/international-operations-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/international-operations-lead")({
 });
 
 function Page() {
-  const { data: intlData, isLoading, error } = useQuery({
+  const { data: intlData, isLoading, error, refetch } = useQuery({
     queryKey: ["international-operations-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="International Operations Lead" subtitle="International operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="International Operations Lead" subtitle="International operations workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load International Operations Lead data</div>
+        <DashboardError
+          title="International Operations Lead"
+          subtitle="International operations workspace"
+          message="We couldn't load International Operations Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

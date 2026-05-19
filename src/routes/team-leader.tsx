@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/team-leader")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/team-leader")({
 });
 
 function Page() {
-  const { data: teamLeadData, isLoading, error } = useQuery({
+  const { data: teamLeadData, isLoading, error, refetch } = useQuery({
     queryKey: ["team-leader-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Team Leader" subtitle="Team leadership" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Team Leader" subtitle="Team leadership" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Team Leader data</div>
+        <DashboardError
+          title="Team Leader"
+          subtitle="Team leadership"
+          message="We couldn't load Team Leader data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

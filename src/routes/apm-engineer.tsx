@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/apm-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/apm-engineer")({
 });
 
 function Page() {
-  const { data: apmData, isLoading, error } = useQuery({
+  const { data: apmData, isLoading, error, refetch } = useQuery({
     queryKey: ["apm-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="APM Engineer" subtitle="APM engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="APM Engineer" subtitle="APM engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load APM Engineer data</div>
+        <DashboardError
+          title="APM Engineer"
+          subtitle="APM engineering workspace"
+          message="We couldn't load APM Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

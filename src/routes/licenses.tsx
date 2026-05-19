@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/licenses")({
   head: () => ({ meta: [{ title: "License System — SaaS Vala" }, { name: "description", content: "Issue & manage product licenses" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/licenses")({
 });
 
 function Page() {
-  const { data: licensesData, isLoading, error } = useQuery({
+  const { data: licensesData, isLoading, error, refetch } = useQuery({
     queryKey: ["licenses"],
     queryFn: async () => {
       const response = await fetch("/api/licenses?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="License System" subtitle="Issue & manage product licenses" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="License System" subtitle="Issue & manage product licenses" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Licenses data</div>
+        <DashboardError
+          title="License System"
+          subtitle="Issue & manage product licenses"
+          message="We couldn't load Licenses data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

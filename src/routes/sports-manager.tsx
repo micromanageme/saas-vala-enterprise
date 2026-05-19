@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/sports-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/sports-manager")({
 });
 
 function Page() {
-  const { data: sportsData, isLoading, error } = useQuery({
+  const { data: sportsData, isLoading, error, refetch } = useQuery({
     queryKey: ["sports-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Sports Manager" subtitle="Sports management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Sports Manager" subtitle="Sports management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Sports Manager data</div>
+        <DashboardError
+          title="Sports Manager"
+          subtitle="Sports management workspace"
+          message="We couldn't load Sports Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

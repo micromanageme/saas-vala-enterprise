@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-bioslayer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-bioslayer")({
 });
 
 function Page() {
-  const { data: biosData, isLoading, error } = useQuery({
+  const { data: biosData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-bioslayer"],
     queryFn: async () => {
       const response = await fetch("/api/root/root-bios-layer?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Root BIOS Layer" subtitle="Pre-runtime validation, boot integrity checks, trusted startup chain" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Root BIOS Layer" subtitle="Pre-runtime validation, boot integrity checks, trusted startup chain" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Root BIOS Layer data</div>
+        <DashboardError
+          title="Universal Root BIOS Layer"
+          subtitle="Pre-runtime validation, boot integrity checks, trusted startup chain"
+          message="We couldn't load Universal Root BIOS Layer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

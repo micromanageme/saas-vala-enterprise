@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-cache")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-cache")({
 });
 
 function Page() {
-  const { data: cacheData, isLoading, error } = useQuery({
+  const { data: cacheData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-cache"],
     queryFn: async () => {
       const response = await fetch("/api/root/cache?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Cache Command" subtitle="Redis/cache clusters, invalidation, and synchronization" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Cache Command" subtitle="Redis/cache clusters, invalidation, and synchronization" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Cache Command data</div>
+        <DashboardError
+          title="Universal Cache Command"
+          subtitle="Redis/cache clusters, invalidation, and synchronization"
+          message="We couldn't load Universal Cache Command data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

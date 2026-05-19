@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-recoverymatrix")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-recoverymatrix")({
 });
 
 function Page() {
-  const { data: recoveryData, isLoading, error } = useQuery({
+  const { data: recoveryData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-recoverymatrix"],
     queryFn: async () => {
       const response = await fetch("/api/root/absolute-recovery-matrix?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Absolute Recovery Matrix" subtitle="Total ecosystem resurrection, dead-state restoration, corruption rollback lineage" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Absolute Recovery Matrix" subtitle="Total ecosystem resurrection, dead-state restoration, corruption rollback lineage" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Absolute Recovery Matrix data</div>
+        <DashboardError
+          title="Root Absolute Recovery Matrix"
+          subtitle="Total ecosystem resurrection, dead-state restoration, corruption rollback lineage"
+          message="We couldn't load Root Absolute Recovery Matrix data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

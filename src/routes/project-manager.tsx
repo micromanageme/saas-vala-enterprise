@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/project-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/project-manager")({
 });
 
 function Page() {
-  const { data: projData, isLoading, error } = useQuery({
+  const { data: projData, isLoading, error, refetch } = useQuery({
     queryKey: ["project-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Project Manager" subtitle="Project management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Project Manager" subtitle="Project management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Project Manager data</div>
+        <DashboardError
+          title="Project Manager"
+          subtitle="Project management"
+          message="We couldn't load Project Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

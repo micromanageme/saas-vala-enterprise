@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microworkflow")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microworkflow")({
 });
 
 function Page() {
-  const { data: workflowData, isLoading, error } = useQuery({
+  const { data: workflowData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microworkflow"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-workflow-mutation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Workflow Mutation Tracking" subtitle="Workflow branch lineage, mutation rollback snapshots, execution drift tracing" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Workflow Mutation Tracking" subtitle="Workflow branch lineage, mutation rollback snapshots, execution drift tracing" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Workflow Mutation Tracking data</div>
+        <DashboardError
+          title="Micro Workflow Mutation Tracking"
+          subtitle="Workflow branch lineage, mutation rollback snapshots, execution drift tracing"
+          message="We couldn't load Micro Workflow Mutation Tracking data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-dataconsistency")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-dataconsistency")({
 });
 
 function Page() {
-  const { data: consistencyData, isLoading, error } = useQuery({
+  const { data: consistencyData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-dataconsistency"],
     queryFn: async () => {
       const response = await fetch("/api/root/data-consistency?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Data Consistency Engine" subtitle="Replication consistency, transaction reconciliation, stale read detection" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Data Consistency Engine" subtitle="Replication consistency, transaction reconciliation, stale read detection" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Data Consistency Engine data</div>
+        <DashboardError
+          title="Root Data Consistency Engine"
+          subtitle="Replication consistency, transaction reconciliation, stale read detection"
+          message="We couldn't load Root Data Consistency Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

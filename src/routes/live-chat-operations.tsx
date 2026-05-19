@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/live-chat-operations")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/live-chat-operations")({
 });
 
 function Page() {
-  const { data: chatData, isLoading, error } = useQuery({
+  const { data: chatData, isLoading, error, refetch } = useQuery({
     queryKey: ["live-chat-operations-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Live Chat Operations" subtitle="Live chat operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Live Chat Operations" subtitle="Live chat operations workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Live Chat Operations data</div>
+        <DashboardError
+          title="Live Chat Operations"
+          subtitle="Live chat operations workspace"
+          message="We couldn't load Live Chat Operations data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-nanosession")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-nanosession")({
 });
 
 function Page() {
-  const { data: sessionData, isLoading, error } = useQuery({
+  const { data: sessionData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-nanosession"],
     queryFn: async () => {
       const response = await fetch("/api/root/nano-session-fingerprinting?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Nano Session Fingerprinting" subtitle="Browser fingerprint mesh, hardware entropy validation, behavioral session verification" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Nano Session Fingerprinting" subtitle="Browser fingerprint mesh, hardware entropy validation, behavioral session verification" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Nano Session Fingerprinting data</div>
+        <DashboardError
+          title="Nano Session Fingerprinting"
+          subtitle="Browser fingerprint mesh, hardware entropy validation, behavioral session verification"
+          message="We couldn't load Nano Session Fingerprinting data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

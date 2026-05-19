@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/forensic-reconstruction-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/forensic-reconstruction-analyst")({
 });
 
 function Page() {
-  const { data: reconstructionData, isLoading, error } = useQuery({
+  const { data: reconstructionData, isLoading, error, refetch } = useQuery({
     queryKey: ["forensic-reconstruction-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Forensic Reconstruction Analyst" subtitle="Forensic reconstruction analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Forensic Reconstruction Analyst" subtitle="Forensic reconstruction analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Forensic Reconstruction Analyst data</div>
+        <DashboardError
+          title="Forensic Reconstruction Analyst"
+          subtitle="Forensic reconstruction analysis workspace"
+          message="We couldn't load Forensic Reconstruction Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

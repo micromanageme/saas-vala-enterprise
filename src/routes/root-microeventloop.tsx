@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microeventloop")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microeventloop")({
 });
 
 function Page() {
-  const { data: eventData, isLoading, error } = useQuery({
+  const { data: eventData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microeventloop"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-event-loop?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Event Loop Observability" subtitle="Event-loop starvation detection, async dead-zone tracing, microtask queue stabilization" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Event Loop Observability" subtitle="Event-loop starvation detection, async dead-zone tracing, microtask queue stabilization" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Event Loop Observability data</div>
+        <DashboardError
+          title="Micro Event Loop Observability"
+          subtitle="Event-loop starvation detection, async dead-zone tracing, microtask queue stabilization"
+          message="We couldn't load Micro Event Loop Observability data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

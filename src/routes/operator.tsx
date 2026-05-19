@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/operator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/operator")({
 });
 
 function Page() {
-  const { data: operatorData, isLoading, error } = useQuery({
+  const { data: operatorData, isLoading, error, refetch } = useQuery({
     queryKey: ["operator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/user/dashboard");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Operator" subtitle="Operator workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Operator" subtitle="Operator workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Operator data</div>
+        <DashboardError
+          title="Operator"
+          subtitle="Operator workspace"
+          message="We couldn't load Operator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

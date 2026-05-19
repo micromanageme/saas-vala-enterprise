@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/network-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/network-admin")({
 });
 
 function Page() {
-  const { data: netData, isLoading, error } = useQuery({
+  const { data: netData, isLoading, error, refetch } = useQuery({
     queryKey: ["network-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Network Admin" subtitle="Network management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Network Admin" subtitle="Network management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Network Admin data</div>
+        <DashboardError
+          title="Network Admin"
+          subtitle="Network management"
+          message="We couldn't load Network Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

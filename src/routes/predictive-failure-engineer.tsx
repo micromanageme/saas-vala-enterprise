@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/predictive-failure-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/predictive-failure-engineer")({
 });
 
 function Page() {
-  const { data: predictiveData, isLoading, error } = useQuery({
+  const { data: predictiveData, isLoading, error, refetch } = useQuery({
     queryKey: ["predictive-failure-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Predictive Failure Engineer" subtitle="Predictive failure engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Predictive Failure Engineer" subtitle="Predictive failure engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Predictive Failure Engineer data</div>
+        <DashboardError
+          title="Predictive Failure Engineer"
+          subtitle="Predictive failure engineering workspace"
+          message="We couldn't load Predictive Failure Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

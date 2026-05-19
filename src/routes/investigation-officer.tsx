@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/investigation-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/investigation-officer")({
 });
 
 function Page() {
-  const { data: investigationData, isLoading, error } = useQuery({
+  const { data: investigationData, isLoading, error, refetch } = useQuery({
     queryKey: ["investigation-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Investigation Officer" subtitle="Investigation officer workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Investigation Officer" subtitle="Investigation officer workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Investigation Officer data</div>
+        <DashboardError
+          title="Investigation Officer"
+          subtitle="Investigation officer workspace"
+          message="We couldn't load Investigation Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

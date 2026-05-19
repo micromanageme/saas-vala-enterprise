@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-metarole")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-metarole")({
 });
 
 function Page() {
-  const { data: roleData, isLoading, error } = useQuery({
+  const { data: roleData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-metarole"],
     queryFn: async () => {
       const response = await fetch("/api/root/meta-role-engine?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Meta-Role Engine" subtitle="Dynamic runtime role generation, hierarchical inheritance, temporary elevation" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Meta-Role Engine" subtitle="Dynamic runtime role generation, hierarchical inheritance, temporary elevation" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Meta-Role Engine data</div>
+        <DashboardError
+          title="Universal Meta-Role Engine"
+          subtitle="Dynamic runtime role generation, hierarchical inheritance, temporary elevation"
+          message="We couldn't load Universal Meta-Role Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

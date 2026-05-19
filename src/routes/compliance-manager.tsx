@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/compliance-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/compliance-manager")({
 });
 
 function Page() {
-  const { data: compData, isLoading, error } = useQuery({
+  const { data: compData, isLoading, error, refetch } = useQuery({
     queryKey: ["compliance-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Compliance Manager" subtitle="Compliance operations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Compliance Manager" subtitle="Compliance operations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Compliance Manager data</div>
+        <DashboardError
+          title="Compliance Manager"
+          subtitle="Compliance operations management"
+          message="We couldn't load Compliance Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

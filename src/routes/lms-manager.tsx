@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/lms-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/lms-manager")({
 });
 
 function Page() {
-  const { data: lmsData, isLoading, error } = useQuery({
+  const { data: lmsData, isLoading, error, refetch } = useQuery({
     queryKey: ["lms-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="LMS Manager" subtitle="Learning management system workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="LMS Manager" subtitle="Learning management system workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load LMS Manager data</div>
+        <DashboardError
+          title="LMS Manager"
+          subtitle="Learning management system workspace"
+          message="We couldn't load LMS Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

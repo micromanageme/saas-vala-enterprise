@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/replication-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/replication-engineer")({
 });
 
 function Page() {
-  const { data: replicationData, isLoading, error } = useQuery({
+  const { data: replicationData, isLoading, error, refetch } = useQuery({
     queryKey: ["replication-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Replication Engineer" subtitle="Replication engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Replication Engineer" subtitle="Replication engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Replication Engineer data</div>
+        <DashboardError
+          title="Replication Engineer"
+          subtitle="Replication engineering workspace"
+          message="We couldn't load Replication Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

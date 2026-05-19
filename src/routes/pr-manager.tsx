@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/pr-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/pr-manager")({
 });
 
 function Page() {
-  const { data: prData, isLoading, error } = useQuery({
+  const { data: prData, isLoading, error, refetch } = useQuery({
     queryKey: ["pr-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="PR Manager" subtitle="Public relations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="PR Manager" subtitle="Public relations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load PR Manager data</div>
+        <DashboardError
+          title="PR Manager"
+          subtitle="Public relations management"
+          message="We couldn't load PR Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

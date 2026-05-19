@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/tactical-operations-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/tactical-operations-officer")({
 });
 
 function Page() {
-  const { data: tacticalData, isLoading, error } = useQuery({
+  const { data: tacticalData, isLoading, error, refetch } = useQuery({
     queryKey: ["tactical-operations-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Tactical Operations Officer" subtitle="Tactical operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Tactical Operations Officer" subtitle="Tactical operations workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Tactical Operations Officer data</div>
+        <DashboardError
+          title="Tactical Operations Officer"
+          subtitle="Tactical operations workspace"
+          message="We couldn't load Tactical Operations Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

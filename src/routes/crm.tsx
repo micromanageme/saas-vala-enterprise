@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/crm")({
   head: () => ({ meta: [{ title: "CRM — SaaS Vala" }, { name: "description", content: "Leads, opportunities & customer pipeline" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/crm")({
 });
 
 function Page() {
-  const { data: crmData, isLoading, error } = useQuery({
+  const { data: crmData, isLoading, error, refetch } = useQuery({
     queryKey: ["crm"],
     queryFn: async () => {
       const response = await fetch("/api/crm?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CRM" subtitle="Leads, opportunities & customer pipeline" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CRM" subtitle="Leads, opportunities & customer pipeline" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CRM data</div>
+        <DashboardError
+          title="CRM"
+          subtitle="Leads, opportunities & customer pipeline"
+          message="We couldn't load CRM data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

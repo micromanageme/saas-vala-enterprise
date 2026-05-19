@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/digital-campaign-strategist")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/digital-campaign-strategist")({
 });
 
 function Page() {
-  const { data: campaignData, isLoading, error } = useQuery({
+  const { data: campaignData, isLoading, error, refetch } = useQuery({
     queryKey: ["digital-campaign-strategist-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Digital Campaign Strategist" subtitle="Digital campaign strategy workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Digital Campaign Strategist" subtitle="Digital campaign strategy workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Digital Campaign Strategist data</div>
+        <DashboardError
+          title="Digital Campaign Strategist"
+          subtitle="Digital campaign strategy workspace"
+          message="We couldn't load Digital Campaign Strategist data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

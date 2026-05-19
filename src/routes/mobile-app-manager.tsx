@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/mobile-app-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/mobile-app-manager")({
 });
 
 function Page() {
-  const { data: mobileData, isLoading, error } = useQuery({
+  const { data: mobileData, isLoading, error, refetch } = useQuery({
     queryKey: ["mobile-app-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Mobile App Manager" subtitle="Mobile application management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Mobile App Manager" subtitle="Mobile application management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Mobile App Manager data</div>
+        <DashboardError
+          title="Mobile App Manager"
+          subtitle="Mobile application management"
+          message="We couldn't load Mobile App Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

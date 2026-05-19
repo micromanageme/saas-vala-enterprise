@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-computegrid")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-computegrid")({
 });
 
 function Page() {
-  const { data: computeData, isLoading, error } = useQuery({
+  const { data: computeData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-computegrid"],
     queryFn: async () => {
       const response = await fetch("/api/root/compute-grid?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Compute Grid" subtitle="Cluster orchestration, distributed compute, edge compute mesh" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Compute Grid" subtitle="Cluster orchestration, distributed compute, edge compute mesh" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Compute Grid data</div>
+        <DashboardError
+          title="Root Compute Grid"
+          subtitle="Cluster orchestration, distributed compute, edge compute mesh"
+          message="We couldn't load Root Compute Grid data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

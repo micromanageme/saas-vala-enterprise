@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/chro")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/chro")({
 });
 
 function Page() {
-  const { data: chroData, isLoading, error } = useQuery({
+  const { data: chroData, isLoading, error, refetch } = useQuery({
     queryKey: ["chro-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="CHRO Dashboard" subtitle="Chief Human Resources Officer - HR oversight" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="CHRO Dashboard" subtitle="Chief Human Resources Officer - HR oversight" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load CHRO data</div>
+        <DashboardError
+          title="CHRO Dashboard"
+          subtitle="Chief Human Resources Officer - HR oversight"
+          message="We couldn't load CHRO data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

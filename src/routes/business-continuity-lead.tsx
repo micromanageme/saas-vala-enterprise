@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/business-continuity-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/business-continuity-lead")({
 });
 
 function Page() {
-  const { data: bcData, isLoading, error } = useQuery({
+  const { data: bcData, isLoading, error, refetch } = useQuery({
     queryKey: ["business-continuity-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Business Continuity Lead" subtitle="Business continuity management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Business Continuity Lead" subtitle="Business continuity management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Business Continuity Lead data</div>
+        <DashboardError
+          title="Business Continuity Lead"
+          subtitle="Business continuity management"
+          message="We couldn't load Business Continuity Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

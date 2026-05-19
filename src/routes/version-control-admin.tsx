@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/version-control-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/version-control-admin")({
 });
 
 function Page() {
-  const { data: versionData, isLoading, error } = useQuery({
+  const { data: versionData, isLoading, error, refetch } = useQuery({
     queryKey: ["version-control-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Version Control Admin" subtitle="Version control administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Version Control Admin" subtitle="Version control administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Version Control Admin data</div>
+        <DashboardError
+          title="Version Control Admin"
+          subtitle="Version control administration workspace"
+          message="We couldn't load Version Control Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

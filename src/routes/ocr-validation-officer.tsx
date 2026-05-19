@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/ocr-validation-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/ocr-validation-officer")({
 });
 
 function Page() {
-  const { data: ocrData, isLoading, error } = useQuery({
+  const { data: ocrData, isLoading, error, refetch } = useQuery({
     queryKey: ["ocr-validation-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="OCR Validation Officer" subtitle="OCR validation workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="OCR Validation Officer" subtitle="OCR validation workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load OCR Validation Officer data</div>
+        <DashboardError
+          title="OCR Validation Officer"
+          subtitle="OCR validation workspace"
+          message="We couldn't load OCR Validation Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

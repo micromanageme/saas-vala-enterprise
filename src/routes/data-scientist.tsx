@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/data-scientist")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/data-scientist")({
 });
 
 function Page() {
-  const { data: dataSciData, isLoading, error } = useQuery({
+  const { data: dataSciData, isLoading, error, refetch } = useQuery({
     queryKey: ["data-scientist-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Data Scientist" subtitle="Data science workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Data Scientist" subtitle="Data science workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Data Scientist data</div>
+        <DashboardError
+          title="Data Scientist"
+          subtitle="Data science workspace"
+          message="We couldn't load Data Scientist data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

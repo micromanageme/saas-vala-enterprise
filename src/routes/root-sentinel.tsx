@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-sentinel")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-sentinel")({
 });
 
 function Page() {
-  const { data: sentinelData, isLoading, error } = useQuery({
+  const { data: sentinelData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-sentinel"],
     queryFn: async () => {
       const response = await fetch("/api/root/sentinel-network?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Sentinel Network" subtitle="Distributed guardian processes, watchdog intelligence, autonomous protection nodes" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Sentinel Network" subtitle="Distributed guardian processes, watchdog intelligence, autonomous protection nodes" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Sentinel Network data</div>
+        <DashboardError
+          title="Universal Sentinel Network"
+          subtitle="Distributed guardian processes, watchdog intelligence, autonomous protection nodes"
+          message="We couldn't load Universal Sentinel Network data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

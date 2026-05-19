@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/wellness-coach")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/wellness-coach")({
 });
 
 function Page() {
-  const { data: wellnessData, isLoading, error } = useQuery({
+  const { data: wellnessData, isLoading, error, refetch } = useQuery({
     queryKey: ["wellness-coach-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Wellness Coach" subtitle="Wellness coaching workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Wellness Coach" subtitle="Wellness coaching workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Wellness Coach data</div>
+        <DashboardError
+          title="Wellness Coach"
+          subtitle="Wellness coaching workspace"
+          message="We couldn't load Wellness Coach data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

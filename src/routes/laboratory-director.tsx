@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/laboratory-director")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/laboratory-director")({
 });
 
 function Page() {
-  const { data: labData, isLoading, error } = useQuery({
+  const { data: labData, isLoading, error, refetch } = useQuery({
     queryKey: ["laboratory-director-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Laboratory Director" subtitle="Laboratory director workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Laboratory Director" subtitle="Laboratory director workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Laboratory Director data</div>
+        <DashboardError
+          title="Laboratory Director"
+          subtitle="Laboratory director workspace"
+          message="We couldn't load Laboratory Director data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

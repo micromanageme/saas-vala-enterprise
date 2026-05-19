@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/employee-relations")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/employee-relations")({
 });
 
 function Page() {
-  const { data: erData, isLoading, error } = useQuery({
+  const { data: erData, isLoading, error, refetch } = useQuery({
     queryKey: ["employee-relations-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Employee Relations" subtitle="Employee relations management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Employee Relations" subtitle="Employee relations management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Employee Relations data</div>
+        <DashboardError
+          title="Employee Relations"
+          subtitle="Employee relations management"
+          message="We couldn't load Employee Relations data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

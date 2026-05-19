@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/community-outreach-lead")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/community-outreach-lead")({
 });
 
 function Page() {
-  const { data: outreachData, isLoading, error } = useQuery({
+  const { data: outreachData, isLoading, error, refetch } = useQuery({
     queryKey: ["community-outreach-lead-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Community Outreach Lead" subtitle="Community outreach leadership workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Community Outreach Lead" subtitle="Community outreach leadership workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Community Outreach Lead data</div>
+        <DashboardError
+          title="Community Outreach Lead"
+          subtitle="Community outreach leadership workspace"
+          message="We couldn't load Community Outreach Lead data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

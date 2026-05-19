@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/press-secretary")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/press-secretary")({
 });
 
 function Page() {
-  const { data: pressData, isLoading, error } = useQuery({
+  const { data: pressData, isLoading, error, refetch } = useQuery({
     queryKey: ["press-secretary-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Press Secretary" subtitle="Press secretary workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Press Secretary" subtitle="Press secretary workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Press Secretary data</div>
+        <DashboardError
+          title="Press Secretary"
+          subtitle="Press secretary workspace"
+          message="We couldn't load Press Secretary data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

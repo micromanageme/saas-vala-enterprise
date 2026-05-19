@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/trust-safety-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/trust-safety-analyst")({
 });
 
 function Page() {
-  const { data: trustData, isLoading, error } = useQuery({
+  const { data: trustData, isLoading, error, refetch } = useQuery({
     queryKey: ["trust-safety-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Trust & Safety Analyst" subtitle="Trust and safety analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Trust & Safety Analyst" subtitle="Trust and safety analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Trust & Safety Analyst data</div>
+        <DashboardError
+          title="Trust & Safety Analyst"
+          subtitle="Trust and safety analysis workspace"
+          message="We couldn't load Trust & Safety Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

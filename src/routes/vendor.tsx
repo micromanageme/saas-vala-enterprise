@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/vendor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/vendor")({
 });
 
 function Page() {
-  const { data: vendorData, isLoading, error } = useQuery({
+  const { data: vendorData, isLoading, error, refetch } = useQuery({
     queryKey: ["vendor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Vendor Dashboard" subtitle="Vendor portal" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Vendor Dashboard" subtitle="Vendor portal" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Vendor data</div>
+        <DashboardError
+          title="Vendor Dashboard"
+          subtitle="Vendor portal"
+          message="We couldn't load Vendor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/network-operations-center")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/network-operations-center")({
 });
 
 function Page() {
-  const { data: nocData, isLoading, error } = useQuery({
+  const { data: nocData, isLoading, error, refetch } = useQuery({
     queryKey: ["network-operations-center-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Network Operations Center" subtitle="Network operations center workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Network Operations Center" subtitle="Network operations center workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Network Operations Center data</div>
+        <DashboardError
+          title="Network Operations Center"
+          subtitle="Network operations center workspace"
+          message="We couldn't load Network Operations Center data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

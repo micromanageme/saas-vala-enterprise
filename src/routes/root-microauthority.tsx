@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-microauthority")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-microauthority")({
 });
 
 function Page() {
-  const { data: authorityData, isLoading, error } = useQuery({
+  const { data: authorityData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-microauthority"],
     queryFn: async () => {
       const response = await fetch("/api/root/micro-authority-propagation?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Micro Authority Propagation" subtitle="Permission propagation timing, nested inheritance validation, stale authority cleanup" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Micro Authority Propagation" subtitle="Permission propagation timing, nested inheritance validation, stale authority cleanup" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Micro Authority Propagation data</div>
+        <DashboardError
+          title="Micro Authority Propagation"
+          subtitle="Permission propagation timing, nested inheritance validation, stale authority cleanup"
+          message="We couldn't load Micro Authority Propagation data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

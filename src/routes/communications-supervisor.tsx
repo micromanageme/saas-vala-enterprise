@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/communications-supervisor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/communications-supervisor")({
 });
 
 function Page() {
-  const { data: commData, isLoading, error } = useQuery({
+  const { data: commData, isLoading, error, refetch } = useQuery({
     queryKey: ["communications-supervisor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Communications Supervisor" subtitle="Communications supervision workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Communications Supervisor" subtitle="Communications supervision workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Communications Supervisor data</div>
+        <DashboardError
+          title="Communications Supervisor"
+          subtitle="Communications supervision workspace"
+          message="We couldn't load Communications Supervisor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

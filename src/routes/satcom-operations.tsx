@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/satcom-operations")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/satcom-operations")({
 });
 
 function Page() {
-  const { data: satcomData, isLoading, error } = useQuery({
+  const { data: satcomData, isLoading, error, refetch } = useQuery({
     queryKey: ["satcom-operations-dashboard"],
     queryFn: async () => {
       const response = fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="SatCom Operations" subtitle="Satellite communications operations workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="SatCom Operations" subtitle="Satellite communications operations workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load SatCom Operations data</div>
+        <DashboardError
+          title="SatCom Operations"
+          subtitle="Satellite communications operations workspace"
+          message="We couldn't load SatCom Operations data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

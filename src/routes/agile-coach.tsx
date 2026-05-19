@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/agile-coach")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/agile-coach")({
 });
 
 function Page() {
-  const { data: agileData, isLoading, error } = useQuery({
+  const { data: agileData, isLoading, error, refetch } = useQuery({
     queryKey: ["agile-coach-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Agile Coach" subtitle="Agile coaching workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Agile Coach" subtitle="Agile coaching workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Agile Coach data</div>
+        <DashboardError
+          title="Agile Coach"
+          subtitle="Agile coaching workspace"
+          message="We couldn't load Agile Coach data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

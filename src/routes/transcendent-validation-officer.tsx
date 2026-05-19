@@ -2,6 +2,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/transcendent-validation-officer")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/transcendent-validation-officer")({
 });
 
 function Page() {
-  const { data: validationData, isLoading, error } = useQuery({
+  const { data: validationData, isLoading, error, refetch } = useQuery({
     queryKey: ["transcendent-validation-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Transcendent Validation Officer" subtitle="Transcendent validation workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Transcendent Validation Officer" subtitle="Transcendent validation workspace" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Transcendent Validation Officer data</div>
+        <DashboardError
+          title="Transcendent Validation Officer"
+          subtitle="Transcendent validation workspace"
+          message="We couldn't load Transcendent Validation Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

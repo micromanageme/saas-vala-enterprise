@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/workforce-planner")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/workforce-planner")({
 });
 
 function Page() {
-  const { data: workforceData, isLoading, error } = useQuery({
+  const { data: workforceData, isLoading, error, refetch } = useQuery({
     queryKey: ["workforce-planner-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Workforce Planner" subtitle="Workforce planning workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Workforce Planner" subtitle="Workforce planning workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Workforce Planner data</div>
+        <DashboardError
+          title="Workforce Planner"
+          subtitle="Workforce planning workspace"
+          message="We couldn't load Workforce Planner data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

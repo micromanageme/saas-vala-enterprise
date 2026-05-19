@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-settings")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-settings")({
 });
 
 function Page() {
-  const { data: settingsData, isLoading, error } = useQuery({
+  const { data: settingsData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-settings"],
     queryFn: async () => {
       const response = await fetch("/api/root/settings?type=all", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Universal Settings" subtitle="Root-level global configuration management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Universal Settings" subtitle="Root-level global configuration management" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Universal Settings data</div>
+        <DashboardError
+          title="Universal Settings"
+          subtitle="Root-level global configuration management"
+          message="We couldn't load Universal Settings data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

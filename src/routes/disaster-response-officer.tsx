@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/disaster-response-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/disaster-response-officer")({
 });
 
 function Page() {
-  const { data: disasterData, isLoading, error } = useQuery({
+  const { data: disasterData, isLoading, error, refetch } = useQuery({
     queryKey: ["disaster-response-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Disaster Response Officer" subtitle="Disaster response workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Disaster Response Officer" subtitle="Disaster response workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Disaster Response Officer data</div>
+        <DashboardError
+          title="Disaster Response Officer"
+          subtitle="Disaster response workspace"
+          message="We couldn't load Disaster Response Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin-users")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/admin-users")({
 });
 
 function Page() {
-  const { data: usersData, isLoading, error } = useQuery({
+  const { data: usersData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
       const response = await fetch("/api/admin/users");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="User Management" subtitle="Global user management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="User Management" subtitle="Global user management" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load users</div>
+        <DashboardError
+          title="User Management"
+          subtitle="Global user management"
+          message="We couldn't load users. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

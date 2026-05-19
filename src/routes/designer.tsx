@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/designer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/designer")({
 });
 
 function Page() {
-  const { data: designerData, isLoading, error } = useQuery({
+  const { data: designerData, isLoading, error, refetch } = useQuery({
     queryKey: ["designer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Designer" subtitle="Design workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Designer" subtitle="Design workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Designer data</div>
+        <DashboardError
+          title="Designer"
+          subtitle="Design workspace"
+          message="We couldn't load Designer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

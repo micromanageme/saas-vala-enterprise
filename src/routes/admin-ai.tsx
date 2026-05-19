@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin-ai")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/admin-ai")({
 });
 
 function Page() {
-  const { data: aiData, isLoading, error } = useQuery({
+  const { data: aiData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-ai"],
     queryFn: async () => {
       const response = await fetch("/api/admin/ai-control?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="AI Control Center" subtitle="AI model and usage management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="AI Control Center" subtitle="AI model and usage management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load AI data</div>
+        <DashboardError
+          title="AI Control Center"
+          subtitle="AI model and usage management"
+          message="We couldn't load AI data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/cyber-warfare-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/cyber-warfare-analyst")({
 });
 
 function Page() {
-  const { data: cyberWarfareData, isLoading, error } = useQuery({
+  const { data: cyberWarfareData, isLoading, error, refetch } = useQuery({
     queryKey: ["cyber-warfare-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Cyber Warfare Analyst" subtitle="Cyber warfare analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Cyber Warfare Analyst" subtitle="Cyber warfare analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Cyber Warfare Analyst data</div>
+        <DashboardError
+          title="Cyber Warfare Analyst"
+          subtitle="Cyber warfare analysis workspace"
+          message="We couldn't load Cyber Warfare Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

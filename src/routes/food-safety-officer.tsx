@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/food-safety-officer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/food-safety-officer")({
 });
 
 function Page() {
-  const { data: safetyData, isLoading, error } = useQuery({
+  const { data: safetyData, isLoading, error, refetch } = useQuery({
     queryKey: ["food-safety-officer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Food Safety Officer" subtitle="Food safety workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Food Safety Officer" subtitle="Food safety workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Food Safety Officer data</div>
+        <DashboardError
+          title="Food Safety Officer"
+          subtitle="Food safety workspace"
+          message="We couldn't load Food Safety Officer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

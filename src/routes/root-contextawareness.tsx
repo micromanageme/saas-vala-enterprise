@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-contextawareness")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-contextawareness")({
 });
 
 function Page() {
-  const { data: contextData, isLoading, error } = useQuery({
+  const { data: contextData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-contextawareness"],
     queryFn: async () => {
       const response = await fetch("/api/root/context-awareness?type=all", {
@@ -24,7 +25,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Root Context Awareness Engine" subtitle="Contextual permission synthesis, situational workflow adaptation, dynamic policy intelligence" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Root Context Awareness Engine" subtitle="Contextual permission synthesis, situational workflow adaptation, dynamic policy intelligence" />
       </AppShell>
     );
   }
@@ -32,7 +33,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Root Context Awareness Engine data</div>
+        <DashboardError
+          title="Root Context Awareness Engine"
+          subtitle="Contextual permission synthesis, situational workflow adaptation, dynamic policy intelligence"
+          message="We couldn't load Root Context Awareness Engine data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

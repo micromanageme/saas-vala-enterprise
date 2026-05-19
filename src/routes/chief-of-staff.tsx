@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/chief-of-staff")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/chief-of-staff")({
 });
 
 function Page() {
-  const { data: staffData, isLoading, error } = useQuery({
+  const { data: staffData, isLoading, error, refetch } = useQuery({
     queryKey: ["chief-of-staff-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Chief of Staff" subtitle="Chief of Staff - Executive coordination" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Chief of Staff" subtitle="Chief of Staff - Executive coordination" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Chief of Staff data</div>
+        <DashboardError
+          title="Chief of Staff"
+          subtitle="Chief of Staff - Executive coordination"
+          message="We couldn't load Chief of Staff data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

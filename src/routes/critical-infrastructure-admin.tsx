@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/critical-infrastructure-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/critical-infrastructure-admin")({
 });
 
 function Page() {
-  const { data: infraData, isLoading, error } = useQuery({
+  const { data: infraData, isLoading, error, refetch } = useQuery({
     queryKey: ["critical-infrastructure-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Critical Infrastructure Admin" subtitle="Critical infrastructure administration" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Critical Infrastructure Admin" subtitle="Critical infrastructure administration" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Critical Infrastructure Admin data</div>
+        <DashboardError
+          title="Critical Infrastructure Admin"
+          subtitle="Critical infrastructure administration"
+          message="We couldn't load Critical Infrastructure Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

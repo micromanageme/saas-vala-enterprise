@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({ meta: [{ title: "Reports — SaaS Vala" }, { name: "description", content: "Enterprise reports & exports" }] }),
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/reports")({
 });
 
 function Page() {
-  const { data: reportsData, isLoading, error } = useQuery({
+  const { data: reportsData, isLoading, error, refetch } = useQuery({
     queryKey: ["reports"],
     queryFn: async () => {
       const response = await fetch("/api/reports?type=all");
@@ -21,7 +22,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Reports" subtitle="Enterprise reports & exports" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Reports" subtitle="Enterprise reports & exports" />
       </AppShell>
     );
   }
@@ -29,7 +30,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Reports data</div>
+        <DashboardError
+          title="Reports"
+          subtitle="Enterprise reports & exports"
+          message="We couldn't load Reports data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

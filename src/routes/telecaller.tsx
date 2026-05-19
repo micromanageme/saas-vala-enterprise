@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/telecaller")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/telecaller")({
 });
 
 function Page() {
-  const { data: telecallerData, isLoading, error } = useQuery({
+  const { data: telecallerData, isLoading, error, refetch } = useQuery({
     queryKey: ["telecaller-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Telecaller" subtitle="Telecaller workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Telecaller" subtitle="Telecaller workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Telecaller data</div>
+        <DashboardError
+          title="Telecaller"
+          subtitle="Telecaller workspace"
+          message="We couldn't load Telecaller data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/marketing-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/marketing-manager")({
 });
 
 function Page() {
-  const { data: mktData, isLoading, error } = useQuery({
+  const { data: mktData, isLoading, error, refetch } = useQuery({
     queryKey: ["marketing-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/analytics/revenue");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Marketing Manager" subtitle="Marketing team management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Marketing Manager" subtitle="Marketing team management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Marketing Manager data</div>
+        <DashboardError
+          title="Marketing Manager"
+          subtitle="Marketing team management"
+          message="We couldn't load Marketing Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

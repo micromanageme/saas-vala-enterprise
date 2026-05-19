@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/robotics-operations-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/robotics-operations-manager")({
 });
 
 function Page() {
-  const { data: roboticsData, isLoading, error } = useQuery({
+  const { data: roboticsData, isLoading, error, refetch } = useQuery({
     queryKey: ["robotics-operations-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Robotics Operations Manager" subtitle="Robotics operations management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Robotics Operations Manager" subtitle="Robotics operations management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Robotics Operations Manager data</div>
+        <DashboardError
+          title="Robotics Operations Manager"
+          subtitle="Robotics operations management workspace"
+          message="We couldn't load Robotics Operations Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/multi-agent-supervisor")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/multi-agent-supervisor")({
 });
 
 function Page() {
-  const { data: multiAgentData, isLoading, error } = useQuery({
+  const { data: multiAgentData, isLoading, error, refetch } = useQuery({
     queryKey: ["multi-agent-supervisor-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Multi Agent Supervisor" subtitle="Multi-agent supervision workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Multi Agent Supervisor" subtitle="Multi-agent supervision workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Multi Agent Supervisor data</div>
+        <DashboardError
+          title="Multi Agent Supervisor"
+          subtitle="Multi-agent supervision workspace"
+          message="We couldn't load Multi Agent Supervisor data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

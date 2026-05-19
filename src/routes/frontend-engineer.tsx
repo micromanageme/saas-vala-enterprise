@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/frontend-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/frontend-engineer")({
 });
 
 function Page() {
-  const { data: feData, isLoading, error } = useQuery({
+  const { data: feData, isLoading, error, refetch } = useQuery({
     queryKey: ["frontend-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Frontend Engineer" subtitle="Frontend development" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Frontend Engineer" subtitle="Frontend development" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Frontend Engineer data</div>
+        <DashboardError
+          title="Frontend Engineer"
+          subtitle="Frontend development"
+          message="We couldn't load Frontend Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

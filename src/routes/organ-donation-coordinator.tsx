@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/organ-donation-coordinator")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/organ-donation-coordinator")({
 });
 
 function Page() {
-  const { data: organData, isLoading, error } = useQuery({
+  const { data: organData, isLoading, error, refetch } = useQuery({
     queryKey: ["organ-donation-coordinator-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Organ Donation Coordinator" subtitle="Organ donation coordination workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Organ Donation Coordinator" subtitle="Organ donation coordination workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Organ Donation Coordinator data</div>
+        <DashboardError
+          title="Organ Donation Coordinator"
+          subtitle="Organ donation coordination workspace"
+          message="We couldn't load Organ Donation Coordinator data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

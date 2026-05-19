@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/state-synchronization-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/state-synchronization-engineer")({
 });
 
 function Page() {
-  const { data: stateData, isLoading, error } = useQuery({
+  const { data: stateData, isLoading, error, refetch } = useQuery({
     queryKey: ["state-synchronization-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="State Synchronization Engineer" subtitle="State synchronization engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="State Synchronization Engineer" subtitle="State synchronization engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load State Synchronization Engineer data</div>
+        <DashboardError
+          title="State Synchronization Engineer"
+          subtitle="State synchronization engineering workspace"
+          message="We couldn't load State Synchronization Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/coo")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/coo")({
 });
 
 function Page() {
-  const { data: cooData, isLoading, error } = useQuery({
+  const { data: cooData, isLoading, error, refetch } = useQuery({
     queryKey: ["coo-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/executive?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="COO Dashboard" subtitle="Chief Operating Officer - Operations oversight" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="COO Dashboard" subtitle="Chief Operating Officer - Operations oversight" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load COO data</div>
+        <DashboardError
+          title="COO Dashboard"
+          subtitle="Chief Operating Officer - Operations oversight"
+          message="We couldn't load COO data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

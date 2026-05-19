@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin-devops")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/admin-devops")({
 });
 
 function Page() {
-  const { data: devopsData, isLoading, error } = useQuery({
+  const { data: devopsData, isLoading, error, refetch } = useQuery({
     queryKey: ["admin-devops"],
     queryFn: async () => {
       const response = await fetch("/api/admin/devops?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Server & DevOps" subtitle="Server, deployment and infrastructure management" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Server & DevOps" subtitle="Server, deployment and infrastructure management" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load DevOps data</div>
+        <DashboardError
+          title="Server & DevOps"
+          subtitle="Server, deployment and infrastructure management"
+          message="We couldn't load DevOps data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

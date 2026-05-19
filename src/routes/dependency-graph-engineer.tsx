@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dependency-graph-engineer")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/dependency-graph-engineer")({
 });
 
 function Page() {
-  const { data: dependencyData, isLoading, error } = useQuery({
+  const { data: dependencyData, isLoading, error, refetch } = useQuery({
     queryKey: ["dependency-graph-engineer-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Dependency Graph Engineer" subtitle="Dependency graph engineering workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Dependency Graph Engineer" subtitle="Dependency graph engineering workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Dependency Graph Engineer data</div>
+        <DashboardError
+          title="Dependency Graph Engineer"
+          subtitle="Dependency graph engineering workspace"
+          message="We couldn't load Dependency Graph Engineer data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

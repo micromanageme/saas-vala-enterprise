@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/construction-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/construction-manager")({
 });
 
 function Page() {
-  const { data: constructionData, isLoading, error } = useQuery({
+  const { data: constructionData, isLoading, error, refetch } = useQuery({
     queryKey: ["construction-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Construction Manager" subtitle="Construction management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Construction Manager" subtitle="Construction management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Construction Manager data</div>
+        <DashboardError
+          title="Construction Manager"
+          subtitle="Construction management workspace"
+          message="We couldn't load Construction Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

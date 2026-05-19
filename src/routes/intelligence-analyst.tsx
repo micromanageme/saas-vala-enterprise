@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/intelligence-analyst")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/intelligence-analyst")({
 });
 
 function Page() {
-  const { data: intelData, isLoading, error } = useQuery({
+  const { data: intelData, isLoading, error, refetch } = useQuery({
     queryKey: ["intelligence-analyst-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Intelligence Analyst" subtitle="Intelligence analysis workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Intelligence Analyst" subtitle="Intelligence analysis workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Intelligence Analyst data</div>
+        <DashboardError
+          title="Intelligence Analyst"
+          subtitle="Intelligence analysis workspace"
+          message="We couldn't load Intelligence Analyst data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/root-governance")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/root-governance")({
 });
 
 function Page() {
-  const { data: governanceData, isLoading, error } = useQuery({
+  const { data: governanceData, isLoading, error, refetch } = useQuery({
     queryKey: ["root-governance"],
     queryFn: async () => {
       const response = await fetch("/api/admin/monitoring", {
@@ -23,7 +24,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="System Governance" subtitle="Root-level policies and compliance" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="System Governance" subtitle="Root-level policies and compliance" />
       </AppShell>
     );
   }
@@ -31,7 +32,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load System Governance data</div>
+        <DashboardError
+          title="System Governance"
+          subtitle="Root-level policies and compliance"
+          message="We couldn't load System Governance data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

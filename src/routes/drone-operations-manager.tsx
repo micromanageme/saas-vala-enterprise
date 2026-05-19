@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/drone-operations-manager")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/drone-operations-manager")({
 });
 
 function Page() {
-  const { data: droneData, isLoading, error } = useQuery({
+  const { data: droneData, isLoading, error, refetch } = useQuery({
     queryKey: ["drone-operations-manager-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Drone Operations Manager" subtitle="Drone operations management workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Drone Operations Manager" subtitle="Drone operations management workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Drone Operations Manager data</div>
+        <DashboardError
+          title="Drone Operations Manager"
+          subtitle="Drone operations management workspace"
+          message="We couldn't load Drone Operations Manager data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }

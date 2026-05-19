@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { ModulePage } from "@/components/ModulePage";
+import { DashboardSkeleton, DashboardError } from "@/components/DashboardStates";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/deep-space-network-admin")({
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/deep-space-network-admin")({
 });
 
 function Page() {
-  const { data: dsnData, isLoading, error } = useQuery({
+  const { data: dsnData, isLoading, error, refetch } = useQuery({
     queryKey: ["deep-space-network-admin-dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/admin/dashboard?type=all");
@@ -22,7 +23,7 @@ function Page() {
   if (isLoading) {
     return (
       <AppShell>
-        <ModulePage title="Deep Space Network Admin" subtitle="Deep space network administration workspace" kpis={[]} columns={[]} rows={[]} />
+        <DashboardSkeleton title="Deep Space Network Admin" subtitle="Deep space network administration workspace" />
       </AppShell>
     );
   }
@@ -30,7 +31,12 @@ function Page() {
   if (error) {
     return (
       <AppShell>
-        <div className="p-4 text-destructive">Failed to load Deep Space Network Admin data</div>
+        <DashboardError
+          title="Deep Space Network Admin"
+          subtitle="Deep space network administration workspace"
+          message="We couldn't load Deep Space Network Admin data. The service may be unavailable or you may not have permission."
+          onRetry={() => refetch()}
+        />
       </AppShell>
     );
   }
