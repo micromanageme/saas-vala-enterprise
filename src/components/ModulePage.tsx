@@ -123,7 +123,7 @@ export function ModulePage({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="gradient-primary text-primary-foreground border-0 shadow-glow">
+          <Button size="sm" onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)} className="gradient-primary text-primary-foreground border-0 shadow-glow hover:opacity-90 hover:text-primary-foreground">
             <Plus className="h-4 w-4 mr-1" />New
           </Button>
         </div>
@@ -132,8 +132,8 @@ export function ModulePage({
       {/* Odoo-style status bar */}
       <div className="flex items-center gap-0 rounded-lg border border-border/60 bg-card/60 p-1 overflow-x-auto">
         {STAGES.map((s, i) => (
-          <button key={s} onClick={() => setStage(i)} className={`relative flex-1 min-w-24 text-xs px-4 py-2 transition ${i <= stage ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-            {i <= stage && <span className="absolute inset-0 gradient-primary rounded-md -z-0" />}
+          <button key={s} type="button" onClick={() => setStage(i)} aria-pressed={i === stage} className={`relative flex-1 min-w-24 text-xs px-4 py-2 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i <= stage ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-primary/5"}`}>
+            {i <= stage && <span aria-hidden className="absolute inset-0 gradient-primary rounded-md" />}
             <span className="relative z-10 font-medium">{s}</span>
           </button>
         ))}
