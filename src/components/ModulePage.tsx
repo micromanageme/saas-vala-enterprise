@@ -72,18 +72,18 @@ export function ModulePage({
       {/* Odoo-style breadcrumb action bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
         <div className="flex items-center gap-2 text-sm">
-          <Button size="sm" variant="ghost" className="h-7 gradient-primary text-primary-foreground"><Plus className="h-3.5 w-3.5 mr-1" />New</Button>
+          <Button size="sm" className="h-7 gradient-primary text-primary-foreground border-0 hover:opacity-90 hover:text-primary-foreground shadow-glow" onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)}><Plus className="h-3.5 w-3.5 mr-1" />New</Button>
           <span className="text-muted-foreground">{title}</span>
           <ChevronRight className="h-3 w-3 text-muted-foreground" />
           <span className="font-medium">All records</span>
-          <button onClick={() => setStarred(!starred)} className="ml-1">
+          <button onClick={() => setStarred(!starred)} className="ml-1" aria-label={starred ? "Unstar" : "Star"} aria-pressed={starred}>
             <Star className={`h-3.5 w-3.5 ${starred ? "fill-warning text-warning" : "text-muted-foreground"}`} />
           </button>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Button size="icon" variant="ghost" className="h-7 w-7"><ChevronLeft className="h-3.5 w-3.5" /></Button>
-          <span>1-{Math.min(filtered.length, 80)} / {filtered.length || 0}</span>
-          <Button size="icon" variant="ghost" className="h-7 w-7"><ChevronRight className="h-3.5 w-3.5" /></Button>
+          <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Previous page" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+          <span>{pageStart}-{pageEnd} / {filtered.length || 0}</span>
+          <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Next page" disabled={page >= totalPages - 1} onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}><ChevronRight className="h-3.5 w-3.5" /></Button>
         </div>
       </div>
 
