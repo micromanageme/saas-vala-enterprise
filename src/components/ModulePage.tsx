@@ -98,8 +98,8 @@ export function ModulePage({
         <div className="flex gap-2">
           {/* Smart buttons (Odoo) */}
           <div className="hidden md:flex items-center gap-1 rounded-lg border border-border/60 bg-card/60 p-1">
-            {[{ n: 24, l: "Activities" }, { n: 12, l: "Documents" }, { n: 7, l: "Tasks" }].map((s) => (
-              <button key={s.l} className="text-left px-3 py-1 rounded-md hover:bg-primary/10 transition">
+            {[{ n: 24, l: "Activities", ev: ACTION_EVENTS.scheduleActivity }, { n: 12, l: "Documents", ev: ACTION_EVENTS.exportWizard }, { n: 7, l: "Tasks", ev: ACTION_EVENTS.scheduleActivity }].map((s) => (
+              <button key={s.l} type="button" onClick={() => ui.emit(s.ev)} className="text-left px-3 py-1 rounded-md hover:bg-primary/10 active:bg-primary/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <div className="text-sm font-bold text-primary leading-none">{s.n}</div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.l}</div>
               </button>
