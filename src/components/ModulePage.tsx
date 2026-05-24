@@ -56,9 +56,14 @@ export function ModulePage({
   const [q, setQ] = useState("");
   const [stage, setStage] = useState(1);
   const [starred, setStarred] = useState(false);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 80;
   const filtered = rows.filter((r) =>
     !q || Object.values(r).some((v) => String(v).toLowerCase().includes(q.toLowerCase()))
   );
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageStart = filtered.length === 0 ? 0 : page * PAGE_SIZE + 1;
+  const pageEnd = Math.min(filtered.length, (page + 1) * PAGE_SIZE);
   const allChecked = filtered.length > 0 && selected.length === filtered.length;
   const padCell = density === "compact" ? "py-1.5" : "py-3";
 
@@ -67,18 +72,18 @@ export function ModulePage({
       {/* Odoo-style breadcrumb action bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
         <div className="flex items-center gap-2 text-sm">
-          <Button size="sm" variant="ghost" className="h-7 gradient-primary text-primary-foreground"><Plus className="h-3.5 w-3.5 mr-1" />New</Button>
+          <Button size="sm" className="h-7 gradient-primary text-primary-foreground border-0 hover:opacity-90 hover:text-primary-foreground shadow-glow" onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)}><Plus className="h-3.5 w-3.5 mr-1" />New</Button>
           <span className="text-muted-foreground">{title}</span>
           <ChevronRight className="h-3 w-3 text-muted-foreground" />
           <span className="font-medium">All records</span>
-          <button onClick={() => setStarred(!starred)} className="ml-1">
+          <button onClick={() => setStarred(!starred)} className="ml-1" aria-label={starred ? "Unstar" : "Star"} aria-pressed={starred}>
             <Star className={`h-3.5 w-3.5 ${starred ? "fill-warning text-warning" : "text-muted-foreground"}`} />
           </button>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Button size="icon" variant="ghost" className="h-7 w-7"><ChevronLeft className="h-3.5 w-3.5" /></Button>
-          <span>1-{Math.min(filtered.length, 80)} / {filtered.length || 0}</span>
-          <Button size="icon" variant="ghost" className="h-7 w-7"><ChevronRight className="h-3.5 w-3.5" /></Button>
+          <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Previous page" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}><ChevronLeft className="h-3.5 w-3.5" /></Button>
+          <span>{pageStart}-{pageEnd} / {filtered.length || 0}</span>
+          <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Next page" disabled={page >= totalPages - 1} onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}><ChevronRight className="h-3.5 w-3.5" /></Button>
         </div>
       </div>
 
@@ -93,8 +98,8 @@ export function ModulePage({
         <div className="flex gap-2">
           {/* Smart buttons (Odoo) */}
           <div className="hidden md:flex items-center gap-1 rounded-lg border border-border/60 bg-card/60 p-1">
-            {[{ n: 24, l: "Activities" }, { n: 12, l: "Documents" }, { n: 7, l: "Tasks" }].map((s) => (
-              <button key={s.l} className="text-left px-3 py-1 rounded-md hover:bg-primary/10 transition">
+            {[{ n: 24, l: "Activities", ev: ACTION_EVENTS.scheduleActivity }, { n: 12, l: "Documents", ev: ACTION_EVENTS.exportWizard }, { n: 7, l: "Tasks", ev: ACTION_EVENTS.scheduleActivity }].map((s) => (
+              <button key={s.l} type="button" onClick={() => ui.emit(s.ev)} className="text-left px-3 py-1 rounded-md hover:bg-primary/10 active:bg-primary/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <div className="text-sm font-bold text-primary leading-none">{s.n}</div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.l}</div>
               </button>
@@ -118,7 +123,7 @@ export function ModulePage({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="gradient-primary text-primary-foreground border-0 shadow-glow">
+          <Button size="sm" onClick={() => ui.emit(ACTION_EVENTS.scheduleActivity)} className="gradient-primary text-primary-foreground border-0 shadow-glow hover:opacity-90 hover:text-primary-foreground">
             <Plus className="h-4 w-4 mr-1" />New
           </Button>
         </div>
@@ -127,8 +132,8 @@ export function ModulePage({
       {/* Odoo-style status bar */}
       <div className="flex items-center gap-0 rounded-lg border border-border/60 bg-card/60 p-1 overflow-x-auto">
         {STAGES.map((s, i) => (
-          <button key={s} onClick={() => setStage(i)} className={`relative flex-1 min-w-24 text-xs px-4 py-2 transition ${i <= stage ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-            {i <= stage && <span className="absolute inset-0 gradient-primary rounded-md -z-0" />}
+          <button key={s} type="button" onClick={() => setStage(i)} aria-pressed={i === stage} className={`relative flex-1 min-w-24 text-xs px-4 py-2 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i <= stage ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-primary/5"}`}>
+            {i <= stage && <span aria-hidden className="absolute inset-0 gradient-primary rounded-md" />}
             <span className="relative z-10 font-medium">{s}</span>
           </button>
         ))}
