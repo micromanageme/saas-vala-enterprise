@@ -56,9 +56,14 @@ export function ModulePage({
   const [q, setQ] = useState("");
   const [stage, setStage] = useState(1);
   const [starred, setStarred] = useState(false);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 80;
   const filtered = rows.filter((r) =>
     !q || Object.values(r).some((v) => String(v).toLowerCase().includes(q.toLowerCase()))
   );
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageStart = filtered.length === 0 ? 0 : page * PAGE_SIZE + 1;
+  const pageEnd = Math.min(filtered.length, (page + 1) * PAGE_SIZE);
   const allChecked = filtered.length > 0 && selected.length === filtered.length;
   const padCell = density === "compact" ? "py-1.5" : "py-3";
 
