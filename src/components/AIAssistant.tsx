@@ -41,7 +41,7 @@ export function AIAssistant() {
                 <div className="text-[10px] text-success flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-success" /> Online</div>
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setOpen(false)}><X className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon" aria-label="Close AI assistant" onClick={() => setOpen(false)}><X className="h-4 w-4" /></Button>
           </div>
           <div className="max-h-72 overflow-y-auto p-3 space-y-2">
             {msgs.map((m, i) => (
