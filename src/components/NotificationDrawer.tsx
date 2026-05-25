@@ -36,7 +36,7 @@ export function NotificationDrawer() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative" aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}>
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge className="absolute -right-1 -top-1 h-4 min-w-4 px-1 text-[10px] gradient-primary border-0 animate-pulse">{unreadCount}</Badge>
