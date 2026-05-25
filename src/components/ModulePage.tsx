@@ -493,31 +493,34 @@ export function ModulePage({
 
         <TabsContent value="pivot" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Dimension</TableHead>
-                    {STAGES.map((s) => <TableHead key={s} className="text-right">{s}</TableHead>)}
-                    <TableHead className="text-right font-bold">Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {["Q1", "Q2", "Q3", "Q4"].map((q, i) => {
-                    const vals = STAGES.map((_, j) => (i + 1) * (j + 2) * 7);
-                    return (
-                      <TableRow key={q} className="hover:bg-primary/5">
-                        <TableCell className="font-medium">{q}</TableCell>
-                        {vals.map((v, j) => <TableCell key={j} className="text-right tabular-nums">{v}</TableCell>)}
-                        <TableCell className="text-right font-bold text-primary tabular-nums">{vals.reduce((a, b) => a + b, 0)}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table className="min-w-[640px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Dimension</TableHead>
+                      {STAGES.map((s) => <TableHead key={s} className="text-right">{s}</TableHead>)}
+                      <TableHead className="text-right font-bold">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {["Q1", "Q2", "Q3", "Q4"].map((q, i) => {
+                      const vals = STAGES.map((_, j) => (i + 1) * (j + 2) * 7);
+                      return (
+                        <TableRow key={q} className="hover:bg-primary/5">
+                          <TableCell className="font-medium">{q}</TableCell>
+                          {vals.map((v, j) => <TableCell key={j} className="text-right tabular-nums">{v}</TableCell>)}
+                          <TableCell className="text-right font-bold text-primary tabular-nums">{vals.reduce((a, b) => a + b, 0)}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="graph" className="mt-4">
           <Card className="gradient-card border-border/60">
