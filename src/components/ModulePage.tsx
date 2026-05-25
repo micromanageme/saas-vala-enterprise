@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -423,7 +423,8 @@ export function ModulePage({
             <CardContent className="p-0">
               {filtered.length ? (
                 <div className="overflow-x-auto">
-                  <Table>
+                  <Table className="min-w-[640px]">
+
                     <TableHeader className="sticky top-0 bg-card/95 backdrop-blur z-10">
                       <TableRow className="hover:bg-transparent">
                         <TableHead className="w-10">
@@ -493,31 +494,34 @@ export function ModulePage({
 
         <TabsContent value="pivot" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Dimension</TableHead>
-                    {STAGES.map((s) => <TableHead key={s} className="text-right">{s}</TableHead>)}
-                    <TableHead className="text-right font-bold">Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {["Q1", "Q2", "Q3", "Q4"].map((q, i) => {
-                    const vals = STAGES.map((_, j) => (i + 1) * (j + 2) * 7);
-                    return (
-                      <TableRow key={q} className="hover:bg-primary/5">
-                        <TableCell className="font-medium">{q}</TableCell>
-                        {vals.map((v, j) => <TableCell key={j} className="text-right tabular-nums">{v}</TableCell>)}
-                        <TableCell className="text-right font-bold text-primary tabular-nums">{vals.reduce((a, b) => a + b, 0)}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table className="min-w-[640px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Dimension</TableHead>
+                      {STAGES.map((s) => <TableHead key={s} className="text-right">{s}</TableHead>)}
+                      <TableHead className="text-right font-bold">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {["Q1", "Q2", "Q3", "Q4"].map((q, i) => {
+                      const vals = STAGES.map((_, j) => (i + 1) * (j + 2) * 7);
+                      return (
+                        <TableRow key={q} className="hover:bg-primary/5">
+                          <TableCell className="font-medium">{q}</TableCell>
+                          {vals.map((v, j) => <TableCell key={j} className="text-right tabular-nums">{v}</TableCell>)}
+                          <TableCell className="text-right font-bold text-primary tabular-nums">{vals.reduce((a, b) => a + b, 0)}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="graph" className="mt-4">
           <Card className="gradient-card border-border/60">
@@ -537,27 +541,30 @@ export function ModulePage({
 
         <TabsContent value="cohort" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-4 overflow-auto">
-              <div className="grid grid-cols-[100px_repeat(8,1fr)] gap-1 text-[10px]">
-                <div className="font-medium text-muted-foreground">Cohort</div>
-                {Array.from({ length: 8 }).map((_, i) => <div key={i} className="text-center text-muted-foreground">W{i}</div>)}
-                {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, r) => (
-                  <>
-                    <div key={m} className="font-medium pr-2">{m}</div>
-                    {Array.from({ length: 8 }).map((_, c) => {
-                      const v = Math.max(0, 100 - r * 8 - c * 6);
-                      return (
-                        <div key={c} className="aspect-square rounded grid place-items-center text-foreground" style={{ background: `oklch(0.72 0.19 295 / ${v / 100})` }}>
-                          {v}%
-                        </div>
-                      );
-                    })}
-                  </>
-                ))}
+            <CardContent className="p-4">
+              <div className="overflow-x-auto">
+                <div className="grid grid-cols-[80px_repeat(8,minmax(36px,1fr))] gap-1 text-[10px] min-w-[420px]">
+                  <div className="font-medium text-muted-foreground">Cohort</div>
+                  {Array.from({ length: 8 }).map((_, i) => <div key={`h-${i}`} className="text-center text-muted-foreground">W{i}</div>)}
+                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, r) => (
+                    <Fragment key={m}>
+                      <div className="font-medium pr-2">{m}</div>
+                      {Array.from({ length: 8 }).map((_, c) => {
+                        const v = Math.max(0, 100 - r * 8 - c * 6);
+                        return (
+                          <div key={c} className="aspect-square rounded grid place-items-center text-foreground" style={{ background: `oklch(0.72 0.19 295 / ${v / 100})` }}>
+                            {v}%
+                          </div>
+                        );
+                      })}
+                    </Fragment>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="calendar" className="mt-4">
           <Card className="gradient-card border-border/60">
@@ -583,37 +590,40 @@ export function ModulePage({
 
         <TabsContent value="activity" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Record</TableHead>
-                    <TableHead>Call</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Meeting</TableHead>
-                    <TableHead>To Do</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.slice(0, 6).map((r, i) => (
-                    <TableRow key={i} className="hover:bg-primary/5">
-                      <TableCell className="font-medium">{Object.values(r)[0]}</TableCell>
-                      {[0, 1, 2, 3].map((j) => (
-                        <TableCell key={j}>
-                          {(i + j) % 3 === 0 ? (
-                            <div className="h-6 w-6 rounded-full gradient-primary grid place-items-center text-[10px] text-primary-foreground">●</div>
-                          ) : (
-                            <div className="h-6 w-6 rounded-full border border-dashed border-border/60" />
-                          )}
-                        </TableCell>
-                      ))}
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table className="min-w-[560px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Record</TableHead>
+                      <TableHead>Call</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Meeting</TableHead>
+                      <TableHead>To Do</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.slice(0, 6).map((r, i) => (
+                      <TableRow key={i} className="hover:bg-primary/5">
+                        <TableCell className="font-medium">{Object.values(r)[0]}</TableCell>
+                        {[0, 1, 2, 3].map((j) => (
+                          <TableCell key={j}>
+                            {(i + j) % 3 === 0 ? (
+                              <div className="h-6 w-6 rounded-full gradient-primary grid place-items-center text-[10px] text-primary-foreground">●</div>
+                            ) : (
+                              <div className="h-6 w-6 rounded-full border border-dashed border-border/60" />
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
+
       </Tabs>
 
       {/* Odoo-style Chatter panel */}
