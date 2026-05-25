@@ -79,7 +79,8 @@ export function FocusMode() {
   };
   return (
     <div className="hidden md:flex items-center">
-      <Button variant="ghost" size="icon" className="h-8 w-8" title="Zen / Focus mode" onClick={() => setFocus((f) => !f)}>
+      <Button variant="ghost" size="icon" className="h-8 w-8" title="Zen / Focus mode" aria-label="Toggle focus mode" aria-pressed={focus} onClick={() => setFocus((f) => !f)}>
+
         <Focus className={`h-4 w-4 ${focus ? "text-primary" : ""}`} />
       </Button>
       <Button variant="ghost" size="icon" className="h-8 w-8" title="Fullscreen" onClick={fs}>
