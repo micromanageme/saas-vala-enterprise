@@ -130,9 +130,9 @@ export function Chatter({ title = "Chatter" }: { title?: string }) {
           )}
           <div className="flex items-center justify-between border-t border-border/40 pt-2">
             <div className="flex gap-1 text-muted-foreground">
-              <Button size="icon" variant="ghost" className="h-7 w-7"><Paperclip className="h-3.5 w-3.5" /></Button>
-              <Button size="icon" variant="ghost" className="h-7 w-7"><AtSign className="h-3.5 w-3.5" /></Button>
-              <Button size="icon" variant="ghost" className="h-7 w-7"><Mail className="h-3.5 w-3.5" /></Button>
+              <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Attach file"><Paperclip className="h-3.5 w-3.5" /></Button>
+              <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Mention someone"><AtSign className="h-3.5 w-3.5" /></Button>
+              <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Send email"><Mail className="h-3.5 w-3.5" /></Button>
             </div>
             <Button size="sm" onClick={post} className="gradient-primary text-primary-foreground h-7"><Send className="h-3 w-3 mr-1" />Post</Button>
           </div>
