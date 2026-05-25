@@ -83,7 +83,7 @@ export function FocusMode() {
 
         <Focus className={`h-4 w-4 ${focus ? "text-primary" : ""}`} />
       </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" title="Fullscreen" onClick={fs}>
+      <Button variant="ghost" size="icon" className="h-8 w-8" title="Fullscreen" aria-label="Toggle fullscreen" onClick={fs}>
         <Maximize2 className="h-4 w-4" />
       </Button>
     </div>
