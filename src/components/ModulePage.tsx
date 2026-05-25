@@ -589,37 +589,40 @@ export function ModulePage({
 
         <TabsContent value="activity" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Record</TableHead>
-                    <TableHead>Call</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Meeting</TableHead>
-                    <TableHead>To Do</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.slice(0, 6).map((r, i) => (
-                    <TableRow key={i} className="hover:bg-primary/5">
-                      <TableCell className="font-medium">{Object.values(r)[0]}</TableCell>
-                      {[0, 1, 2, 3].map((j) => (
-                        <TableCell key={j}>
-                          {(i + j) % 3 === 0 ? (
-                            <div className="h-6 w-6 rounded-full gradient-primary grid place-items-center text-[10px] text-primary-foreground">●</div>
-                          ) : (
-                            <div className="h-6 w-6 rounded-full border border-dashed border-border/60" />
-                          )}
-                        </TableCell>
-                      ))}
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table className="min-w-[560px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Record</TableHead>
+                      <TableHead>Call</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Meeting</TableHead>
+                      <TableHead>To Do</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.slice(0, 6).map((r, i) => (
+                      <TableRow key={i} className="hover:bg-primary/5">
+                        <TableCell className="font-medium">{Object.values(r)[0]}</TableCell>
+                        {[0, 1, 2, 3].map((j) => (
+                          <TableCell key={j}>
+                            {(i + j) % 3 === 0 ? (
+                              <div className="h-6 w-6 rounded-full gradient-primary grid place-items-center text-[10px] text-primary-foreground">●</div>
+                            ) : (
+                              <div className="h-6 w-6 rounded-full border border-dashed border-border/60" />
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
+
       </Tabs>
 
       {/* Odoo-style Chatter panel */}
