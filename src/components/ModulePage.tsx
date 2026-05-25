@@ -540,27 +540,30 @@ export function ModulePage({
 
         <TabsContent value="cohort" className="mt-4">
           <Card className="gradient-card border-border/60">
-            <CardContent className="p-4 overflow-auto">
-              <div className="grid grid-cols-[100px_repeat(8,1fr)] gap-1 text-[10px]">
-                <div className="font-medium text-muted-foreground">Cohort</div>
-                {Array.from({ length: 8 }).map((_, i) => <div key={i} className="text-center text-muted-foreground">W{i}</div>)}
-                {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, r) => (
-                  <>
-                    <div key={m} className="font-medium pr-2">{m}</div>
-                    {Array.from({ length: 8 }).map((_, c) => {
-                      const v = Math.max(0, 100 - r * 8 - c * 6);
-                      return (
-                        <div key={c} className="aspect-square rounded grid place-items-center text-foreground" style={{ background: `oklch(0.72 0.19 295 / ${v / 100})` }}>
-                          {v}%
-                        </div>
-                      );
-                    })}
-                  </>
-                ))}
+            <CardContent className="p-4">
+              <div className="overflow-x-auto">
+                <div className="grid grid-cols-[80px_repeat(8,minmax(36px,1fr))] gap-1 text-[10px] min-w-[420px]">
+                  <div className="font-medium text-muted-foreground">Cohort</div>
+                  {Array.from({ length: 8 }).map((_, i) => <div key={`h-${i}`} className="text-center text-muted-foreground">W{i}</div>)}
+                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, r) => (
+                    <Fragment key={m}>
+                      <div className="font-medium pr-2">{m}</div>
+                      {Array.from({ length: 8 }).map((_, c) => {
+                        const v = Math.max(0, 100 - r * 8 - c * 6);
+                        return (
+                          <div key={c} className="aspect-square rounded grid place-items-center text-foreground" style={{ background: `oklch(0.72 0.19 295 / ${v / 100})` }}>
+                            {v}%
+                          </div>
+                        );
+                      })}
+                    </Fragment>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="calendar" className="mt-4">
           <Card className="gradient-card border-border/60">
