@@ -52,7 +52,7 @@ export function AIAssistant() {
           </div>
           <div className="border-t border-border/60 p-2 flex gap-2 bg-card/60">
             <Input value={v} onChange={(e) => setV(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Ask Vala AI…" className="bg-input/50" />
-            <Button size="icon" onClick={send} className="gradient-primary text-primary-foreground"><Send className="h-4 w-4" /></Button>
+            <Button size="icon" aria-label="Send message" onClick={send} className="gradient-primary text-primary-foreground"><Send className="h-4 w-4" /></Button>
           </div>
         </div>
       )}
