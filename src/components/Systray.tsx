@@ -37,18 +37,19 @@ export function Systray() {
         </DropdownMenuContent>
       </DropdownMenu>
       <Button variant="ghost" size="sm" className="h-8 px-2 text-[11px] gap-1" title={`Timezone ${tz}`}><Clock className="h-3.5 w-3.5" />{tz}</Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSound((s) => !s)} title={sound ? "Mute notifications" : "Enable sound"}>
+      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSound((s) => !s)} title={sound ? "Mute notifications" : "Enable sound"} aria-label={sound ? "Mute notifications" : "Enable sound"} aria-pressed={!sound}>
         {sound ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-destructive" />}
       </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" title="Discuss / Chat"><MessageCircle className="h-4 w-4" /></Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" title="Help"><HelpCircle className="h-4 w-4" /></Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8 relative" title="Activities">
+      <Button variant="ghost" size="icon" className="h-8 w-8" title="Discuss / Chat" aria-label="Discuss / Chat"><MessageCircle className="h-4 w-4" /></Button>
+      <Button variant="ghost" size="icon" className="h-8 w-8" title="Help" aria-label="Help"><HelpCircle className="h-4 w-4" /></Button>
+      <Button variant="ghost" size="icon" className="h-8 w-8 relative" title="Activities" aria-label="Activities, 7 new">
         <Bell className="h-4 w-4" />
-        <span className="absolute -top-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full gradient-primary text-[9px] font-bold text-primary-foreground">7</span>
+        <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full gradient-primary text-[9px] font-bold text-primary-foreground">7</span>
       </Button>
-      <button onClick={() => setOnline((o) => !o)} title={online ? "Online" : "Offline"} className="grid h-8 w-8 place-items-center hover:bg-muted/40 rounded-md">
+      <button type="button" onClick={() => setOnline((o) => !o)} title={online ? "Online" : "Offline"} aria-label={`Connectivity: ${online ? "online" : "offline"}, click to toggle`} aria-pressed={online} className="grid h-8 w-8 place-items-center hover:bg-muted/40 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
         {online ? <Wifi className="h-4 w-4 text-success" /> : <WifiOff className="h-4 w-4 text-destructive" />}
       </button>
+
     </div>
   );
 }
