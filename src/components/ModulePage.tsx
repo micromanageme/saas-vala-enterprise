@@ -423,7 +423,8 @@ export function ModulePage({
             <CardContent className="p-0">
               {filtered.length ? (
                 <div className="overflow-x-auto">
-                  <Table>
+                  <Table className="min-w-[640px]">
+
                     <TableHeader className="sticky top-0 bg-card/95 backdrop-blur z-10">
                       <TableRow className="hover:bg-transparent">
                         <TableHead className="w-10">
