@@ -143,7 +143,7 @@ export function SidePeek({ open, onClose, title, children }: { open: boolean; on
             <span className="text-[10px] uppercase tracking-wider text-primary">Side Peek</span>
             <span className="text-sm font-semibold">{title}</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}><X className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Close side peek" onClick={onClose}><X className="h-4 w-4" /></Button>
         </div>
         <div className="p-4">{children}</div>
       </div>
