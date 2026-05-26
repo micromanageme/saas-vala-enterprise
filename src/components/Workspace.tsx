@@ -76,7 +76,7 @@ export function QuickAccess() {
                 <Link to={m.url} className="flex-1 flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary/10 text-sm">
                   <m.icon className="h-3.5 w-3.5 text-primary" />{m.title}
                 </Link>
-                <button onClick={() => togglePin(m.url)} className="opacity-0 group-hover:opacity-100"><X className="h-3 w-3 text-muted-foreground" /></button>
+                <button type="button" onClick={() => togglePin(m.url)} className="opacity-0 group-hover:opacity-100" aria-label={`Unpin ${m.title}`}><X className="h-3 w-3 text-muted-foreground" /></button>
               </div>
             ))}
           </div>
