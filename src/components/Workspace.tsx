@@ -111,7 +111,7 @@ export function QuickAccess() {
                 <span className="flex-1">{m.title}</span>
                 <span className="text-[9px] text-muted-foreground">{m.group}</span>
               </Link>
-              <button onClick={() => togglePin(m.url)} title="Pin" className="opacity-0 group-hover:opacity-100"><Pin className="h-3 w-3 text-muted-foreground hover:text-primary" /></button>
+              <button type="button" onClick={() => togglePin(m.url)} title="Pin" aria-label={`Pin ${m.title}`} className="opacity-0 group-hover:opacity-100"><Pin className="h-3 w-3 text-muted-foreground hover:text-primary" /></button>
             </div>
           ))}
         </div>
