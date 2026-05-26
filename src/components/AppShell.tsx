@@ -151,7 +151,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NotificationDrawer />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="relative">
+                <button type="button" className="relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full" aria-label="User menu">
                   <Avatar className="h-8 w-8 ring-2 ring-border hover:ring-primary transition">
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
