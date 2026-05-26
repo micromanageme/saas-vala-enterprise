@@ -133,7 +133,7 @@ export function BackgroundTasks() {
     <div className="fixed bottom-44 left-6 z-30 w-72 rounded-xl glass border border-border/60 shadow-elegant animate-slide-in-right">
       <div className="flex items-center justify-between px-3 py-2 border-b border-border/40">
         <div className="text-xs font-semibold flex items-center gap-2"><Cloud className="h-3.5 w-3.5 text-primary" />Background tasks</div>
-        <button onClick={() => setOpen(false)}><X className="h-3 w-3 opacity-60 hover:opacity-100" /></button>
+        <button type="button" onClick={() => setOpen(false)} aria-label="Dismiss background tasks"><X className="h-3 w-3 opacity-60 hover:opacity-100" /></button>
       </div>
       <div className="p-3 space-y-2 text-[11px]">
         <div>

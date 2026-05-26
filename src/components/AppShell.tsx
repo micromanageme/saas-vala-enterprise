@@ -78,9 +78,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/60 glass px-4">
             <SidebarTrigger />
             <button
+              type="button"
               onClick={() => setAppDrawerOpen(true)}
-              className="grid h-8 w-8 place-items-center rounded-md hover:bg-accent transition"
+              className="grid h-8 w-8 place-items-center rounded-md hover:bg-accent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               title="Apps"
+              aria-label="Open app drawer"
             >
               <Grid3x3 className="h-4 w-4 text-foreground" />
             </button>
@@ -149,7 +151,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NotificationDrawer />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="relative">
+                <button type="button" className="relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full" aria-label="User menu">
                   <Avatar className="h-8 w-8 ring-2 ring-border hover:ring-primary transition">
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}

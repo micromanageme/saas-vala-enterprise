@@ -15,7 +15,7 @@ export function Banners() {
           <Sparkles className="h-4 w-4 text-warning" />
           <span className="flex-1">Your <b>Enterprise Trial</b> ends in <b>14 days</b>. Upgrade to keep premium modules.</span>
           <Button size="sm" className="h-7 gradient-primary text-primary-foreground">Upgrade</Button>
-          <button onClick={() => setTrial(false)}><X className="h-3.5 w-3.5 opacity-60 hover:opacity-100" /></button>
+          <button type="button" onClick={() => setTrial(false)} aria-label="Dismiss trial banner"><X className="h-3.5 w-3.5 opacity-60 hover:opacity-100" /></button>
         </div>
       )}
       {license && (

@@ -76,7 +76,7 @@ export function QuickAccess() {
                 <Link to={m.url} className="flex-1 flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary/10 text-sm">
                   <m.icon className="h-3.5 w-3.5 text-primary" />{m.title}
                 </Link>
-                <button onClick={() => togglePin(m.url)} className="opacity-0 group-hover:opacity-100"><X className="h-3 w-3 text-muted-foreground" /></button>
+                <button type="button" onClick={() => togglePin(m.url)} className="opacity-0 group-hover:opacity-100" aria-label={`Unpin ${m.title}`}><X className="h-3 w-3 text-muted-foreground" /></button>
               </div>
             ))}
           </div>
@@ -111,7 +111,7 @@ export function QuickAccess() {
                 <span className="flex-1">{m.title}</span>
                 <span className="text-[9px] text-muted-foreground">{m.group}</span>
               </Link>
-              <button onClick={() => togglePin(m.url)} title="Pin" className="opacity-0 group-hover:opacity-100"><Pin className="h-3 w-3 text-muted-foreground hover:text-primary" /></button>
+              <button type="button" onClick={() => togglePin(m.url)} title="Pin" aria-label={`Pin ${m.title}`} className="opacity-0 group-hover:opacity-100"><Pin className="h-3 w-3 text-muted-foreground hover:text-primary" /></button>
             </div>
           ))}
         </div>
@@ -143,7 +143,7 @@ export function SidePeek({ open, onClose, title, children }: { open: boolean; on
             <span className="text-[10px] uppercase tracking-wider text-primary">Side Peek</span>
             <span className="text-sm font-semibold">{title}</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}><X className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Close side peek" onClick={onClose}><X className="h-4 w-4" /></Button>
         </div>
         <div className="p-4">{children}</div>
       </div>
