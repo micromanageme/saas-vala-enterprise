@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Sparkles, Clock, Pin, TrendingUp, Eye, X, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { modules } from "@/lib/modules";
