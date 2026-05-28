@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { Copy, Edit, Archive, Trash2, Star, Share2, Eye, Download, Maximize2, Minimize2, Focus, Save, CheckCircle2, Cloud, Upload as UploadIcon, X } from "lucide-react";
 import { ui } from "@/lib/ui-bus";
