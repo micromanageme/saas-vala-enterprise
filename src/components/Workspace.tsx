@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Sparkles, Clock, Pin, TrendingUp, Eye, X, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { modules } from "@/lib/modules";
@@ -133,21 +134,27 @@ export function RouteTracker() {
 
 /* ----------- Side peek panel (Quick record preview) ------------- */
 export function SidePeek({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children?: React.ReactNode }) {
-  if (!open) return null;
   return (
-    <>
-      <div className="fixed inset-0 z-40 bg-background/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-[480px] max-w-[92vw] glass border-l border-border/60 shadow-glow animate-slide-in-right overflow-y-auto">
-        <div className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card/90 backdrop-blur">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-wider text-primary">Side Peek</span>
-            <span className="text-sm font-semibold">{title}</span>
+    <DialogPrimitive.Root open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-background/40 backdrop-blur-sm animate-fade-in" />
+        <DialogPrimitive.Content
+          aria-describedby={undefined}
+          className="fixed right-0 top-0 bottom-0 z-50 w-[480px] max-w-[92vw] glass border-l border-border/60 shadow-glow animate-slide-in-right overflow-y-auto focus:outline-none"
+        >
+          <div className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card/90 backdrop-blur">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-wider text-primary">Side Peek</span>
+              <DialogPrimitive.Title className="text-sm font-semibold">{title}</DialogPrimitive.Title>
+            </div>
+            <DialogPrimitive.Close asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Close side peek"><X className="h-4 w-4" /></Button>
+            </DialogPrimitive.Close>
           </div>
-          <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Close side peek" onClick={onClose}><X className="h-4 w-4" /></Button>
-        </div>
-        <div className="p-4">{children}</div>
-      </div>
-    </>
+          <div className="p-4">{children}</div>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
 

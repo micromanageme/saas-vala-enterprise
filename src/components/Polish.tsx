@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { Copy, Edit, Archive, Trash2, Star, Share2, Eye, Download, Maximize2, Minimize2, Focus, Save, CheckCircle2, Cloud, Upload as UploadIcon, X } from "lucide-react";
 import { ui } from "@/lib/ui-bus";
@@ -191,24 +192,30 @@ export function Walkthrough() {
   const close = () => { localStorage.setItem("sv-walkthrough-done", "1"); setOpen(false); };
   const s = steps[step];
   return (
-    <div className="fixed inset-0 z-[70] grid place-items-center bg-background/70 backdrop-blur-sm animate-fade-in">
-      <div className="w-[420px] max-w-[92vw] rounded-2xl glass shadow-glow border border-primary/30 p-6 animate-scale-in">
-        <div className="text-[10px] uppercase tracking-wider text-primary mb-1">Step {step + 1} of {steps.length}</div>
-        <h3 className="text-lg font-bold text-gradient">{s.t}</h3>
-        <p className="text-sm text-muted-foreground mt-2">{s.d}</p>
-        <div className="mt-4 flex gap-1">
-          {steps.map((_, i) => <div key={i} className={`h-1 flex-1 rounded ${i <= step ? "gradient-primary" : "bg-muted"}`} />)}
-        </div>
-        <div className="mt-5 flex justify-between">
-          <Button variant="ghost" size="sm" onClick={close}>Skip</Button>
-          {step < steps.length - 1 ? (
-            <Button size="sm" className="gradient-primary text-primary-foreground" onClick={() => setStep((s) => s + 1)}>Next</Button>
-          ) : (
-            <Button size="sm" className="gradient-primary text-primary-foreground" onClick={close}>Finish</Button>
-          )}
-        </div>
-      </div>
-    </div>
+    <DialogPrimitive.Root open={open} onOpenChange={(o) => { if (!o) close(); }}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 z-[70] bg-background/70 backdrop-blur-sm animate-fade-in" />
+        <DialogPrimitive.Content
+          aria-describedby="sv-walkthrough-desc"
+          className="fixed left-1/2 top-1/2 z-[71] w-[420px] max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl glass shadow-glow border border-primary/30 p-6 animate-scale-in focus:outline-none"
+        >
+          <div className="text-[10px] uppercase tracking-wider text-primary mb-1">Step {step + 1} of {steps.length}</div>
+          <DialogPrimitive.Title className="text-lg font-bold text-gradient">{s.t}</DialogPrimitive.Title>
+          <DialogPrimitive.Description id="sv-walkthrough-desc" className="text-sm text-muted-foreground mt-2">{s.d}</DialogPrimitive.Description>
+          <div className="mt-4 flex gap-1">
+            {steps.map((_, i) => <div key={i} className={`h-1 flex-1 rounded ${i <= step ? "gradient-primary" : "bg-muted"}`} />)}
+          </div>
+          <div className="mt-5 flex justify-between">
+            <Button variant="ghost" size="sm" onClick={close}>Skip</Button>
+            {step < steps.length - 1 ? (
+              <Button size="sm" className="gradient-primary text-primary-foreground" onClick={() => setStep((s) => s + 1)}>Next</Button>
+            ) : (
+              <Button size="sm" className="gradient-primary text-primary-foreground" onClick={close}>Finish</Button>
+            )}
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
 
