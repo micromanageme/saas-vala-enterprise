@@ -29,18 +29,39 @@ function walk(dir) {
   }
 }
 
-// Match opening tags for components named Button / Toggle / IconButton.
-// Captures the full attribute blob until the first matching '>'.
-const TAG_RE = /<(Button|Toggle|IconButton)\b([^>]*?)(\/?>)/gs;
+// Match the start of an opening tag for components named Button / Toggle /
+// IconButton. We then scan forward respecting JSX brace nesting to find the
+// real closing '>' (so '=>' inside attribute expressions doesn't fool us).
+const TAG_START = /<(Button|Toggle|IconButton)\b/g;
+
+function findTagEnd(src, start) {
+  let depth = 0;
+  let inStr = null;
+  for (let i = start; i < src.length; i++) {
+    const c = src[i];
+    if (inStr) {
+      if (c === "\\") { i++; continue; }
+      if (c === inStr) inStr = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") { inStr = c; continue; }
+    if (c === "{") depth++;
+    else if (c === "}") depth--;
+    else if (c === ">" && depth === 0) return i;
+  }
+  return -1;
+}
 
 function scan(file) {
   const src = readFileSync(file, "utf8");
-  // Strip line comments and block comments to avoid false positives.
+  // Strip block + line comments to avoid false positives.
   const clean = src
     .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "))
     .replace(/(^|[^:])\/\/[^\n]*/g, (_m, p1) => p1 + " ");
 
   let m;
+  const TAG_RE = TAG_START;
+  TAG_RE.lastIndex = 0;
   while ((m = TAG_RE.exec(clean))) {
     const [full, tag, attrs] = m;
     if (!/\bsize=("icon"|{[^}]*"icon"[^}]*})/.test(attrs)) continue;
