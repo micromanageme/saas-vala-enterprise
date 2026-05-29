@@ -63,8 +63,14 @@ function scan(file) {
   const TAG_RE = TAG_START;
   TAG_RE.lastIndex = 0;
   while ((m = TAG_RE.exec(clean))) {
-    const [full, tag, attrs] = m;
-    if (!/\bsize=("icon"|{[^}]*"icon"[^}]*})/.test(attrs)) continue;
+    const tag = m[1];
+    const attrsStart = m.index + m[0].length;
+    const end = findTagEnd(clean, attrsStart);
+    if (end < 0) continue;
+    const attrs = clean.slice(attrsStart, end);
+    TAG_RE.lastIndex = end + 1;
+
+    if (!/\bsize=("icon"|\{[^}]*["']icon["'][^}]*\})/.test(attrs)) continue;
 
     const hasAriaLabel = /\baria-label\s*=/.test(attrs);
     const hasAriaLabelledBy = /\baria-labelledby\s*=/.test(attrs);
@@ -74,10 +80,11 @@ function scan(file) {
     if (hasAriaLabel || hasAriaLabelledBy || hasTitle || spreadsProps) continue;
 
     const line = src.slice(0, m.index).split("\n").length;
+    const preview = clean.slice(m.index, Math.min(end + 1, m.index + 100)).replace(/\s+/g, " ");
     violations.push({
       file: relative(ROOT, file),
       line,
-      tag: full.slice(0, 80).replace(/\s+/g, " "),
+      tag: preview,
       reason: `<${tag} size="icon"> missing aria-label / aria-labelledby / title`,
     });
   }
