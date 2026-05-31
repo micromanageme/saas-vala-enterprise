@@ -737,6 +737,7 @@ import { Route as AccessReviewerRouteImport } from './routes/access-reviewer'
 import { Route as AccessControlAdminRouteImport } from './routes/access-control-admin'
 import { Route as AbsoluteSystemOversightRouteImport } from './routes/absolute-system-oversight'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestOverlaysRouteImport } from './routes/test.overlays'
 import { Route as OperationsOperationIdRouteImport } from './routes/operations.$operationId'
 import { Route as AppsAppIdRouteImport } from './routes/apps.$appId'
 import { Route as ApiWalletRouteImport } from './routes/api/wallet'
@@ -4629,6 +4630,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestOverlaysRoute = TestOverlaysRouteImport.update({
+  id: '/test/overlays',
+  path: '/test/overlays',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperationsOperationIdRoute = OperationsOperationIdRouteImport.update({
   id: '/$operationId',
   path: '/$operationId',
@@ -6386,6 +6392,7 @@ export interface FileRoutesByFullPath {
   '/api/wallet': typeof ApiWalletRoute
   '/apps/$appId': typeof AppsAppIdRouteWithChildren
   '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/test/overlays': typeof TestOverlaysRoute
   '/api/admin/ai-control': typeof ApiAdminAiControlRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/billing': typeof ApiAdminBillingRoute
@@ -7304,6 +7311,7 @@ export interface FileRoutesByTo {
   '/api/wallet': typeof ApiWalletRoute
   '/apps/$appId': typeof AppsAppIdRouteWithChildren
   '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/test/overlays': typeof TestOverlaysRoute
   '/api/admin/ai-control': typeof ApiAdminAiControlRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/billing': typeof ApiAdminBillingRoute
@@ -8224,6 +8232,7 @@ export interface FileRoutesById {
   '/api/wallet': typeof ApiWalletRoute
   '/apps/$appId': typeof AppsAppIdRouteWithChildren
   '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/test/overlays': typeof TestOverlaysRoute
   '/api/admin/ai-control': typeof ApiAdminAiControlRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/billing': typeof ApiAdminBillingRoute
@@ -9145,6 +9154,7 @@ export interface FileRouteTypes {
     | '/api/wallet'
     | '/apps/$appId'
     | '/operations/$operationId'
+    | '/test/overlays'
     | '/api/admin/ai-control'
     | '/api/admin/analytics'
     | '/api/admin/billing'
@@ -10063,6 +10073,7 @@ export interface FileRouteTypes {
     | '/api/wallet'
     | '/apps/$appId'
     | '/operations/$operationId'
+    | '/test/overlays'
     | '/api/admin/ai-control'
     | '/api/admin/analytics'
     | '/api/admin/billing'
@@ -10982,6 +10993,7 @@ export interface FileRouteTypes {
     | '/api/wallet'
     | '/apps/$appId'
     | '/operations/$operationId'
+    | '/test/overlays'
     | '/api/admin/ai-control'
     | '/api/admin/analytics'
     | '/api/admin/billing'
@@ -11900,6 +11912,7 @@ export interface RootRouteChildren {
   ApiSubscriptionsRoute: typeof ApiSubscriptionsRoute
   ApiVendorsRoute: typeof ApiVendorsRoute
   ApiWalletRoute: typeof ApiWalletRoute
+  TestOverlaysRoute: typeof TestOverlaysRoute
   ApiAdminAiControlRoute: typeof ApiAdminAiControlRoute
   ApiAdminAnalyticsRoute: typeof ApiAdminAnalyticsRoute
   ApiAdminBillingRoute: typeof ApiAdminBillingRoute
@@ -17143,6 +17156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/test/overlays': {
+      id: '/test/overlays'
+      path: '/test/overlays'
+      fullPath: '/test/overlays'
+      preLoaderRoute: typeof TestOverlaysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/operations/$operationId': {
       id: '/operations/$operationId'
       path: '/$operationId'
@@ -19368,6 +19388,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSubscriptionsRoute: ApiSubscriptionsRoute,
   ApiVendorsRoute: ApiVendorsRoute,
   ApiWalletRoute: ApiWalletRoute,
+  TestOverlaysRoute: TestOverlaysRoute,
   ApiAdminAiControlRoute: ApiAdminAiControlRoute,
   ApiAdminAnalyticsRoute: ApiAdminAnalyticsRoute,
   ApiAdminBillingRoute: ApiAdminBillingRoute,
@@ -19518,13 +19539,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
