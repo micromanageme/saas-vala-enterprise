@@ -89,6 +89,208 @@ export type Database = {
         }
         Relationships: []
       }
+      sales_invoices: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          currency: string
+          customer_company: string | null
+          customer_email: string | null
+          customer_name: string
+          due_date: string | null
+          id: string
+          line_items: Json
+          notes: string | null
+          number: string
+          order_id: string | null
+          owner_id: string
+          paid_at: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name: string
+          due_date?: string | null
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number: string
+          order_id?: string | null
+          owner_id: string
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          due_date?: string | null
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number?: string
+          order_id?: string | null
+          owner_id?: string
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "sales_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_orders: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          currency: string
+          customer_company: string | null
+          customer_email: string | null
+          customer_name: string
+          id: string
+          line_items: Json
+          notes: string | null
+          number: string
+          owner_id: string
+          quote_id: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name: string
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number: string
+          owner_id: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number?: string
+          owner_id?: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_orders_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "sales_quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_quotes: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          currency: string
+          customer_company: string | null
+          customer_email: string | null
+          customer_name: string
+          id: string
+          line_items: Json
+          notes: string | null
+          number: string
+          owner_id: string
+          status: Database["public"]["Enums"]["quote_status"]
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name: string
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number: string
+          owner_id: string
+          status?: Database["public"]["Enums"]["quote_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          id?: string
+          line_items?: Json
+          notes?: string | null
+          number?: string
+          owner_id?: string
+          status?: Database["public"]["Enums"]["quote_status"]
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -125,6 +327,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "sales_rep"
+      invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
       lead_source:
         | "website"
         | "referral"
@@ -139,6 +342,13 @@ export type Database = {
         | "proposal"
         | "won"
         | "lost"
+      order_status:
+        | "pending"
+        | "processing"
+        | "shipped"
+        | "completed"
+        | "cancelled"
+      quote_status: "draft" | "sent" | "accepted" | "rejected" | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -267,6 +477,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "sales_rep"],
+      invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
       lead_source: [
         "website",
         "referral",
@@ -276,6 +487,14 @@ export const Constants = {
         "other",
       ],
       lead_status: ["new", "contacted", "qualified", "proposal", "won", "lost"],
+      order_status: [
+        "pending",
+        "processing",
+        "shipped",
+        "completed",
+        "cancelled",
+      ],
+      quote_status: ["draft", "sent", "accepted", "rejected", "expired"],
     },
   },
 } as const
