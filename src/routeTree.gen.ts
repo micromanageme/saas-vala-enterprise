@@ -300,6 +300,7 @@ import { Route as RealEstateManagerRouteImport } from './routes/real-estate-mana
 import { Route as RdDirectorRouteImport } from './routes/rd-director'
 import { Route as RailwayOperationsManagerRouteImport } from './routes/railway-operations-manager'
 import { Route as RadiologyManagerRouteImport } from './routes/radiology-manager'
+import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as QueueOperatorRouteImport } from './routes/queue-operator'
 import { Route as QuantumSystemAdminRouteImport } from './routes/quantum-system-admin'
 import { Route as QuantumResearcherRouteImport } from './routes/quantum-researcher'
@@ -348,6 +349,7 @@ import { Route as ParoleOfficerRouteImport } from './routes/parole-officer'
 import { Route as ParamedicCoordinatorRouteImport } from './routes/paramedic-coordinator'
 import { Route as OrganDonationCoordinatorRouteImport } from './routes/organ-donation-coordinator'
 import { Route as OrgChartRouteImport } from './routes/org-chart'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as OrchestrationRecoveryEngineerRouteImport } from './routes/orchestration-recovery-engineer'
 import { Route as OperatorRouteImport } from './routes/operator'
 import { Route as OperationsManagerRouteImport } from './routes/operations-manager'
@@ -2401,6 +2403,11 @@ const RadiologyManagerRoute = RadiologyManagerRouteImport.update({
   path: '/radiology-manager',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuotesRoute = QuotesRouteImport.update({
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QueueOperatorRoute = QueueOperatorRouteImport.update({
   id: '/queue-operator',
   path: '/queue-operator',
@@ -2644,6 +2651,11 @@ const OrganDonationCoordinatorRoute =
 const OrgChartRoute = OrgChartRouteImport.update({
   id: '/org-chart',
   path: '/org-chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrchestrationRecoveryEngineerRoute =
@@ -6033,6 +6045,7 @@ export interface FileRoutesByFullPath {
   '/operations-manager': typeof OperationsManagerRoute
   '/operator': typeof OperatorRoute
   '/orchestration-recovery-engineer': typeof OrchestrationRecoveryEngineerRoute
+  '/orders': typeof OrdersRoute
   '/org-chart': typeof OrgChartRoute
   '/organ-donation-coordinator': typeof OrganDonationCoordinatorRoute
   '/paramedic-coordinator': typeof ParamedicCoordinatorRoute
@@ -6081,6 +6094,7 @@ export interface FileRoutesByFullPath {
   '/quantum-researcher': typeof QuantumResearcherRoute
   '/quantum-system-admin': typeof QuantumSystemAdminRoute
   '/queue-operator': typeof QueueOperatorRoute
+  '/quotes': typeof QuotesRoute
   '/radiology-manager': typeof RadiologyManagerRoute
   '/railway-operations-manager': typeof RailwayOperationsManagerRoute
   '/rd-director': typeof RdDirectorRoute
@@ -6954,6 +6968,7 @@ export interface FileRoutesByTo {
   '/operations-manager': typeof OperationsManagerRoute
   '/operator': typeof OperatorRoute
   '/orchestration-recovery-engineer': typeof OrchestrationRecoveryEngineerRoute
+  '/orders': typeof OrdersRoute
   '/org-chart': typeof OrgChartRoute
   '/organ-donation-coordinator': typeof OrganDonationCoordinatorRoute
   '/paramedic-coordinator': typeof ParamedicCoordinatorRoute
@@ -7002,6 +7017,7 @@ export interface FileRoutesByTo {
   '/quantum-researcher': typeof QuantumResearcherRoute
   '/quantum-system-admin': typeof QuantumSystemAdminRoute
   '/queue-operator': typeof QueueOperatorRoute
+  '/quotes': typeof QuotesRoute
   '/radiology-manager': typeof RadiologyManagerRoute
   '/railway-operations-manager': typeof RailwayOperationsManagerRoute
   '/rd-director': typeof RdDirectorRoute
@@ -7875,6 +7891,7 @@ export interface FileRoutesById {
   '/operations-manager': typeof OperationsManagerRoute
   '/operator': typeof OperatorRoute
   '/orchestration-recovery-engineer': typeof OrchestrationRecoveryEngineerRoute
+  '/orders': typeof OrdersRoute
   '/org-chart': typeof OrgChartRoute
   '/organ-donation-coordinator': typeof OrganDonationCoordinatorRoute
   '/paramedic-coordinator': typeof ParamedicCoordinatorRoute
@@ -7923,6 +7940,7 @@ export interface FileRoutesById {
   '/quantum-researcher': typeof QuantumResearcherRoute
   '/quantum-system-admin': typeof QuantumSystemAdminRoute
   '/queue-operator': typeof QueueOperatorRoute
+  '/quotes': typeof QuotesRoute
   '/radiology-manager': typeof RadiologyManagerRoute
   '/railway-operations-manager': typeof RailwayOperationsManagerRoute
   '/rd-director': typeof RdDirectorRoute
@@ -8798,6 +8816,7 @@ export interface FileRouteTypes {
     | '/operations-manager'
     | '/operator'
     | '/orchestration-recovery-engineer'
+    | '/orders'
     | '/org-chart'
     | '/organ-donation-coordinator'
     | '/paramedic-coordinator'
@@ -8846,6 +8865,7 @@ export interface FileRouteTypes {
     | '/quantum-researcher'
     | '/quantum-system-admin'
     | '/queue-operator'
+    | '/quotes'
     | '/radiology-manager'
     | '/railway-operations-manager'
     | '/rd-director'
@@ -9719,6 +9739,7 @@ export interface FileRouteTypes {
     | '/operations-manager'
     | '/operator'
     | '/orchestration-recovery-engineer'
+    | '/orders'
     | '/org-chart'
     | '/organ-donation-coordinator'
     | '/paramedic-coordinator'
@@ -9767,6 +9788,7 @@ export interface FileRouteTypes {
     | '/quantum-researcher'
     | '/quantum-system-admin'
     | '/queue-operator'
+    | '/quotes'
     | '/radiology-manager'
     | '/railway-operations-manager'
     | '/rd-director'
@@ -10639,6 +10661,7 @@ export interface FileRouteTypes {
     | '/operations-manager'
     | '/operator'
     | '/orchestration-recovery-engineer'
+    | '/orders'
     | '/org-chart'
     | '/organ-donation-coordinator'
     | '/paramedic-coordinator'
@@ -10687,6 +10710,7 @@ export interface FileRouteTypes {
     | '/quantum-researcher'
     | '/quantum-system-admin'
     | '/queue-operator'
+    | '/quotes'
     | '/radiology-manager'
     | '/railway-operations-manager'
     | '/rd-director'
@@ -11561,6 +11585,7 @@ export interface RootRouteChildren {
   OperationsManagerRoute: typeof OperationsManagerRoute
   OperatorRoute: typeof OperatorRoute
   OrchestrationRecoveryEngineerRoute: typeof OrchestrationRecoveryEngineerRoute
+  OrdersRoute: typeof OrdersRoute
   OrgChartRoute: typeof OrgChartRoute
   OrganDonationCoordinatorRoute: typeof OrganDonationCoordinatorRoute
   ParamedicCoordinatorRoute: typeof ParamedicCoordinatorRoute
@@ -11609,6 +11634,7 @@ export interface RootRouteChildren {
   QuantumResearcherRoute: typeof QuantumResearcherRoute
   QuantumSystemAdminRoute: typeof QuantumSystemAdminRoute
   QueueOperatorRoute: typeof QueueOperatorRoute
+  QuotesRoute: typeof QuotesRoute
   RadiologyManagerRoute: typeof RadiologyManagerRoute
   RailwayOperationsManagerRoute: typeof RailwayOperationsManagerRoute
   RdDirectorRoute: typeof RdDirectorRoute
@@ -14110,6 +14136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RadiologyManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quotes': {
+      id: '/quotes'
+      path: '/quotes'
+      fullPath: '/quotes'
+      preLoaderRoute: typeof QuotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/queue-operator': {
       id: '/queue-operator'
       path: '/queue-operator'
@@ -14444,6 +14477,13 @@ declare module '@tanstack/react-router' {
       path: '/org-chart'
       fullPath: '/org-chart'
       preLoaderRoute: typeof OrgChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orchestration-recovery-engineer': {
@@ -19045,6 +19085,7 @@ const rootRouteChildren: RootRouteChildren = {
   OperationsManagerRoute: OperationsManagerRoute,
   OperatorRoute: OperatorRoute,
   OrchestrationRecoveryEngineerRoute: OrchestrationRecoveryEngineerRoute,
+  OrdersRoute: OrdersRoute,
   OrgChartRoute: OrgChartRoute,
   OrganDonationCoordinatorRoute: OrganDonationCoordinatorRoute,
   ParamedicCoordinatorRoute: ParamedicCoordinatorRoute,
@@ -19093,6 +19134,7 @@ const rootRouteChildren: RootRouteChildren = {
   QuantumResearcherRoute: QuantumResearcherRoute,
   QuantumSystemAdminRoute: QuantumSystemAdminRoute,
   QueueOperatorRoute: QueueOperatorRoute,
+  QuotesRoute: QuotesRoute,
   RadiologyManagerRoute: RadiologyManagerRoute,
   RailwayOperationsManagerRoute: RailwayOperationsManagerRoute,
   RdDirectorRoute: RdDirectorRoute,
