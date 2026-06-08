@@ -506,7 +506,7 @@ function CustomersCenter() {
         <KPI label="Total" value="3,842" icon={Users} />
         <KPI label="VIP" value="184" icon={Star} tone="good" />
         <KPI label="Enterprise" value="42" icon={Crown} />
-        <KPI label="Active 30d" value="2,118" icon={Activity()} />
+        <KPI label="Active 30d" value="2,118" icon={TrendingUp} />
       </div>
       <SimpleTable
         columns={[{ key: "name", label: "Customer" }, { key: "tier", label: "Tier" }, { key: "products", label: "Products" }, { key: "spend", label: "Lifetime" }, { key: "last", label: "Last seen" }]}
