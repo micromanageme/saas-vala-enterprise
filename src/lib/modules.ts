@@ -38,6 +38,7 @@ export const modules: ModuleItem[] = [
   { title: "POS", url: "/pos", icon: ShoppingCart, group: "Sales", desc: "Point of sale" },
   { title: "Marketplace", url: "/marketplace", icon: Store, group: "Sales", desc: "Multi-vendor marketplace" },
   { title: "Subscriptions", url: "/subscriptions", icon: Repeat, group: "Sales", desc: "Recurring billing" },
+  { title: "Author Studio", url: "/author", icon: Crown, group: "Sales", desc: "Build, publish, sell & support software products" },
 
   // Finance
   { title: "Accounting", url: "/accounting", icon: Calculator, group: "Finance", desc: "Ledger & reports" },

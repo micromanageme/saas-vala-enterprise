@@ -683,6 +683,7 @@ import { Route as AutonomousRecoveryEngineerRouteImport } from './routes/autonom
 import { Route as AutonomousAiSupervisorRouteImport } from './routes/autonomous-ai-supervisor'
 import { Route as AutomationManagerRouteImport } from './routes/automation-manager'
 import { Route as AutomationRouteImport } from './routes/automation'
+import { Route as AuthorRouteImport } from './routes/author'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuditTrailGovernorRouteImport } from './routes/audit-trail-governor'
 import { Route as AuditManagerRouteImport } from './routes/audit-manager'
@@ -4359,6 +4360,11 @@ const AutomationRoute = AutomationRouteImport.update({
   path: '/automation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthorRoute = AuthorRouteImport.update({
+  id: '/author',
+  path: '/author',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -5712,6 +5718,7 @@ export interface FileRoutesByFullPath {
   '/audit-manager': typeof AuditManagerRoute
   '/audit-trail-governor': typeof AuditTrailGovernorRoute
   '/auth': typeof AuthRoute
+  '/author': typeof AuthorRoute
   '/automation': typeof AutomationRoute
   '/automation-manager': typeof AutomationManagerRoute
   '/autonomous-ai-supervisor': typeof AutonomousAiSupervisorRoute
@@ -6635,6 +6642,7 @@ export interface FileRoutesByTo {
   '/audit-manager': typeof AuditManagerRoute
   '/audit-trail-governor': typeof AuditTrailGovernorRoute
   '/auth': typeof AuthRoute
+  '/author': typeof AuthorRoute
   '/automation': typeof AutomationRoute
   '/automation-manager': typeof AutomationManagerRoute
   '/autonomous-ai-supervisor': typeof AutonomousAiSupervisorRoute
@@ -7558,6 +7566,7 @@ export interface FileRoutesById {
   '/audit-manager': typeof AuditManagerRoute
   '/audit-trail-governor': typeof AuditTrailGovernorRoute
   '/auth': typeof AuthRoute
+  '/author': typeof AuthorRoute
   '/automation': typeof AutomationRoute
   '/automation-manager': typeof AutomationManagerRoute
   '/autonomous-ai-supervisor': typeof AutonomousAiSupervisorRoute
@@ -8483,6 +8492,7 @@ export interface FileRouteTypes {
     | '/audit-manager'
     | '/audit-trail-governor'
     | '/auth'
+    | '/author'
     | '/automation'
     | '/automation-manager'
     | '/autonomous-ai-supervisor'
@@ -9406,6 +9416,7 @@ export interface FileRouteTypes {
     | '/audit-manager'
     | '/audit-trail-governor'
     | '/auth'
+    | '/author'
     | '/automation'
     | '/automation-manager'
     | '/autonomous-ai-supervisor'
@@ -10328,6 +10339,7 @@ export interface FileRouteTypes {
     | '/audit-manager'
     | '/audit-trail-governor'
     | '/auth'
+    | '/author'
     | '/automation'
     | '/automation-manager'
     | '/autonomous-ai-supervisor'
@@ -11252,6 +11264,7 @@ export interface RootRouteChildren {
   AuditManagerRoute: typeof AuditManagerRoute
   AuditTrailGovernorRoute: typeof AuditTrailGovernorRoute
   AuthRoute: typeof AuthRoute
+  AuthorRoute: typeof AuthorRoute
   AutomationRoute: typeof AutomationRoute
   AutomationManagerRoute: typeof AutomationManagerRoute
   AutonomousAiSupervisorRoute: typeof AutonomousAiSupervisorRoute
@@ -16817,6 +16830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AutomationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/author': {
+      id: '/author'
+      path: '/author'
+      fullPath: '/author'
+      preLoaderRoute: typeof AuthorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -18752,6 +18772,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditManagerRoute: AuditManagerRoute,
   AuditTrailGovernorRoute: AuditTrailGovernorRoute,
   AuthRoute: AuthRoute,
+  AuthorRoute: AuthorRoute,
   AutomationRoute: AutomationRoute,
   AutomationManagerRoute: AutomationManagerRoute,
   AutonomousAiSupervisorRoute: AutonomousAiSupervisorRoute,
