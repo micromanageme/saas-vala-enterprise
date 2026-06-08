@@ -519,7 +519,7 @@ function CustomersCenter() {
     </div>
   );
 }
-function Activity() { return TrendingUp; }
+
 
 /* ---------- 10 Licenses ---------- */
 function LicensesCenter() {
