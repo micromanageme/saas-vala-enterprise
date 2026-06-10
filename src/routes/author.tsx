@@ -15,8 +15,20 @@ import {
   Wallet, Megaphone, Download, Search, Sparkles, FileText, HeartPulse, Swords,
   Map as MapIcon, Trophy, Award, Globe, MessageSquare, Bell, Settings,
   Plus, Upload, CheckCircle2, Clock, AlertTriangle, TrendingUp, Eye, Edit3,
-  Rocket, Crown, Flame, Languages, Mic, Paperclip,
+  Rocket, Crown, Flame, Languages, Mic, Paperclip, Loader2,
 } from "lucide-react";
+import {
+  useAuthorProducts, useAuthorVersions, useAuthorOrders, useAuthorLicenses,
+  useAuthorSubscriptions, useAuthorRenewals, useAuthorReviews, useAuthorPayouts,
+  useAuthorRevenue, money, num, fmtDate, sum,
+} from "@/lib/author-data";
+
+function Loading() {
+  return <div className="flex items-center gap-2 text-xs text-muted-foreground p-4"><Loader2 className="h-3.5 w-3.5 animate-spin" />Loading…</div>;
+}
+function Empty({ msg }: { msg: string }) {
+  return <div className="text-xs text-muted-foreground p-4 border border-dashed border-border/60 rounded-md text-center">{msg}</div>;
+}
 
 export const Route = createFileRoute("/author")({
   head: () => ({
