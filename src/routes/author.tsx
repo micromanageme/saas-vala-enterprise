@@ -394,6 +394,7 @@ function ProductFactory() {
 }
 
 function CreateProductForm({ onDone }: { onDone: () => void }) {
+  const qc = useQueryClient();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("0");
@@ -404,7 +405,6 @@ function CreateProductForm({ onDone }: { onDone: () => void }) {
     e.preventDefault();
     setBusy(true); setErr(null);
     try {
-      const { supabase } = await import("@/integrations/supabase/client");
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("Sign in required.");
       const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Math.random().toString(36).slice(2, 6);
@@ -417,9 +417,7 @@ function CreateProductForm({ onDone }: { onDone: () => void }) {
         status: "draft",
       });
       if (error) throw error;
-      const { useQueryClient } = await import("@tanstack/react-query");
-      // soft refetch via invalidate event
-      window.dispatchEvent(new CustomEvent("author:invalidate"));
+      qc.invalidateQueries({ queryKey: ["author", "products"] });
       onDone();
     } catch (e: any) {
       setErr(e.message);
@@ -439,6 +437,7 @@ function CreateProductForm({ onDone }: { onDone: () => void }) {
     </form>
   );
 }
+
 
 function ProductActions() {
   return (
