@@ -266,37 +266,64 @@ function PanelTitle({ icon: Icon, title, action }: { icon: any; title: string; a
 
 /* ---------- 01 Command Center ---------- */
 function CommandCenter() {
+  const products = useAuthorProducts();
+  const orders = useAuthorOrders();
+  const licenses = useAuthorLicenses();
+  const renewals = useAuthorRenewals();
+  const revenue = useAuthorRevenue();
+  const reviews = useAuthorReviews();
+
+  const productsArr = products.data ?? [];
+  const ordersArr = orders.data ?? [];
+  const licensesArr = licenses.data ?? [];
+  const renewalsArr = renewals.data ?? [];
+  const revenueArr = revenue.data ?? [];
+  const reviewsArr = reviews.data ?? [];
+
+  const now = Date.now();
+  const monthAgo = now - 30 * 24 * 3600 * 1000;
+  const mtdRevenue = sum(revenueArr.filter((r: any) => new Date(r.occurred_at).getTime() >= monthAgo), (r: any) => r.amount_cents);
+  const renewals30 = renewalsArr.filter((r: any) => new Date(r.renewed_at).getTime() >= monthAgo);
+  const avgRating = reviewsArr.length ? (sum(reviewsArr, (r: any) => r.rating) / reviewsArr.length).toFixed(1) : "—";
+  const active = productsArr.filter((p: any) => p.status === "published").length;
+  const pending = productsArr.filter((p: any) => p.status === "review").length;
+  const activeLicenses = licensesArr.filter((l: any) => l.status === "active").length;
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Total Products" value="12" delta="+2 this quarter" icon={Package} />
-        <KPI label="Active" value="9" delta="75% live" icon={CheckCircle2} tone="good" />
-        <KPI label="Pending Review" value="2" delta="Awaiting approval" icon={Clock} tone="warn" />
-        <KPI label="Customers" value="3,842" delta="+18% MoM" icon={Users} tone="good" />
-        <KPI label="Licenses" value="5,210" delta="+312 this month" icon={KeyRound} />
-        <KPI label="Renewals (30d)" value="184" delta="$24,800" icon={CalendarClock} />
-        <KPI label="Revenue (MTD)" value="$48,219" delta="+22% MoM" icon={DollarSign} tone="good" />
-        <KPI label="Downloads" value="92,481" delta="+8.4K this week" icon={Download} />
-        <KPI label="Avg Rating" value="4.7" delta="based on 1,204 reviews" icon={Star} tone="good" />
-        <KPI label="Open Tickets" value="14" delta="3 escalated" icon={LifeBuoy} tone="warn" />
+        <KPI label="Total Products" value={num(productsArr.length)} icon={Package} />
+        <KPI label="Active" value={num(active)} delta={productsArr.length ? `${Math.round((active / productsArr.length) * 100)}% live` : undefined} icon={CheckCircle2} tone="good" />
+        <KPI label="Pending Review" value={num(pending)} icon={Clock} tone="warn" />
+        <KPI label="Orders" value={num(ordersArr.length)} icon={ShoppingCart} />
+        <KPI label="Active Licenses" value={num(activeLicenses)} icon={KeyRound} />
+        <KPI label="Renewals (30d)" value={num(renewals30.length)} delta={money(sum(renewals30, (r: any) => r.amount_cents))} icon={CalendarClock} />
+        <KPI label="Revenue (MTD)" value={money(mtdRevenue)} icon={DollarSign} tone="good" />
+        <KPI label="Revenue (Total)" value={money(sum(revenueArr, (r: any) => r.amount_cents))} icon={TrendingUp} />
+        <KPI label="Avg Rating" value={String(avgRating)} delta={reviewsArr.length ? `${num(reviewsArr.length)} reviews` : undefined} icon={Star} tone="good" />
+        <KPI label="Reviews" value={num(reviewsArr.length)} icon={Star} />
       </div>
 
       <div className="grid grid-cols-12 gap-4">
         <Card className="col-span-12 lg:col-span-8">
           <CardHeader><CardTitle className="text-base flex items-center gap-2"><Sparkles className="h-4 w-4 text-primary" /> AI Insights</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <div className="flex items-start gap-2 p-3 rounded-md bg-success/10 border border-success/30"><TrendingUp className="h-4 w-4 text-success mt-0.5" /><div><div className="font-medium">Revenue forecast strong</div><div className="text-muted-foreground text-xs">Projected $58K next month (+20%). Driven by "Nexus Pro" renewals.</div></div></div>
-            <div className="flex items-start gap-2 p-3 rounded-md bg-warning/10 border border-warning/30"><AlertTriangle className="h-4 w-4 text-warning mt-0.5" /><div><div className="font-medium">Product health: "Vala CRM" rating dipping</div><div className="text-muted-foreground text-xs">3 negative reviews this week mention onboarding. Suggest doc refresh.</div></div></div>
-            <div className="flex items-start gap-2 p-3 rounded-md bg-primary/10 border border-primary/30"><Rocket className="h-4 w-4 text-primary mt-0.5" /><div><div className="font-medium">Marketing opportunity</div><div className="text-muted-foreground text-xs">Launch a Black Friday coupon — competitor activity rising 34%.</div></div></div>
+            {productsArr.length === 0 ? (
+              <Empty msg="Create your first product to unlock AI insights." />
+            ) : (
+              <>
+                <div className="flex items-start gap-2 p-3 rounded-md bg-success/10 border border-success/30"><TrendingUp className="h-4 w-4 text-success mt-0.5" /><div><div className="font-medium">Revenue tracked</div><div className="text-muted-foreground text-xs">{money(sum(revenueArr, (r: any) => r.amount_cents))} across {num(revenueArr.length)} events.</div></div></div>
+                <div className="flex items-start gap-2 p-3 rounded-md bg-primary/10 border border-primary/30"><Rocket className="h-4 w-4 text-primary mt-0.5" /><div><div className="font-medium">{num(productsArr.length)} products in catalog</div><div className="text-muted-foreground text-xs">{active} published · {pending} in review.</div></div></div>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card className="col-span-12 lg:col-span-4">
           <CardHeader><CardTitle className="text-base">Risk Analysis</CardTitle></CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <RiskBar label="Revenue concentration" value={62} tone="warn" />
-            <RiskBar label="Support backlog" value={28} tone="good" />
-            <RiskBar label="Churn risk" value={18} tone="good" />
-            <RiskBar label="Refund rate" value={4} tone="good" />
+            <RiskBar label="Refund rate" value={ordersArr.length ? Math.round((ordersArr.filter((o: any) => o.status === "refunded").length / ordersArr.length) * 100) : 0} tone="good" />
+            <RiskBar label="Expired licenses" value={licensesArr.length ? Math.round((licensesArr.filter((l: any) => l.status === "expired").length / licensesArr.length) * 100) : 0} tone="warn" />
+            <RiskBar label="Past-due subs" value={0} tone="good" />
           </CardContent>
         </Card>
       </div>
