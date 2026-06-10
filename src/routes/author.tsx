@@ -22,6 +22,8 @@ import {
   useAuthorSubscriptions, useAuthorRenewals, useAuthorReviews, useAuthorPayouts,
   useAuthorRevenue, money, num, fmtDate, sum,
 } from "@/lib/author-data";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 function Loading() {
   return <div className="flex items-center gap-2 text-xs text-muted-foreground p-4"><Loader2 className="h-3.5 w-3.5 animate-spin" />Loading…</div>;
