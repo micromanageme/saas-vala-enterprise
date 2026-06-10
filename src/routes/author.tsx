@@ -341,38 +341,105 @@ function RiskBar({ label, value, tone }: { label: string; value: number; tone: "
 
 /* ---------- 02 Product Factory ---------- */
 function ProductFactory() {
-  const [tab, setTab] = useState("All");
-  const tabs = ["All", "Draft", "Testing", "Submitted", "Approved", "Rejected", "Archived"];
-  const rows = [
-    { name: "Nexus Pro", category: "ERP", version: "4.2.0", status: <Badge>Approved</Badge>, customers: "1,204", revenue: "$24,800", actions: <ProductActions /> },
-    { name: "Vala CRM", category: "CRM", version: "2.8.1", status: <Badge>Approved</Badge>, customers: "892", revenue: "$11,420", actions: <ProductActions /> },
-    { name: "Pixel POS", category: "POS", version: "1.4.0", status: <Badge variant="secondary">Submitted</Badge>, customers: "0", revenue: "$0", actions: <ProductActions /> },
-    { name: "Sky Inventory", category: "Inventory", version: "3.0.0-beta", status: <Badge variant="outline">Testing</Badge>, customers: "42", revenue: "$580", actions: <ProductActions /> },
-    { name: "Volt Analytics", category: "BI", version: "0.9.0", status: <Badge variant="outline">Draft</Badge>, customers: "0", revenue: "$0", actions: <ProductActions /> },
+  const [tab, setTab] = useState<string>("all");
+  const tabs: { id: string; label: string }[] = [
+    { id: "all", label: "All" },
+    { id: "draft", label: "Draft" },
+    { id: "review", label: "In Review" },
+    { id: "published", label: "Published" },
+    { id: "archived", label: "Archived" },
   ];
+  const { data: products = [], isLoading } = useAuthorProducts();
+  const { data: orders = [] } = useAuthorOrders();
+  const { data: revenue = [] } = useAuthorRevenue();
+  const [creating, setCreating] = useState(false);
+
+  const filtered = tab === "all" ? products : products.filter((p: any) => p.status === tab);
+  const rows = filtered.map((p: any) => {
+    const productRevenue = sum(revenue.filter((r: any) => r.product_id === p.id), (r: any) => r.amount_cents);
+    const productOrders = orders.filter((o: any) => o.product_id === p.id).length;
+    return {
+      name: <div className="font-medium">{p.name}</div>,
+      category: p.category ?? "—",
+      price: money(p.price_cents, p.currency),
+      status: <Badge variant={p.status === "published" ? "default" : "secondary"}>{p.status}</Badge>,
+      orders: num(productOrders),
+      revenue: money(productRevenue, p.currency),
+      actions: <ProductActions />,
+    };
+  });
+
   return (
     <div className="space-y-4">
       <PanelTitle icon={Package} title="Product Factory" action={
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">Clone</Button>
-          <Button size="sm" className="gap-1.5"><Plus className="h-4 w-4" />Create Product</Button>
-        </div>
+        <Button size="sm" className="gap-1.5" onClick={() => setCreating((v) => !v)}><Plus className="h-4 w-4" />Create Product</Button>
       } />
+      {creating && <CreateProductForm onDone={() => setCreating(false)} />}
       <div className="flex gap-1.5 flex-wrap">
         {tabs.map((t) => (
-          <Button key={t} variant={tab === t ? "default" : "outline"} size="sm" className="h-7 text-xs" onClick={() => setTab(t)}>{t}</Button>
+          <Button key={t.id} variant={tab === t.id ? "default" : "outline"} size="sm" className="h-7 text-xs" onClick={() => setTab(t.id)}>{t.label}</Button>
         ))}
       </div>
-      <SimpleTable
-        columns={[
-          { key: "name", label: "Product" }, { key: "category", label: "Category" }, { key: "version", label: "Version" },
-          { key: "status", label: "Status" }, { key: "customers", label: "Customers" }, { key: "revenue", label: "Revenue" }, { key: "actions", label: "" },
-        ]}
-        rows={rows}
-      />
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No products yet. Click Create Product to add one." /> : (
+        <SimpleTable
+          columns={[
+            { key: "name", label: "Product" }, { key: "category", label: "Category" }, { key: "price", label: "Price" },
+            { key: "status", label: "Status" }, { key: "orders", label: "Orders" }, { key: "revenue", label: "Revenue" }, { key: "actions", label: "" },
+          ]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
+
+function CreateProductForm({ onDone }: { onDone: () => void }) {
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [price, setPrice] = useState("0");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr(null);
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) throw new Error("Sign in required.");
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Math.random().toString(36).slice(2, 6);
+      const { error } = await supabase.from("author_products").insert({
+        owner_id: u.user.id,
+        name,
+        slug,
+        category: category || null,
+        price_cents: Math.round(Number(price || "0") * 100),
+        status: "draft",
+      });
+      if (error) throw error;
+      const { useQueryClient } = await import("@tanstack/react-query");
+      // soft refetch via invalidate event
+      window.dispatchEvent(new CustomEvent("author:invalidate"));
+      onDone();
+    } catch (e: any) {
+      setErr(e.message);
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-4 gap-2 p-3 rounded-md border border-border/60 bg-card">
+      <Input placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} required />
+      <Input placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+      <Input placeholder="Price (USD)" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={busy || !name}>{busy ? "Creating…" : "Create"}</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onDone}>Cancel</Button>
+      </div>
+      {err && <div className="md:col-span-4 text-xs text-destructive">{err}</div>}
+    </form>
+  );
+}
+
 function ProductActions() {
   return (
     <div className="flex gap-1">
@@ -382,6 +449,7 @@ function ProductActions() {
     </div>
   );
 }
+
 
 /* ---------- 03 Product Builder ---------- */
 function ProductBuilder() {
