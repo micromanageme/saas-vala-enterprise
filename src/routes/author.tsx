@@ -591,46 +591,75 @@ function MarketplaceCenter() {
 
 /* ---------- 08 Orders ---------- */
 function OrdersCenter() {
+  const { data: orders = [], isLoading } = useAuthorOrders();
+  const completed = orders.filter((o: any) => o.status === "paid").length;
+  const pending = orders.filter((o: any) => o.status === "pending").length;
+  const refunded = orders.filter((o: any) => o.status === "refunded").length;
+  const cancelled = orders.filter((o: any) => o.status === "cancelled").length;
+  const rows = orders.slice(0, 25).map((o: any) => ({
+    id: <span className="font-mono text-xs">{o.id.slice(0, 8)}</span>,
+    customer: o.buyer_name ?? o.buyer_email ?? "—",
+    product: o.author_products?.name ?? "—",
+    amount: money(o.amount_cents, o.currency),
+    status: <Badge variant={o.status === "paid" ? "default" : "secondary"}>{o.status}</Badge>,
+    date: fmtDate(o.created_at),
+  }));
   return (
     <div className="space-y-4">
       <PanelTitle icon={ShoppingCart} title="Order Center" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPI label="Completed" value="1,842" icon={CheckCircle2} tone="good" />
-        <KPI label="Pending" value="24" icon={Clock} tone="warn" />
-        <KPI label="Refunded" value="12" icon={AlertTriangle} />
-        <KPI label="Cancelled" value="6" icon={AlertTriangle} />
+        <KPI label="Paid" value={num(completed)} icon={CheckCircle2} tone="good" />
+        <KPI label="Pending" value={num(pending)} icon={Clock} tone="warn" />
+        <KPI label="Refunded" value={num(refunded)} icon={AlertTriangle} />
+        <KPI label="Cancelled" value={num(cancelled)} icon={AlertTriangle} />
       </div>
-      <SimpleTable
-        columns={[{ key: "id", label: "Order" }, { key: "customer", label: "Customer" }, { key: "product", label: "Product" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }]}
-        rows={[
-          { id: "#ORD-10421", customer: "Acme Corp", product: "Nexus Pro Annual", amount: "$1,200", status: <Badge>Completed</Badge> },
-          { id: "#ORD-10422", customer: "Globex", product: "Vala CRM Monthly", amount: "$49", status: <Badge variant="secondary">Pending</Badge> },
-          { id: "#ORD-10423", customer: "Initech", product: "Nexus Pro Lifetime", amount: "$2,400", status: <Badge>Completed</Badge> },
-        ]}
-      />
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No orders yet." /> : (
+        <SimpleTable
+          columns={[{ key: "id", label: "Order" }, { key: "customer", label: "Customer" }, { key: "product", label: "Product" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }, { key: "date", label: "Date" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
 
 /* ---------- 09 Customers ---------- */
 function CustomersCenter() {
+  const { data: orders = [], isLoading } = useAuthorOrders();
+  const byCustomer = new Map<string, { name: string; orders: number; spend: number; last: string }>();
+  for (const o of orders as any[]) {
+    const key = o.buyer_id ?? o.buyer_email ?? "anon";
+    const prev = byCustomer.get(key);
+    if (prev) {
+      prev.orders += 1;
+      prev.spend += o.amount_cents ?? 0;
+      if (o.created_at > prev.last) prev.last = o.created_at;
+    } else {
+      byCustomer.set(key, { name: o.buyer_name ?? o.buyer_email ?? "Anonymous", orders: 1, spend: o.amount_cents ?? 0, last: o.created_at });
+    }
+  }
+  const customers = Array.from(byCustomer.values()).sort((a, b) => b.spend - a.spend);
+  const rows = customers.slice(0, 25).map((c) => ({
+    name: c.name,
+    orders: num(c.orders),
+    spend: money(c.spend),
+    last: fmtDate(c.last),
+  }));
   return (
     <div className="space-y-4">
       <PanelTitle icon={Users} title="Customer Center" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPI label="Total" value="3,842" icon={Users} />
-        <KPI label="VIP" value="184" icon={Star} tone="good" />
-        <KPI label="Enterprise" value="42" icon={Crown} />
-        <KPI label="Active 30d" value="2,118" icon={TrendingUp} />
+        <KPI label="Total Customers" value={num(customers.length)} icon={Users} />
+        <KPI label="Avg Spend" value={money(customers.length ? Math.round(sum(customers, (c) => c.spend) / customers.length) : 0)} icon={DollarSign} />
+        <KPI label="Top Spend" value={money(customers[0]?.spend ?? 0)} icon={Crown} tone="good" />
+        <KPI label="Orders" value={num(orders.length)} icon={ShoppingCart} />
       </div>
-      <SimpleTable
-        columns={[{ key: "name", label: "Customer" }, { key: "tier", label: "Tier" }, { key: "products", label: "Products" }, { key: "spend", label: "Lifetime" }, { key: "last", label: "Last seen" }]}
-        rows={[
-          { name: "Acme Corp", tier: <Badge>Enterprise</Badge>, products: "3", spend: "$24,800", last: "2h ago" },
-          { name: "Globex", tier: <Badge variant="secondary">VIP</Badge>, products: "2", spend: "$8,420", last: "1d ago" },
-          { name: "Initech", tier: <Badge variant="outline">Standard</Badge>, products: "1", spend: "$1,200", last: "5d ago" },
-        ]}
-      />
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No customers yet." /> : (
+        <SimpleTable
+          columns={[{ key: "name", label: "Customer" }, { key: "orders", label: "Orders" }, { key: "spend", label: "Lifetime" }, { key: "last", label: "Last order" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
@@ -638,48 +667,101 @@ function CustomersCenter() {
 
 /* ---------- 10 Licenses ---------- */
 function LicensesCenter() {
+  const { data: licenses = [], isLoading } = useAuthorLicenses();
+  const active = licenses.filter((l: any) => l.status === "active").length;
+  const expired = licenses.filter((l: any) => l.status === "expired").length;
+  const revoked = licenses.filter((l: any) => l.status === "revoked").length;
+  const rows = licenses.slice(0, 25).map((l: any) => ({
+    key: <span className="font-mono text-xs">{l.license_key.slice(0, 12)}…</span>,
+    product: l.author_products?.name ?? "—",
+    status: <Badge variant={l.status === "active" ? "default" : "secondary"}>{l.status}</Badge>,
+    seats: num(l.seats),
+    expires: fmtDate(l.expires_at),
+  }));
   return (
     <div className="space-y-4">
-      <PanelTitle icon={KeyRound} title="License Center" action={<Button size="sm">Generate License</Button>} />
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Generated" value="5,210" icon={KeyRound} />
-        <KPI label="Active" value="4,180" icon={CheckCircle2} tone="good" />
-        <KPI label="Expired" value="412" icon={Clock} tone="warn" />
-        <KPI label="Transferred" value="84" icon={GitBranch} />
-        <KPI label="Renewed" value="534" icon={Repeat} tone="good" />
+      <PanelTitle icon={KeyRound} title="License Center" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <KPI label="Total" value={num(licenses.length)} icon={KeyRound} />
+        <KPI label="Active" value={num(active)} icon={CheckCircle2} tone="good" />
+        <KPI label="Expired" value={num(expired)} icon={Clock} tone="warn" />
+        <KPI label="Revoked" value={num(revoked)} icon={AlertTriangle} />
       </div>
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No licenses issued yet." /> : (
+        <SimpleTable
+          columns={[{ key: "key", label: "Key" }, { key: "product", label: "Product" }, { key: "status", label: "Status" }, { key: "seats", label: "Seats" }, { key: "expires", label: "Expires" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
 
 /* ---------- 11 Subscriptions ---------- */
 function SubscriptionsCenter() {
+  const { data: subs = [], isLoading } = useAuthorSubscriptions();
+  const active = subs.filter((s: any) => s.status === "active").length;
+  const trial = subs.filter((s: any) => s.status === "trialing").length;
+  const pastDue = subs.filter((s: any) => s.status === "past_due").length;
+  const cancelled = subs.filter((s: any) => s.status === "cancelled").length;
+  const mrr = sum(subs.filter((s: any) => s.status === "active"), (s: any) => s.mrr_cents);
+  const rows = subs.slice(0, 25).map((s: any) => ({
+    customer: s.customer_email ?? "—",
+    product: s.author_products?.name ?? "—",
+    plan: s.plan,
+    mrr: money(s.mrr_cents),
+    status: <Badge variant={s.status === "active" ? "default" : "secondary"}>{s.status}</Badge>,
+    renews: fmtDate(s.current_period_end),
+  }));
   return (
     <div className="space-y-4">
       <PanelTitle icon={Repeat} title="Subscription Center" />
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-        <KPI label="Monthly" value="1,204" icon={CalendarClock} />
-        <KPI label="Yearly" value="812" icon={CalendarClock} />
-        <KPI label="Lifetime" value="148" icon={Crown} />
-        <KPI label="Enterprise" value="42" icon={Crown} />
-        <KPI label="Trials" value="96" icon={Clock} tone="warn" />
-        <KPI label="Renewals" value="534" icon={Repeat} tone="good" />
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <KPI label="MRR" value={money(mrr)} icon={DollarSign} tone="good" />
+        <KPI label="Active" value={num(active)} icon={CheckCircle2} tone="good" />
+        <KPI label="Trialing" value={num(trial)} icon={Clock} tone="warn" />
+        <KPI label="Past Due" value={num(pastDue)} icon={AlertTriangle} tone="warn" />
+        <KPI label="Cancelled" value={num(cancelled)} icon={AlertTriangle} />
       </div>
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No subscriptions yet." /> : (
+        <SimpleTable
+          columns={[{ key: "customer", label: "Customer" }, { key: "product", label: "Product" }, { key: "plan", label: "Plan" }, { key: "mrr", label: "MRR" }, { key: "status", label: "Status" }, { key: "renews", label: "Renews" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
 
 /* ---------- 12 Renewals ---------- */
 function RenewalsCenter() {
+  const { data: renewals = [], isLoading } = useAuthorRenewals();
+  const now = Date.now();
+  const monthAgo = now - 30 * 24 * 3600 * 1000;
+  const last30 = renewals.filter((r: any) => new Date(r.renewed_at).getTime() >= monthAgo);
+  const revenue30 = sum(last30, (r: any) => r.amount_cents);
+  const failed = renewals.filter((r: any) => r.status !== "paid").length;
+  const rows = renewals.slice(0, 25).map((r: any) => ({
+    sub: <span className="font-mono text-xs">{r.subscription_id.slice(0, 8)}</span>,
+    date: fmtDate(r.renewed_at),
+    amount: money(r.amount_cents, r.currency),
+    status: <Badge variant={r.status === "paid" ? "default" : "destructive"}>{r.status}</Badge>,
+  }));
   return (
     <div className="space-y-4">
       <PanelTitle icon={CalendarClock} title="Renewal Center" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPI label="Upcoming 30d" value="184" delta="$24,800" icon={CalendarClock} />
-        <KPI label="Expired" value="42" icon={AlertTriangle} tone="warn" />
-        <KPI label="Renewal Revenue MTD" value="$18,200" icon={DollarSign} tone="good" />
-        <KPI label="Forecast 90d" value="$72,400" icon={TrendingUp} tone="good" />
+        <KPI label="Total Renewals" value={num(renewals.length)} icon={Repeat} />
+        <KPI label="Last 30d" value={num(last30.length)} icon={CalendarClock} />
+        <KPI label="Revenue 30d" value={money(revenue30)} icon={DollarSign} tone="good" />
+        <KPI label="Failed" value={num(failed)} icon={AlertTriangle} tone="warn" />
       </div>
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No renewals yet." /> : (
+        <SimpleTable
+          columns={[{ key: "sub", label: "Subscription" }, { key: "date", label: "Renewed" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
@@ -689,47 +771,39 @@ function SupportCenter() {
   return (
     <div className="space-y-4">
       <PanelTitle icon={LifeBuoy} title="Support Center" />
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Open Tickets" value="14" icon={LifeBuoy} tone="warn" />
-        <KPI label="Feature Requests" value="62" icon={Sparkles} />
-        <KPI label="Bug Reports" value="11" icon={AlertTriangle} tone="warn" />
-        <KPI label="Questions" value="38" icon={MessageSquare} />
-        <KPI label="Escalations" value="3" icon={Flame} tone="bad" />
-      </div>
-      <SimpleTable
-        columns={[{ key: "id", label: "Ticket" }, { key: "subject", label: "Subject" }, { key: "customer", label: "Customer" }, { key: "priority", label: "Priority" }, { key: "status", label: "Status" }]}
-        rows={[
-          { id: "#TKT-882", subject: "License key not received", customer: "Globex", priority: <Badge variant="destructive">High</Badge>, status: <Badge>Open</Badge> },
-          { id: "#TKT-881", subject: "Feature request: SSO", customer: "Acme Corp", priority: <Badge variant="secondary">Normal</Badge>, status: <Badge variant="outline">Triage</Badge> },
-        ]}
-      />
+      <Empty msg="Support tickets coming soon." />
     </div>
   );
 }
 
 /* ---------- 14 Reviews ---------- */
 function ReviewsCenter() {
+  const { data: reviews = [], isLoading } = useAuthorReviews();
+  const avg = reviews.length ? (sum(reviews, (r: any) => r.rating) / reviews.length).toFixed(1) : "—";
+  const five = reviews.filter((r: any) => r.rating === 5).length;
+  const four = reviews.filter((r: any) => r.rating === 4).length;
+  const low = reviews.filter((r: any) => r.rating <= 3).length;
   return (
     <div className="space-y-4">
       <PanelTitle icon={Star} title="Review Center" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPI label="Avg Rating" value="4.7" delta="1,204 reviews" icon={Star} tone="good" />
-        <KPI label="5★" value="812" icon={Star} tone="good" />
-        <KPI label="4★" value="284" icon={Star} />
-        <KPI label="≤3★" value="108" icon={Star} tone="warn" />
+        <KPI label="Avg Rating" value={String(avg)} delta={reviews.length ? `${num(reviews.length)} reviews` : undefined} icon={Star} tone="good" />
+        <KPI label="5★" value={num(five)} icon={Star} tone="good" />
+        <KPI label="4★" value={num(four)} icon={Star} />
+        <KPI label="≤3★" value={num(low)} icon={Star} tone="warn" />
       </div>
       <Card>
         <CardContent className="p-4 space-y-3 text-sm">
-          {[
-            { u: "Sarah K.", r: 5, c: "Nexus Pro saved us months of dev time. The AI copilot is uncanny." },
-            { u: "James L.", r: 4, c: "Solid product, onboarding could be smoother." },
-            { u: "Ava M.", r: 2, c: "Install docs are outdated for v4.2." },
-          ].map((rv) => (
-            <div key={rv.u} className="flex gap-3 p-3 rounded-md border border-border/60">
-              <Avatar className="h-9 w-9"><AvatarFallback>{rv.u.charAt(0)}</AvatarFallback></Avatar>
+          {isLoading ? <Loading /> : reviews.length === 0 ? <Empty msg="No reviews yet." /> : reviews.slice(0, 10).map((rv: any) => (
+            <div key={rv.id} className="flex gap-3 p-3 rounded-md border border-border/60">
+              <Avatar className="h-9 w-9"><AvatarFallback>{(rv.title ?? "U").charAt(0).toUpperCase()}</AvatarFallback></Avatar>
               <div className="flex-1">
-                <div className="flex items-center gap-2"><div className="font-medium">{rv.u}</div><div className="text-warning text-xs">{"★".repeat(rv.r)}{"☆".repeat(5 - rv.r)}</div></div>
-                <p className="text-muted-foreground text-xs mt-0.5">{rv.c}</p>
+                <div className="flex items-center gap-2">
+                  <div className="font-medium">{rv.title ?? "Review"}</div>
+                  <div className="text-warning text-xs">{"★".repeat(rv.rating)}{"☆".repeat(5 - rv.rating)}</div>
+                  <div className="text-xs text-muted-foreground ml-auto">{rv.author_products?.name ?? ""}</div>
+                </div>
+                <p className="text-muted-foreground text-xs mt-0.5">{rv.body ?? ""}</p>
               </div>
             </div>
           ))}
@@ -758,34 +832,78 @@ function AnalyticsCenter() {
 
 /* ---------- 16 Revenue ---------- */
 function RevenueCenter() {
+  const { data: events = [], isLoading } = useAuthorRevenue();
+  const now = Date.now();
+  const monthAgo = now - 30 * 24 * 3600 * 1000;
+  const yearAgo = now - 365 * 24 * 3600 * 1000;
+  const total = sum(events, (e: any) => e.amount_cents);
+  const mtd = sum(events.filter((e: any) => new Date(e.occurred_at).getTime() >= monthAgo), (e: any) => e.amount_cents);
+  const ytd = sum(events.filter((e: any) => new Date(e.occurred_at).getTime() >= yearAgo), (e: any) => e.amount_cents);
+
+  const byProduct = new Map<string, number>();
+  for (const e of events as any[]) {
+    const k = e.author_products?.name ?? "Unattributed";
+    byProduct.set(k, (byProduct.get(k) ?? 0) + (e.amount_cents ?? 0));
+  }
+  const top = Array.from(byProduct.entries()).sort((a, b) => b[1] - a[1])[0];
+
+  const rows = (events as any[]).slice(0, 25).map((e) => ({
+    date: fmtDate(e.occurred_at),
+    product: e.author_products?.name ?? "—",
+    source: e.source,
+    amount: money(e.amount_cents, e.currency),
+  }));
   return (
     <div className="space-y-4">
       <PanelTitle icon={DollarSign} title="Revenue Center" />
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Total" value="$418,200" icon={DollarSign} tone="good" />
-        <KPI label="MTD" value="$48,219" delta="+22%" icon={TrendingUp} tone="good" />
-        <KPI label="YTD" value="$284,420" icon={DollarSign} />
-        <KPI label="Forecast 90d" value="$172,000" icon={TrendingUp} tone="good" />
-        <KPI label="Top Product" value="Nexus Pro" delta="62% share" icon={Crown} />
+        <KPI label="Total" value={money(total)} icon={DollarSign} tone="good" />
+        <KPI label="MTD" value={money(mtd)} icon={TrendingUp} tone="good" />
+        <KPI label="YTD" value={money(ytd)} icon={DollarSign} />
+        <KPI label="Events" value={num(events.length)} icon={BarChart3} />
+        <KPI label="Top Product" value={top?.[0] ?? "—"} delta={top ? money(top[1]) : undefined} icon={Crown} />
       </div>
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No revenue events yet." /> : (
+        <SimpleTable
+          columns={[{ key: "date", label: "Date" }, { key: "product", label: "Product" }, { key: "source", label: "Source" }, { key: "amount", label: "Amount" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
 
 /* ---------- 17 Payouts ---------- */
 function PayoutsCenter() {
+  const { data: payouts = [], isLoading } = useAuthorPayouts();
+  const pending = sum(payouts.filter((p: any) => p.status === "pending" || p.status === "processing"), (p: any) => p.amount_cents);
+  const paid = sum(payouts.filter((p: any) => p.status === "paid"), (p: any) => p.amount_cents);
+  const failed = payouts.filter((p: any) => p.status === "failed").length;
+  const rows = payouts.slice(0, 25).map((p: any) => ({
+    period: `${fmtDate(p.period_start)} → ${fmtDate(p.period_end)}`,
+    amount: money(p.amount_cents, p.currency),
+    status: <Badge variant={p.status === "paid" ? "default" : "secondary"}>{p.status}</Badge>,
+    processed: fmtDate(p.processed_at),
+  }));
   return (
     <div className="space-y-4">
-      <PanelTitle icon={Wallet} title="Payout Center" action={<Button size="sm">Request Withdrawal</Button>} />
+      <PanelTitle icon={Wallet} title="Payout Center" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPI label="Available" value="$12,840" icon={Wallet} tone="good" />
-        <KPI label="Pending" value="$3,210" icon={Clock} tone="warn" />
-        <KPI label="Withdrawn YTD" value="$148,200" icon={DollarSign} />
-        <KPI label="Tax Held" value="$8,420" icon={FileText} />
+        <KPI label="Paid Out" value={money(paid)} icon={DollarSign} tone="good" />
+        <KPI label="Pending" value={money(pending)} icon={Clock} tone="warn" />
+        <KPI label="Payouts" value={num(payouts.length)} icon={Wallet} />
+        <KPI label="Failed" value={num(failed)} icon={AlertTriangle} tone={failed ? "warn" : "good"} />
       </div>
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No payouts yet." /> : (
+        <SimpleTable
+          columns={[{ key: "period", label: "Period" }, { key: "amount", label: "Amount" }, { key: "status", label: "Status" }, { key: "processed", label: "Processed" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
+
 
 /* ---------- 18 Marketing ---------- */
 function MarketingCenter() {
