@@ -14,6 +14,411 @@ export type Database = {
   }
   public: {
     Tables: {
+      author_licenses: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          license_key: string
+          order_id: string | null
+          product_id: string
+          seats: number
+          status: Database["public"]["Enums"]["author_license_status"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          license_key: string
+          order_id?: string | null
+          product_id: string
+          seats?: number
+          status?: Database["public"]["Enums"]["author_license_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          license_key?: string
+          order_id?: string | null
+          product_id?: string
+          seats?: number
+          status?: Database["public"]["Enums"]["author_license_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_licenses_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "author_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "author_licenses_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_orders: {
+        Row: {
+          amount_cents: number
+          buyer_email: string | null
+          buyer_id: string | null
+          buyer_name: string | null
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json
+          product_id: string
+          status: Database["public"]["Enums"]["author_order_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount_cents?: number
+          buyer_email?: string | null
+          buyer_id?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json
+          product_id: string
+          status?: Database["public"]["Enums"]["author_order_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          buyer_email?: string | null
+          buyer_id?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json
+          product_id?: string
+          status?: Database["public"]["Enums"]["author_order_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_payouts: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          owner_id: string
+          period_end: string | null
+          period_start: string | null
+          processed_at: string | null
+          status: Database["public"]["Enums"]["author_payout_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          owner_id: string
+          period_end?: string | null
+          period_start?: string | null
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["author_payout_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          owner_id?: string
+          period_end?: string | null
+          period_start?: string | null
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["author_payout_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      author_product_versions: {
+        Row: {
+          changelog: string | null
+          created_at: string
+          download_url: string | null
+          file_size: number | null
+          id: string
+          product_id: string
+          released_at: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          changelog?: string | null
+          created_at?: string
+          download_url?: string | null
+          file_size?: number | null
+          id?: string
+          product_id: string
+          released_at?: string
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          changelog?: string | null
+          created_at?: string
+          download_url?: string | null
+          file_size?: number | null
+          id?: string
+          product_id?: string
+          released_at?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_product_versions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_products: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          metadata: Json
+          name: string
+          owner_id: string
+          price_cents: number
+          slug: string
+          status: Database["public"]["Enums"]["author_product_status"]
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          name: string
+          owner_id: string
+          price_cents?: number
+          slug: string
+          status?: Database["public"]["Enums"]["author_product_status"]
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          name?: string
+          owner_id?: string
+          price_cents?: number
+          slug?: string
+          status?: Database["public"]["Enums"]["author_product_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      author_revenue_events: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json
+          occurred_at: string
+          owner_id: string
+          product_id: string | null
+          source: string
+        }
+        Insert: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          owner_id: string
+          product_id?: string | null
+          source?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          owner_id?: string
+          product_id?: string | null
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_revenue_events_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          product_id: string
+          rating: number
+          reviewer_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          product_id: string
+          rating: number
+          reviewer_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string
+          rating?: number
+          reviewer_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_subscription_renewals: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          renewed_at: string
+          status: Database["public"]["Enums"]["author_order_status"]
+          subscription_id: string
+        }
+        Insert: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          renewed_at?: string
+          status?: Database["public"]["Enums"]["author_order_status"]
+          subscription_id: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          renewed_at?: string
+          status?: Database["public"]["Enums"]["author_order_status"]
+          subscription_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_subscription_renewals_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "author_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      author_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          customer_email: string | null
+          customer_id: string | null
+          id: string
+          mrr_cents: number
+          plan: string
+          product_id: string
+          status: Database["public"]["Enums"]["author_subscription_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          id?: string
+          mrr_cents?: number
+          plan?: string
+          product_id: string
+          status?: Database["public"]["Enums"]["author_subscription_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          id?: string
+          mrr_cents?: number
+          plan?: string
+          product_id?: string
+          status?: Database["public"]["Enums"]["author_subscription_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "author_subscriptions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "author_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           assigned_to: string | null
@@ -327,6 +732,21 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "sales_rep"
+      author_license_status: "active" | "expired" | "revoked" | "suspended"
+      author_order_status:
+        | "pending"
+        | "paid"
+        | "refunded"
+        | "failed"
+        | "cancelled"
+      author_payout_status: "pending" | "processing" | "paid" | "failed"
+      author_product_status: "draft" | "review" | "published" | "archived"
+      author_subscription_status:
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "cancelled"
+        | "expired"
       invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
       lead_source:
         | "website"
@@ -477,6 +897,23 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "sales_rep"],
+      author_license_status: ["active", "expired", "revoked", "suspended"],
+      author_order_status: [
+        "pending",
+        "paid",
+        "refunded",
+        "failed",
+        "cancelled",
+      ],
+      author_payout_status: ["pending", "processing", "paid", "failed"],
+      author_product_status: ["draft", "review", "published", "archived"],
+      author_subscription_status: [
+        "trialing",
+        "active",
+        "past_due",
+        "cancelled",
+        "expired",
+      ],
       invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
       lead_source: [
         "website",
