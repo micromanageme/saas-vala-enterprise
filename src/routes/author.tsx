@@ -524,20 +524,27 @@ function DevCenter() {
 
 /* ---------- 05 Versions ---------- */
 function VersionsCenter() {
+  const { data: versions = [], isLoading } = useAuthorVersions();
+  const rows = versions.map((v: any) => ({
+    v: v.version,
+    product: v.author_products?.name ?? "—",
+    date: fmtDate(v.released_at),
+    size: v.file_size ? `${(v.file_size / 1_000_000).toFixed(1)} MB` : "—",
+    changelog: <span className="text-xs text-muted-foreground line-clamp-1">{v.changelog ?? "—"}</span>,
+  }));
   return (
     <div className="space-y-4">
-      <PanelTitle icon={GitBranch} title="Version Control" action={<Button size="sm">New Release</Button>} />
-      <SimpleTable
-        columns={[{ key: "v", label: "Version" }, { key: "type", label: "Type" }, { key: "date", label: "Released" }, { key: "downloads", label: "Downloads" }, { key: "act", label: "" }]}
-        rows={[
-          { v: "4.2.0", type: <Badge>Major</Badge>, date: "Jun 02, 2026", downloads: "4,210", act: <Button variant="outline" size="sm">Rollback</Button> },
-          { v: "4.1.3", type: <Badge variant="secondary">Patch</Badge>, date: "May 18, 2026", downloads: "8,114", act: <Button variant="outline" size="sm">Rollback</Button> },
-          { v: "4.1.0", type: <Badge variant="outline">Minor</Badge>, date: "Apr 22, 2026", downloads: "12,332", act: <Button variant="outline" size="sm">Rollback</Button> },
-        ]}
-      />
+      <PanelTitle icon={GitBranch} title="Version Control" />
+      {isLoading ? <Loading /> : rows.length === 0 ? <Empty msg="No releases yet." /> : (
+        <SimpleTable
+          columns={[{ key: "v", label: "Version" }, { key: "product", label: "Product" }, { key: "date", label: "Released" }, { key: "size", label: "Size" }, { key: "changelog", label: "Changelog" }]}
+          rows={rows}
+        />
+      )}
     </div>
   );
 }
+
 
 /* ---------- 06 Docs ---------- */
 function DocsCenter() {
